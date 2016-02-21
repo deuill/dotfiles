@@ -202,7 +202,7 @@ set $session "Session (l) Logout, (s) Suspend, (r) Reboot, (Shift + s) Shutdown"
 
 mode $session {
     bindsym l        exec --no-startup-id ~/.config/i3/bin/logout, mode "default"
-    bindsym s        exec --no-startup-id ~/.config/i3/bin/lock && systemctl suspend, mode "default"
+    bindsym s        exec --no-startup-id systemctl suspend && ~/.config/i3/bin/lock, mode "default"
     bindsym r        exec --no-startup-id systemctl reboot, mode "default"
     bindsym Shift+s  exec --no-startup-id systemctl poweroff -i, mode "default"  
 
