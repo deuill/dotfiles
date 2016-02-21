@@ -2,6 +2,15 @@
 # Memory usage applet for i3bar.
 # Requirements: GNU awk (though other versions may also work)
 
+memory() {
+	local memusage=$(awk "${USAGE_CALCULATE}" < /proc/meminfo)
+
+	output "$(icon "${ICON_MEMORY}") ${memusage}%"
+	sleep ${MEMORY_UPDATE_INTERVAL}
+}
+
+# Awk script for calculating memory usage from `/proc/meminfo`. Used on every
+# frame.
 USAGE_CALCULATE=$(cat <<-'EOM'
 	/^MemTotal/	{memtotal = ($2)/(1024)}
 	/^MemFree/	{memfree = ($2)/(1024)}
@@ -14,10 +23,3 @@ USAGE_CALCULATE=$(cat <<-'EOM'
 	}
 	EOM
 )
-
-memory() {
-	local memusage=$(awk "${USAGE_CALCULATE}" < /proc/meminfo)
-
-	output "$(icon "${ICON_MEMORY}") ${memusage}%"
-	sleep ${MEMORY_UPDATE_INTERVAL}
-}

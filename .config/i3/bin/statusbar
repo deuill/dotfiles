@@ -99,6 +99,9 @@ do
 			echo "${index}:${1}" >> "${TEMP_PATH}/output"
 		}
 
+		# Execute optional cleanup function on exit.
+		trap 'cleanup' EXIT
+
 		# Load applet file.
 		source "${APPLET_PATH}/${applet}"
 

@@ -5,15 +5,6 @@
 # Requirements:
 #   cron (or any cron-compatible implementation, such as anacron or cronie)
 
-mkfifo "${TEMP_PATH}/clock"
-trap "cleanup" EXIT
-
-# Command to use for updating the clock.
-UPDATE_CMD="touch '${TEMP_PATH}/clock'"
-
-# Add update command to user's crontab.
-crontab -l | fgrep -i -v "${UPDATE_CMD}" | { cat; echo "* * * * * ${UPDATE_CMD}"; } | crontab -
-
 # Remove temporary crontab entry on exit.
 cleanup() {
 	crontab -l | fgrep -i -v "${UPDATE_CMD}" | crontab -
@@ -25,3 +16,12 @@ clock() {
 	output "$(icon "${ICON_CLOCK}") $(date +"${CLOCK_FORMAT}")"
 	read < "${TEMP_PATH}/clock"
 }
+
+# Command to use for updating the clock.
+UPDATE_CMD="touch '${TEMP_PATH}/clock'"
+
+# Create named pipe for update event.
+mkfifo "${TEMP_PATH}/clock"
+
+# Add update command to user's crontab.
+crontab -l | fgrep -i -v "${UPDATE_CMD}" | { cat; echo "* * * * * ${UPDATE_CMD}"; } | crontab -

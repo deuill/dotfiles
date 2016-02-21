@@ -2,8 +2,6 @@
 # Volume applet for i3bar, using Pulseaudio.
 # Requirements: pulseaudio
 
-mkfifo "${TEMP_PATH}/volume"
-
 volume() {
 	local status=$(exec "${VOLUME_SCRIPT}" get)
 	local volume=$(echo "${status}" | cut -d: -f1)
@@ -28,3 +26,6 @@ volume() {
 	output "$(icon "${volume_icon}") ${volume}%"
 	read < "${TEMP_PATH}/volume"
 }
+
+# Create named pipe for update event.
+mkfifo "${TEMP_PATH}/volume"

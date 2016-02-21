@@ -2,8 +2,6 @@
 # CPU applet for i3bar.
 # Requirements: coretemp (for temperature readings)
 
-PREV_STATUS="$(head -n 1 /proc/stat | cut -d' ' -f3-)"
-
 cpu() {
 	local status=$(head -n 1 /proc/stat | cut -d' ' -f3-)
 
@@ -32,3 +30,6 @@ cpu() {
 	output "$(icon "${ICON_CPU}") ${usage}% $(icon "${ICON_TEMP}") ${temp}°C"
 	sleep ${CPU_UPDATE_INTERVAL}
 }
+
+# Previous CPU status, calculated on init and every subsequent frame.
+PREV_STATUS="$(head -n 1 /proc/stat | cut -d' ' -f3-)"
