@@ -1,0 +1,36 @@
+#!/bin/bash
+# MPRIS-compatible player applet for i3bar, using playerctl.
+# Requirements: dbus, playerctl, GNU awk (though other versions may also work)
+
+waitforsignal() {
+	local signal="type='signal', path='/org/mpris/MediaPlayer2'"
+	timeout 30s dbus-monitor --session --profile "${signal}" | grep -m 0 '^sig.*MediaPlayer2'
+}
+
+player() {
+	local status=$(playerctl status)
+
+	case ${status} in
+		Playing)
+			local status_icon="${ICON_MUSIC_PLAY}"
+			;;
+		Paused)
+			local status_icon="${ICON_MUSIC_PAUSE}"
+			;;
+		*)
+			output ""
+			waitforsignal
+			return
+	esac
+
+	local artist=$(playerctl metadata artist)
+	local track=$(playerctl metadata title)
+
+	# Keep full title under 30 characters, adding an ellipsis if needed.
+	local title=$(echo ${artist} - ${track} | awk -v len=30 '{
+		if (length($0) > len) print substr($0, 1, len) "…"; else print;
+	}')
+
+	output "$(icon "${status_icon}") ${title}"
+	waitforsignal
+}

@@ -1,0 +1,16 @@
+#!/bin/sh
+# Lock screen with i3lock.
+
+# Suspend notifications while locked.
+killall -SIGUSR1 dunst
+
+# Create blurred-out screenshot of current screen.
+scrot -z -e 'convert -resize 20% -fill "#222" -colorize 50% -blur 0x1 -resize 500% $f ~/.cache/i3/_i3lock.png' ~/.cache/i3/__i3lock.png
+convert -gravity center -composite ~/.cache/i3/_i3lock.png ~/.config/i3/assets/lock-overlay.png ~/.cache/i3/i3lock.png
+
+# Lock screen.
+i3lock -n -u -i ~/.cache/i3/i3lock.png
+
+# Remove cached file and un-suspend notifications.
+rm ~/.cache/i3/*i3lock.png
+killall -SIGUSR2 dunst

@@ -1,0 +1,45 @@
+#!/bin/bash
+# Network applet for i3bar, using NetworkManager.
+# Requirements: dbus, networkmanager (nmcli command in particular)
+
+waitforsignal() {
+	local signal="type='signal', interface='org.freedesktop.NetworkManager.AccessPoint'"
+	dbus-monitor --system --profile "${signal}" | grep -m 0 '^sig.*NetworkManager'
+}
+
+network() {
+	local result=()
+	local wifi=$(nmcli -t -f ACTIVE,SSID,SIGNAL dev wifi | grep '^yes' | cut -d':' -f2-)
+	local wired=$(nmcli -t -f STATE,TYPE,CONNECTION dev | grep '^connected:ethernet' | cut -d':' -f3)
+
+	# Wired/Ethernet connection.
+	if [ "x${wired}" != "x" ]
+	then
+		result+=("$(icon "${ICON_WIRED}")")
+	fi
+
+	# Wireless connection.
+	if [ "x${wifi}" != "x" ]
+	then
+		local ssid=$(echo "${wifi}" | cut -d':' -f1)
+		local signal=$(echo "${wifi}" | cut -d':' -f2)
+
+		if [ "${signal}" -ge 80 ]
+		then
+			local wireless_icon="${ICON_WIRELESS_100}"
+		elif [ "${signal}" -ge 50 ]
+		then
+			local wireless_icon="${ICON_WIRELESS_50}"
+		elif [ "${signal}" -ge 30 ]
+		then
+			local wireless_icon="${ICON_WIRELESS_25}"
+		else
+			local wireless_icon="${ICON_WIRELESS_0}"
+		fi
+
+		result+=("$(icon "${wireless_icon}") ${ssid}")
+	fi
+
+	output "${result[*]}"
+	waitforsignal
+}

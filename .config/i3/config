@@ -1,0 +1,242 @@
+# ---------
+# BEHAVIOUR
+# ---------
+
+# Application autostart.
+exec "~/.config/i3/bin/startup"
+
+# Window manipulation.
+focus_follows_mouse no
+
+# Workspace names.
+set $www    1: www
+set $code   2: code
+set $cmd    3: cmd
+set $chat   4: chat
+set $media  5: media
+set $misc   6: misc
+
+# Workspace assignments for applications
+assign [class="Firefox"]     → $www
+assign [class="chromium"]    → $www
+assign [class="Geary"]       → $www
+assign [class="Subl3"]       → $code
+assign [class="Emacs"]       → $code
+assign [class="xv/mplayer"]  → $media
+assign [class="Totem"]       → $media
+assign [class="Lollypop"]    → $media
+assign [class="Gimp"]        → $media
+assign [class="Skype"]       → $chat
+assign [class="Slack"]       → $chat
+assign [class="HipChat"]     → $chat
+
+# -----------
+# KEYBINDINGS
+# -----------
+
+# Default modifier key is the 'Super' key.
+set $mod  Mod4
+
+# Application launching
+bindsym $mod+Return   exec i3-sensible-terminal
+bindsym $mod+d        exec "rofi -show run"
+bindsym $mod+Shift+d  exec i3-dmenu-desktop
+
+# Change focus
+bindsym $mod+h      focus left
+bindsym $mod+j      focus down
+bindsym $mod+k      focus up
+bindsym $mod+l      focus right
+bindsym $mod+Left   focus left
+bindsym $mod+Down   focus down
+bindsym $mod+Up     focus up
+bindsym $mod+Right  focus right
+
+# Move focused window
+bindsym $mod+Shift+h      move left
+bindsym $mod+Shift+j      move down
+bindsym $mod+Shift+k      move up
+bindsym $mod+Shift+l      move right
+bindsym $mod+Shift+Left   move left
+bindsym $mod+Shift+Down   move down
+bindsym $mod+Shift+Up     move up
+bindsym $mod+Shift+Right  move right
+
+# Window size
+bindsym $mod+f  fullscreen toggle
+
+# Horizontal/vertical orientation switching
+bindsym $mod+bracketleft   split h
+bindsym $mod+bracketright  split v
+
+# Change container layout (stacked, tabbed, toggle split)
+bindsym $mod+s  layout stacking
+bindsym $mod+w  layout tabbed
+bindsym $mod+e  layout toggle split
+
+# Toggle tiling/floating
+bindsym $mod+Shift+space  floating toggle
+bindsym $mod+space        focus mode_toggle
+
+# Focus the parent/child container.
+bindsym $mod+a  focus parent
+
+# Focus urgent window.
+bindsym $mod+u  [urgent=latest] focus
+
+# Resize floating windows with modifider + mouse.
+floating_modifier $mod
+
+# Switch to workspace
+bindsym $mod+1  workspace $www
+bindsym $mod+2  workspace $code
+bindsym $mod+3  workspace $cmd
+bindsym $mod+4  workspace $chat
+bindsym $mod+5  workspace $media
+bindsym $mod+6  workspace $misc
+bindsym $mod+7  workspace 7
+bindsym $mod+8  workspace 8
+bindsym $mod+9  workspace 9
+bindsym $mod+0  workspace 10
+
+# Move focused window to workspace
+bindsym $mod+Shift+1  move container to workspace $www
+bindsym $mod+Shift+2  move container to workspace $code
+bindsym $mod+Shift+3  move container to workspace $cmd
+bindsym $mod+Shift+4  move container to workspace $chat
+bindsym $mod+Shift+5  move container to workspace $media
+bindsym $mod+Shift+6  move container to workspace $misc
+bindsym $mod+Shift+7  move container to workspace 7
+bindsym $mod+Shift+8  move container to workspace 8
+bindsym $mod+Shift+9  move container to workspace 9
+bindsym $mod+Shift+0  move container to workspace 10
+
+# Window manager
+bindsym $mod+p             exec "rofi -show window"
+bindsym $mod+q             kill
+bindsym $mod+Shift+c       reload
+bindsym $mod+Shift+r       restart
+bindsym $mod+Shift+Delete  exec --no-startup-id ~/.config/i3/bin/lock
+
+# Volume keys
+bindsym XF86AudioRaiseVolume  exec --no-startup-id "~/.config/i3/bin/volume up && touch /tmp/i3statusbar.*/volume"
+bindsym XF86AudioLowerVolume  exec --no-startup-id "~/.config/i3/bin/volume down && touch /tmp/i3statusbar.*/volume"
+bindsym XF86AudioMute         exec --no-startup-id "~/.config/i3/bin/volume mute && touch /tmp/i3statusbar.*/volume"
+
+# Media keys
+bindsym XF86AudioStop  exec --no-startup-id "playerctl stop"
+bindsym XF86AudioPlay  exec --no-startup-id "playerctl play-pause"
+bindsym XF86AudioNext  exec --no-startup-id "playerctl next"
+bindsym XF86AudioPrev  exec --no-startup-id "playerctl prev"
+
+# Modes
+bindsym $mod+r        mode "resize"
+bindsym $mod+Shift+q  mode $session
+
+# ----------
+# APPEARANCE
+# ----------
+
+# Default font.
+font pango:Inconsolata 10
+
+# Border style for new windows.
+new_window normal
+
+# Color names.
+set $background  #282828
+set $foreground  #d8d8d8
+set $focused     #2d2d2d
+set $unfocused   #585858
+set $urgent      #ab4642
+
+# Window manager colors.
+# Class                  Border       Background   Text         Indicator
+client.focused           $focused     $focused     $foreground  $focused
+client.focused_inactive  $focused     $focused     $unfocused   $focused
+client.unfocused         $background  $background  $unfocused   $background
+client.urgent            $urgent      $urgent      $background  $urgent
+client.background                     $background
+
+# ---------------
+# MODES & MODULES
+# ---------------
+
+mode "resize" {
+        # These bindings trigger as soon as you enter the resize mode.
+
+        # They resize the border in the direction you pressed, e.g. when pressing
+        # left, the window is resized so that it has more space on its left
+
+        bindsym  l           resize shrink left 10 px or 10 ppt
+        bindsym  Shift+l     resize grow   left 10 px or 10 ppt
+
+        bindsym  k           resize shrink down 10 px or 10 ppt
+        bindsym  Shift+k     resize grow   down 10 px or 10 ppt
+
+        bindsym  i           resize shrink up 10 px or 10 ppt
+        bindsym  Shift+i     resize grow   up 10 px or 10 ppt
+
+        bindsym  j           resize shrink right 10 px or 10 ppt
+        bindsym  Shift+j     resize grow   right 10 px or 10 ppt
+
+        # Same bindings, but for the arrow keys
+        bindsym  Left        resize shrink left 10 px or 10 ppt
+        bindsym  Shift+Left  resize grow   left 10 px or 10 ppt
+
+        bindsym  Down        resize shrink down 10 px or 10 ppt
+        bindsym  Shift+Down  resize grow   down 10 px or 10 ppt
+
+        bindsym  Up          resize shrink up 10 px or 10 ppt
+        bindsym  Shift+Up    resize grow   up 10 px or 10 ppt
+
+        bindsym  Right        resize shrink right 10 px or 10 ppt
+        bindsym  Shift+Right  resize grow   right 10 px or 10 ppt
+
+        # Back to normal mode: Enter or Escape
+        bindsym  Return       mode "default"
+        bindsym  Escape       mode "default"
+}
+
+set $session "Session (l) Logout, (s) Suspend, (r) Reboot, (Shift + s) Shutdown"
+
+mode $session {
+    bindsym l        exec --no-startup-id ~/.config/i3/bin/logout, mode "default"
+    bindsym s        exec --no-startup-id ~/.config/i3/bin/lock && systemctl suspend, mode "default"
+    bindsym r        exec --no-startup-id systemctl reboot, mode "default"
+    bindsym Shift+s  exec --no-startup-id systemctl poweroff -i, mode "default"  
+
+    # Back to normal mode: Enter or Escape
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+
+bar {
+    output VGA1
+    output DP2
+    output LVDS1
+
+    mode dock
+    position top
+
+    font pango:Inconsolata, i3cons 10
+    separator_symbol " • "
+
+    workspace_buttons yes
+    binding_mode_indicator yes
+    strip_workspace_numbers yes
+
+    status_command "~/.config/i3/bin/statusbar player cpu memory network battery volume clock"
+
+    colors {
+        background  $background
+        statusline  $foreground
+        separator   $unfocused
+
+        # Class             Border       Background   Text
+        focused_workspace   $background  $background  $foreground
+        active_workspace    $background  $background  $foreground
+        inactive_workspace  $background  $background  $unfocused
+        urgent_workspace    $background  $background  $urgent
+    }
+}

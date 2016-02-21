@@ -1,0 +1,91 @@
+#!/bin/bash
+# Control and query volume levels for Pulseaudio.
+
+getvolume() {
+	local vol=$(echo "${SINKS}" | grep -A 15 '* index' | awk '/volume: front/{ print $5 }' | sed 's/[%|,]//g')
+	local muted=$(echo "${SINKS}" | grep -A 15 '* index' | awk '/muted:/{ print $2 }')
+	echo "${vol}:${muted}"
+}
+
+setvolume() {
+	local amount="${1}"
+
+	if [ "x${1}" == "x" ]
+	then
+		return
+	fi
+
+	pactl set-sink-volume ${ACTIVE_SINK} ${1}%
+}
+
+volumeup() {
+	local amount=${1:-10}
+	local current=$(getvolume | cut -d: -f1)
+
+	mute off
+
+	if [ $((${current} + ${amount})) -gt 100 ]
+	then
+		amount=$((100 - ${current}))
+	fi
+
+	pactl set-sink-volume ${ACTIVE_SINK} +${amount}%
+}
+
+volumedown() {
+	local amount=${1:-10}
+
+	if [ $(($(getvolume | cut -d: -f1) - ${amount})) -le 0 ]
+	then
+		mute on
+	else
+		mute off
+	fi
+	
+	pactl set-sink-volume ${ACTIVE_SINK} -${amount}%
+}
+
+volumemute() {
+	local status=${1:-toggle}
+
+	case ${status} in
+	on)
+		pactl set-sink-mute ${ACTIVE_SINK} true
+		;;
+	off)
+		pactl set-sink-mute ${ACTIVE_SINK} false
+		;;
+	toggle)
+		pactl set-sink-mute ${ACTIVE_SINK} toggle
+		;;
+	esac
+}
+
+SINKS=$(pacmd list-sinks)
+SOURCES=$(pacmd list-sources)
+
+ACTIVE_SINK=$(echo "${SINKS}" | awk '/\* index:/{ print $3 }')
+ACTIVE_SOURCE=$(echo "${SOURCES}" | awk '/\* index:/{ print $3 }')
+
+ACTION=${1:-get}
+
+case ${ACTION} in
+get)
+	getvolume
+	;;
+set)
+	setvolume ${2}
+	;;
+up)
+	volumeup ${2}
+	;;
+down)
+	volumedown ${2}
+	;;
+mute)
+	volumemute ${2}
+	;;
+*)
+	echo 'Unknown command, please use one of the following:'
+	echo "'get', 'set', 'up', 'down', 'mute'"
+esac

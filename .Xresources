@@ -1,0 +1,36 @@
+/*********************************************************************
+ *                              colors                               *
+ *********************************************************************/
+
+#define bg_external argb:bb282828
+#define bg_internal #282828
+#define bg_active   #ab4642
+#define text_normal #d8d8d8
+#define text_active #282828
+
+/*********************************************************************
+ *                               rofi                                *
+ *********************************************************************/
+
+rofi.font:            Inconsolata 10
+rofi.terminal:        i3-sensible-terminal
+rofi.lines:           10
+rofi.columns:         1
+rofi.eh:              2
+rofi.width:           100
+rofi.padding:         345
+rofi.line-margin:     0
+rofi.fullscreen:      false
+rofi.opacity:         100
+rofi.bw:              0
+rofi.sidebar-mode:    false
+rofi.separator-style: none
+rofi.hide-scrollbar:  true
+rofi.fuzzy:           true
+rofi.color-enabled:   true
+
+/* Class           BG           FG           Alt BG       Active BG  Active FG */
+rofi.color-normal: bg_internal, text_normal, bg_internal, bg_active, text_active
+rofi.color-urgent: bg_internal, text_normal, bg_internal, bg_active, text_active
+rofi.color-active: bg_internal, text_normal, bg_internal, bg_active, text_active
+rofi.color-window: bg_external, bg_internal

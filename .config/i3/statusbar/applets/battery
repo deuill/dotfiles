@@ -1,0 +1,50 @@
+#!/bin/bash
+# Battery applet for i3bar.
+# Requirements: dbus, upower
+
+# Listens for dbus messages for the currently selected battery and returns when
+# a matching message is sent.
+waitforsignal() {
+	local signal="type='signal', path='/org/freedesktop/UPower/devices/battery_${BATTERY_NAME}'"
+	dbus-monitor --system --profile "${signal}" | grep -m 0 '^sig.*UPower'
+}
+
+# Battery applet.
+battery() {
+	local sysdir="/sys/class/power_supply"
+
+	local status_file="${sysdir}/${BATTERY_NAME}/status"
+	local capacity_file="${sysdir}/${BATTERY_NAME}/capacity"
+
+	local status=$(cat ${status_file})
+	local capacity=$(cat ${capacity_file})
+
+	case "${status}" in
+		Charging)
+			local battery_icon="${ICON_BATTERY_CHARGE}"
+			;;
+		Full)
+			local battery_icon="${ICON_BATTERY_100}"
+			;;
+		*)
+			if [ "${capacity}" -ge 90 ]
+			then
+				local battery_icon="${ICON_BATTERY_100}"
+			elif [ "${capacity}" -ge 60 ]
+			then
+				local battery_icon="${ICON_BATTERY_75}"
+			elif [ "${capacity}" -ge 30 ]
+			then
+				local battery_icon="${ICON_BATTERY_50}"
+			elif [ "${capacity}" -ge 10 ]
+			then
+				local battery_icon="${ICON_BATTERY_25}"
+			else
+				local battery_icon="${ICON_BATTERY_0}"
+			fi
+			;;
+	esac
+
+	output "$(icon "${battery_icon}") ${capacity}%"
+	waitforsignal
+}

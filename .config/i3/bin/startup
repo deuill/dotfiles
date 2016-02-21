@@ -1,0 +1,17 @@
+#!/bin/sh
+# Startup applications for i3.
+
+# Load Xresources file into X.
+xrdb ~/.Xresources
+
+# Initialize 'compton' composite manager.
+compton -CGfbz -D 2 -o 0 --backend glx --vsync opengl
+
+# Start 'dunst' for notifications.
+dunst &
+
+# Set default background via 'feh'.
+feh --bg-fill ~/.config/i3/assets/default-bg
+
+# Set keyboard map toggle via Alt + Shift combination.
+setxkbmap -model pc105 -layout us,gr -option grp:alt_shift_toggle
