@@ -106,8 +106,8 @@ do
 		source "${APPLET_PATH}/${applet}"
 
 		# Run default applet action in an infinite loop. Applets are supposed to
-		# handle internals in their default actions, otherwise they run the risk
-		# of taxing the CPU.
+		# handle intervals in their default actions, otherwise they run the risk
+		# taxing the CPU.
 		while :
 		do
 			${applet}

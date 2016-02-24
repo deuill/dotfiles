@@ -1,5 +1,0 @@
-#!/bin/sh
-# Logout from i3 with running Gnome session.
-
-i3-msg exit
-gnome-session-quit --logout --no-prompt

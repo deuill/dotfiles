@@ -3,7 +3,7 @@
 # ---------
 
 # Application autostart.
-exec "~/.config/i3/bin/startup"
+exec --no-startup-id "~/.config/i3/bin/startup"
 
 # Window manipulation.
 focus_follows_mouse no
@@ -116,7 +116,7 @@ bindsym $mod+p             exec "rofi -show window"
 bindsym $mod+q             kill
 bindsym $mod+Shift+c       reload
 bindsym $mod+Shift+r       restart
-bindsym $mod+Shift+Delete  exec --no-startup-id ~/.config/i3/bin/lock
+bindsym $mod+Shift+Delete  exec --no-startup-id ~/.config/i3/bin/session lock
 
 # Volume keys
 bindsym XF86AudioRaiseVolume  exec --no-startup-id "~/.config/i3/bin/volume up && touch /tmp/i3statusbar.*/volume"
@@ -198,13 +198,13 @@ mode "resize" {
         bindsym  Escape       mode "default"
 }
 
-set $session "Session (l) Logout, (s) Suspend, (r) Reboot, (Shift + s) Shutdown"
+set $session "Session (s) Suspend, (l) Logout, (r) Reboot, (p) Power off"
 
 mode $session {
-    bindsym l        exec --no-startup-id ~/.config/i3/bin/logout, mode "default"
-    bindsym s        exec --no-startup-id systemctl suspend && ~/.config/i3/bin/lock, mode "default"
-    bindsym r        exec --no-startup-id systemctl reboot, mode "default"
-    bindsym Shift+s  exec --no-startup-id systemctl poweroff -i, mode "default"  
+    bindsym s  exec --no-startup-id ~/.config/i3/bin/session suspend, mode "default"
+    bindsym l  exec --no-startup-id ~/.config/i3/bin/session logout, mode "default"
+    bindsym r  exec --no-startup-id ~/.config/i3/bin/session reboot, mode "default"
+    bindsym p  exec --no-startup-id ~/.config/i3/bin/session poweroff, mode "default"
 
     # Back to normal mode: Enter or Escape
     bindsym Return mode "default"
