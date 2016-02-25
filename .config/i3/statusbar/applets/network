@@ -2,6 +2,14 @@
 # Network applet for i3bar, using NetworkManager.
 # Requirements: dbus, networkmanager (nmcli command in particular)
 
+onclick() {
+	case ${1} in
+	1)
+		gnome-control-center network
+		;;
+	esac
+}
+
 waitforsignal() {
 	local signal="type='signal', interface='org.freedesktop.NetworkManager.AccessPoint'"
 	dbus-monitor --system --profile "${signal}" | grep -m 0 '^sig.*NetworkManager'

@@ -22,7 +22,7 @@ volumeup() {
 	local amount=${1:-10}
 	local current=$(getvolume | cut -d: -f1)
 
-	mute off
+	volumemute off
 
 	if [ $((${current} + ${amount})) -gt 100 ]
 	then
@@ -37,9 +37,9 @@ volumedown() {
 
 	if [ $(($(getvolume | cut -d: -f1) - ${amount})) -le 0 ]
 	then
-		mute on
+		volumemute on
 	else
-		mute off
+		volumemute off
 	fi
 	
 	pactl set-sink-volume ${ACTIVE_SINK} -${amount}%

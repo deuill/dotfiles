@@ -2,6 +2,22 @@
 # Volume applet for i3bar, using Pulseaudio.
 # Requirements: pulseaudio
 
+onclick() {
+	case ${1} in
+	1)
+		gnome-control-center sound
+		;;
+	4)
+		(exec "${VOLUME_SCRIPT}" up)
+		touch "${TEMP_PATH}/volume"
+		;;
+	5)
+		(exec "${VOLUME_SCRIPT}" down)
+		touch "${TEMP_PATH}/volume"
+		;;
+	esac
+}
+
 volume() {
 	local status=$(exec "${VOLUME_SCRIPT}" get)
 	local volume=$(echo "${status}" | cut -d: -f1)

@@ -10,41 +10,7 @@ source "${HOME}/.config/i3/statusbar/config"
 # Utility methods
 # ---------------
 
-bar() {
-	# Bar length.
-	length="${2:-10}"
-
-	# Print full segments.
-	full=$((${1} / ${length}))
-	for i in $(seq 1 ${full})
-	do
-		printf '\u2588'
-	done
-
-	# Print remaining empty segments.
-	empty=$(((100 - ${1}) / ${length}))
-	for i in $(seq 0 ${empty})
-	do
-		printf '\u2591'
-	done
-}
-
-icon() {
-	printf "\u${1}"
-}
-
-quit() {
-	echo "Quitting..."
-
-	# Kill all child processes.
-	pkill -TERM -P $$
-
-	# Clean up shared resources.
-	rm -R "${TEMP_PATH}"
-
-	# Exit with defined code.
-	exit ${1:-0}
-}
+source "${HOME}/.config/i3/statusbar/utils"
 
 # -------------
 # Program start
@@ -71,13 +37,12 @@ trap 'quit 0' EXIT
 # Signals USR1 and USR2 should only be caught by applets.
 trap '' USR1 USR2
 
-# Create temporary directory and files.
-mkdir -p "${TEMP_PATH}"
-mkfifo "${TEMP_PATH}/output"
+# Create temporary directory for files shared by this statusbar instance.
+mkdir -p "${TEMP_PATH}" "${EVENT_PATH}"
 
-# Keep output pipe open forever. This is done in order to prevent EOF under all
-# circumstances.
-while true; do sleep infinity; done > "${TEMP_PATH}/output" &
+# Open output pipe and keep open forever.
+mkfifo "${TEMP_PATH}/output"
+while true; do sleep infinity; done >> "${TEMP_PATH}/output" &
 
 # Applet index, used for ordering output.
 index=0
@@ -96,7 +61,14 @@ do
 		# Applet-local update function. Sends the text argument passed to the
 		# running bar instance for rendering.
 		output() {
-			echo "${index}:${1}" >> "${TEMP_PATH}/output"
+			read -d '' json <<-_EOF_
+				{
+					"name": "${applet}",
+					"full_text": "${1}"
+				},
+			_EOF_
+
+			echo ${index}:${json} >> "${TEMP_PATH}/output"
 		}
 
 		# Execute optional cleanup function on exit.
@@ -104,6 +76,24 @@ do
 
 		# Load applet file.
 		source "${APPLET_PATH}/${applet}"
+
+		# Only attempt to handle click events if onclick handler is defined for
+		# this applet.
+		if [ $(type -t onclick) = 'function' ]
+		then
+			# Create events pipe, used for sending click events through to applets.
+			mkfifo "${EVENT_PATH}/${applet}"
+			while true; do sleep infinity; done >> "${EVENT_PATH}/${applet}" &
+
+			# Handle click events asynchronously.
+			(
+				while read line < "${EVENT_PATH}/${applet}"
+				do
+					button=$(echo ${line} | jq -r '.button')
+					onclick "${button}" "${line}" &
+				done
+			) &
+		fi
 
 		# Run default applet action in an infinite loop. Applets are supposed to
 		# handle intervals in their default actions, otherwise they run the risk
@@ -117,22 +107,38 @@ do
 	index=$((${index} + 1))
 done
 
-# Send the header so that i3bar knows we're using JSON.
-echo '{"version": 1}'
+# Update i3bar with applet output asynchronously.
+(
+	# Send the header so that i3bar knows we're using JSON.
+	echo '{"version": 1, "click_events": true}'
 
-# Begin the endless array.
-echo '['
+	# Begin the endless array.
+	echo '['
 
-# Send an empty array to make the loop simpler.
-echo '[],'
+	# Send an empty array to make the loop simpler.
+	echo '[],'
 
-# Read from output pipe and build JSON output from segments.
-while read line < "${TEMP_PATH}/output"
+	# Read from output pipe and build JSON output from segments.
+	while read line < "${TEMP_PATH}/output"
+	do
+		segments["${line%%:*}"]="${line#*:}"
+		string="${segments[@]}"
+
+		echo "[${string:0:-1}],"
+	done
+) &
+
+# Handle statusbar clicks and send to correct applet.
+cat | while read line
 do
-	segments["${line%%:*}"]="{\"full_text\": \"${line#*:}\"},"
-	string="${segments[@]}"
+	# Find applet name from JSON output line.
+	applet=$(echo "${line#,}" | jq -r '.name')
 
-	echo "[${string:0:-1}],"
+	# Send JSON line to applet event handler, if any exists.
+	if [ -p "${EVENT_PATH}/${applet}" ]
+	then
+		echo "${line#,}" >> "${EVENT_PATH}/${applet}"
+	fi
 done
 
 # Unreachable quit statement.

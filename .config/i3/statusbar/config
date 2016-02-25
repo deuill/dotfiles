@@ -4,6 +4,7 @@
 
 APPLET_PATH="${HOME}/.config/i3/statusbar/applets"
 TEMP_PATH="/tmp/i3statusbar.$$"
+EVENT_PATH="${TEMP_PATH}/__events"
 
 # Colors
 
