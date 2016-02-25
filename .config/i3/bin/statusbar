@@ -124,7 +124,7 @@ done
 		segments["${line%%:*}"]="${line#*:}"
 		string="${segments[@]}"
 
-		echo "[${string:0:-1}],"
+		echo "[${string%,}],"
 	done
 ) &
 
