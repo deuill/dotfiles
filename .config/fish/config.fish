@@ -13,7 +13,7 @@ source $HOME/.config/fish/themes/$theme.fish
 alias sc 'ag --pager "less -R"'
 alias emacs 'emacs -mm'
 alias trash 'gvfs-trash'
-alias dot 'git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
+alias cfg 'git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
 
 function ciff
 	diff -u $argv | colordiff | less -R
