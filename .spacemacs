@@ -265,7 +265,7 @@ values."
 
   ;; Set 80-column marker.
   (define-globalized-minor-mode global-fci-mode fci-mode (lambda () (fci-mode 1)))
-  (setq fci-rule-color "#555")
+  (setq fci-rule-color "#484848")
   (global-fci-mode 1)
 
   ;; C/C++ layer-specific configuration.
