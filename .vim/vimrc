@@ -1,0 +1,62 @@
+" -----------------
+" Plugin Management
+" -----------------
+
+" Initialize Plug for plugin management
+call plug#begin('~/.vim/plugins')
+
+" Base16 theme for VIM
+Plug 'chriskempson/base16-vim'
+
+" Airline, the lightweight status/tabline
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+
+" CtrlP fuzzy file/buffer/tar/etc finder
+Plug 'ctrlpvim/ctrlp.vim'
+Plug 'fisadev/vim-ctrlp-cmdpalette'
+
+call plug#end()
+
+" --------------------
+" Plugin Configuration
+" --------------------
+
+" Configuration for Airline
+let g:airline_theme='base16_eighties'
+let g:airline_powerline_fonts = 1
+let g:airline#extensions#tabline#enabled = 1
+
+" Configuration for CtrlP
+let g:ctrlp_map = ''
+let g:ctrlp_show_hidden = 1
+let g:ctrlp_open_new_file = 't'
+
+" ---------------------
+" Generic Configuration
+" ---------------------
+
+" Map leader key to space key
+let mapleader=" "
+
+" Enable line-number display
+set number
+
+" Show tabline by default
+set laststatus=2
+
+" Use dark base16 color-scheme
+set background=dark
+colorscheme base16-eighties
+
+" Wrap cursor movement at end of line
+set whichwrap=b,s,<,>,[,]
+
+" ------------
+" Key Bindings
+" ------------
+
+"         Binding           Command
+nnoremap  <Leader>w         :w<CR>
+nnoremap  <Leader>f         :CtrlP<CR>
+nnoremap  <Leader><Leader>  :CtrlPCmdPalette<CR>
