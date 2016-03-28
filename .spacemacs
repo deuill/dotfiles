@@ -26,8 +26,6 @@ values."
       ;; Uncomment some layer names and press <SPC f e R> (Vim style) or
       ;; <M-m f e R> (Emacs style) to install them.
       ;; ----------------------------------------------------------------
-      ;; auto-completion
-      ;; better-defaults
       emacs-lisp
       git
       (dash :variables dash-helm-dash-docset-path "~/.cache/docsets")
@@ -39,13 +37,9 @@ values."
       (c-c++ :variables c-c++-enable-clang-support t)
       html
       javascript
-      ;; org
-      ;; (shell :variables
-      ;;        shell-default-height 30
-      ;;        shell-default-position 'bottom)
       spell-checking
       syntax-checking
-      ;; version-control
+      deft
    )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
@@ -261,6 +255,11 @@ values."
 
     ;; Use simple NeoTree theme.
     neo-theme 'nerd
+
+	;; Set user defaults for Deft.
+    deft-text-mode 'markdown-mode
+    deft-extensions '("md" "txt")
+	deft-directory "~/.notes"
   )
 
   ;; Set 80-column marker.
