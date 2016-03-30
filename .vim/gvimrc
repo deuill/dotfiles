@@ -1,8 +1,0 @@
-" GVIM-specific configuration
-set guioptions-=T " Disable toolbar
-set guioptions-=m " Disable menubar
-set guioptions-=r " Disable right-hand scrollbar
-set guioptions-=L " Disable left-hand scrollbar
-set guioptions-=b " Remove bottom scrollbar
-set guiheadroom=0 " Remove headroom from sides of window
-set guifont=Inconsolata\ 10
