@@ -1,0 +1,22 @@
+[user]
+	email = alex@deuill.org
+	name = Alex Palaistras
+
+[core]
+	editor = nano
+
+[push]
+	default = simple
+
+[color]
+	ui = 1
+
+[help]
+	autocorrect = 1
+
+[alias]
+	co = checkout
+	br = branch
+	ci = commit
+	st = status
+	find = "!git log --color --source -S "
