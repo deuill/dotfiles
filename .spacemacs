@@ -21,11 +21,6 @@ values."
    ;; of a list then all discovered layers will be installed.
    dotspacemacs-configuration-layers
    '(
-      ;; ----------------------------------------------------------------
-      ;; Example of useful layers you may want to use right away.
-      ;; Uncomment some layer names and press <SPC f e R> (Vim style) or
-      ;; <M-m f e R> (Emacs style) to install them.
-      ;; ----------------------------------------------------------------
       emacs-lisp
       git
       (dash :variables dash-helm-dash-docset-path "~/.cache/docsets")
@@ -45,7 +40,10 @@ values."
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages then consider to create a layer, you can also put the
    ;; configuration in `dotspacemacs/user-config'.
-   dotspacemacs-additional-packages '()
+   dotspacemacs-additional-packages
+   '(
+      dtrt-indent
+   )
    ;; A list of packages and/or extensions that will not be install and loaded.
    dotspacemacs-excluded-packages '()
    ;; If non-nil spacemacs will delete any orphan packages, i.e. packages that
@@ -209,7 +207,7 @@ values."
    ;; If non nil line numbers are turned on in all `prog-mode' and `text-mode'
    ;; derivatives. If set to `relative', also turns on relative line numbers.
    ;; (default nil)
-   dotspacemacs-line-numbers t
+   dotspacemacs-line-numbers nil
    ;; If non-nil smartparens-strict-mode will be enabled in programming modes.
    ;; (default nil)
    dotspacemacs-smartparens-strict-mode nil
@@ -242,11 +240,9 @@ values."
 )
 
 (defun dotspacemacs/user-config ()
-  "Configuration function for user code.
-  This function is called at the very end of Spacemacs initialization
-  after layers configuration. You are free to put any user code."
+  ;; Generic global default settings.
   (setq-default
-    ;; Indent mode set to tabs.
+    ;; Set indentation to tabs.
     indent-tabs-mode t
     tab-width 4
 
@@ -256,16 +252,29 @@ values."
     ;; Use simple NeoTree theme.
     neo-theme 'nerd
 
-	;; Set user defaults for Deft.
+    ;; Set user defaults for Deft.
     deft-text-mode 'markdown-mode
     deft-extensions '("md" "txt")
-	deft-directory "~/.notes"
+    deft-directory "~/.notes"
+
+    ;; Set color for column marker.
+    fci-rule-color "#484848"
   )
 
-  ;; Set 80-column marker.
-  (define-globalized-minor-mode global-fci-mode fci-mode (lambda () (fci-mode 1)))
-  (setq fci-rule-color "#484848")
-  (global-fci-mode 1)
+  ;; Generic sane defaults for most major modes.
+  (defun set-sane-defaults ()
+	;; Enable line number display.
+	(linum-mode 1)
+
+	;; Enable column marker.
+	(fci-mode 1)
+
+	;; Attempt to automatically determine indentation settings from buffer.
+	(dtrt-indent-mode 1)
+  )
+
+  ;; Apply sane defaults for programming language modes.
+  (add-hook 'prog-mode-hook 'set-sane-defaults)
 
   ;; C/C++ layer-specific configuration.
   ;(defun clang-format-on-save ()
