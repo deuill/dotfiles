@@ -12,13 +12,13 @@
  *                               rofi                                *
  *********************************************************************/
 
-rofi.font:            Inconsolata 10
+rofi.font:            Inconsolata 11
 rofi.terminal:        i3-sensible-terminal
 rofi.lines:           10
 rofi.columns:         1
 rofi.eh:              2
 rofi.width:           100
-rofi.padding:         345
+rofi.padding:         380
 rofi.line-margin:     0
 rofi.fullscreen:      false
 rofi.opacity:         100
