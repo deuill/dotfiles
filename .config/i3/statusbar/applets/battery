@@ -20,29 +20,29 @@ battery() {
 	local capacity=$(cat ${capacity_file})
 
 	case "${status}" in
-		Charging)
-			local battery_icon="${ICON_BATTERY_CHARGE}"
-			;;
-		Full)
+	Charging)
+		local battery_icon="${ICON_BATTERY_CHARGE}"
+		;;
+	Full)
+		local battery_icon="${ICON_BATTERY_100}"
+		;;
+	*)
+		if [ "${capacity}" -ge 90 ]
+		then
 			local battery_icon="${ICON_BATTERY_100}"
-			;;
-		*)
-			if [ "${capacity}" -ge 90 ]
-			then
-				local battery_icon="${ICON_BATTERY_100}"
-			elif [ "${capacity}" -ge 60 ]
-			then
-				local battery_icon="${ICON_BATTERY_75}"
-			elif [ "${capacity}" -ge 30 ]
-			then
-				local battery_icon="${ICON_BATTERY_50}"
-			elif [ "${capacity}" -ge 10 ]
-			then
-				local battery_icon="${ICON_BATTERY_25}"
-			else
-				local battery_icon="${ICON_BATTERY_0}"
-			fi
-			;;
+		elif [ "${capacity}" -ge 60 ]
+		then
+			local battery_icon="${ICON_BATTERY_75}"
+		elif [ "${capacity}" -ge 30 ]
+		then
+			local battery_icon="${ICON_BATTERY_50}"
+		elif [ "${capacity}" -ge 10 ]
+		then
+			local battery_icon="${ICON_BATTERY_25}"
+		else
+			local battery_icon="${ICON_BATTERY_0}"
+		fi
+		;;
 	esac
 
 	output "$(icon "${battery_icon}") ${capacity}%"

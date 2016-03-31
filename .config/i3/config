@@ -18,13 +18,9 @@ set $misc   6: misc
 
 # Workspace assignments for applications
 assign [class="Firefox"]     → $www
-assign [class="chromium"]    → $www
-assign [class="Geary"]       → $www
-assign [class="Subl3"]       → $code
+assign [class="Chromium"]    → $www
 assign [class="Emacs"]       → $code
-assign [class="xv/mplayer"]  → $media
-assign [class="Totem"]       → $media
-assign [class="Lollypop"]    → $media
+assign [class="Parole"]      → $media
 assign [class="Gimp"]        → $media
 assign [class="Skype"]       → $chat
 assign [class="Slack"]       → $chat

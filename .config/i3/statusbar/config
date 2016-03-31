@@ -43,20 +43,23 @@ ICON_MUSIC_PLAY="e816"
 
 # Applet-specific configuration
 
-# Battery applet
+# Battery name, e.g. `BAT0`, `BAT1`
 BATTERY_NAME="BAT1"
 
-# Clock applet
+# Clock date format, run `man date` for more information
 CLOCK_FORMAT="%a %d, %H:%M"
 
-# CPU applet
+# Update interval for CPU applet, in seconds
 CPU_UPDATE_INTERVAL="5"
 
-# Memory applet
+# Update interval for memory applet, in seconds.
 MEMORY_UPDATE_INTERVAL="5"
 
-# Network applet
+# Backend to use for network information, choices: `connman`, `networkmanager`
 NETWORK_BACKEND="connman"
 
-# Volume applet
+# Backend to use for player information, choices: `mpd`, `mpris`
+PLAYER_BACKEND="mpd"
+
+# Script to use for controlling volume
 VOLUME_SCRIPT="~/.config/i3/bin/volume"
