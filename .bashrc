@@ -17,9 +17,3 @@ complete -cf sudo
 # Colorization for various applications
 alias ls='ls --color=auto'
 alias grep='grep --color=always'
-
-function _update_ps1() {
-	export PS1="$(python2 ~/.config/powerline/powerline-shell.py $? 2> /dev/null) "
-}
-
-export PROMPT_COMMAND="_update_ps1; $PROMPT_COMMAND"
