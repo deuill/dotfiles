@@ -1,30 +1,44 @@
 #!/bin/bash
-# MPRIS-compatible player applet for i3bar, using playerctl.
-# Requirements: dbus, playerctl, GNU awk (though other versions may also work)
+# Player applet for i3bar, using playerctl (MPRIS) or mpc (MPD).
 
 waitforsignal() {
-	local signal="type='signal', path='/org/mpris/MediaPlayer2'"
-	timeout 30s dbus-monitor --session --profile "${signal}" | grep -m 0 '^sig.*MediaPlayer2'
+	case "${PLAYER_BACKEND}" in
+	mpris)
+		local signal="type='signal', path='/org/mpris/MediaPlayer2'"
+		timeout 30s dbus-monitor --session --profile "${signal}" | grep -m 0 '^sig.*MediaPlayer2'
+		;;
+	mpd)
+		timeout 30s mpc idle
+		;;
+	esac
 }
 
 player() {
-	local status=$(playerctl status)
-
-	case ${status} in
-		Playing)
-			local status_icon="${ICON_MUSIC_PLAY}"
-			;;
-		Paused)
-			local status_icon="${ICON_MUSIC_PAUSE}"
-			;;
-		*)
-			output ""
-			waitforsignal
-			return
+	case "${PLAYER_BACKEND}" in
+	mpris)
+		local status="$(playerctl status)"
+		local artist="$(playerctl metadata artist)"
+		local track="$(playerctl metadata title)"
+		;;
+	mpd)
+		local status="$(mpc | awk 'NR==2 {print substr($1, 2, length($1) - 2)}')"
+		local artist="$(mpc -f "%artist%" | awk '{print; exit}')"
+		local track="$(mpc -f "%title%" | awk '{print; exit}')"
+		;;
 	esac
 
-	local artist=$(playerctl metadata artist)
-	local track=$(playerctl metadata title)
+	case "${status,,}" in
+	playing)
+		local status_icon="${ICON_MUSIC_PLAY}"
+		;;
+	paused)
+		local status_icon="${ICON_MUSIC_PAUSE}"
+		;;
+	*)
+		output ""
+		waitforsignal
+		return
+	esac
 
 	# Keep full title under 30 characters, adding an ellipsis if needed.
 	local title=$(echo ${artist} - ${track} | awk -v len=30 '{
