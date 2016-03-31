@@ -39,7 +39,7 @@ volume() {
 		local volume_icon="${ICON_VOLUME_0}"
 	fi
 
-	output "$(icon "${volume_icon}") ${volume}%"
+	output "$(icon "${volume_icon}") ${volume:--}%"
 	read < "${TEMP_PATH}/volume"
 }
 

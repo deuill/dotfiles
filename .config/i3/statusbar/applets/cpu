@@ -24,7 +24,8 @@ cpu() {
 		local usage=$((100 * (${total_delta} - ${idle_delta}) / ${total_delta}))
 	fi
 
-	local temp=$(cat /sys/devices/platform/coretemp.0/hwmon/hwmon0/temp2_input | cut -c-2)
+	local __hwmon="$(basename "$(ls -1 /sys/devices/platform/coretemp.0/hwmon)")"
+	local temp="$(cat /sys/devices/platform/coretemp.0/hwmon/${__hwmon}/temp2_input | cut -c-2)"
 	PREV_STATUS="${status}"
 
 	output "$(icon "${ICON_CPU}") ${usage}% $(icon "${ICON_TEMP}") ${temp}°C"

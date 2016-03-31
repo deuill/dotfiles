@@ -41,10 +41,22 @@ ICON_MUSIC_PAUSE="e814"
 ICON_MUSIC_STOP="e815"
 ICON_MUSIC_PLAY="e816"
 
-# Applet configuration
+# Applet-specific configuration
 
+# Battery applet
+BATTERY_NAME="BAT1"
+
+# Clock applet
+CLOCK_FORMAT="%a %d, %H:%M"
+
+# CPU applet
 CPU_UPDATE_INTERVAL="5"
+
+# Memory applet
 MEMORY_UPDATE_INTERVAL="5"
-CLOCK_FORMAT="%a %H:%M"
-BATTERY_NAME="BAT0"
+
+# Network applet
+NETWORK_BACKEND="connman"
+
+# Volume applet
 VOLUME_SCRIPT="~/.config/i3/bin/volume"

@@ -1,27 +1,9 @@
 #!/bin/bash
 #
 # Clock applet for i3bar.
-# 
-# Requirements:
-#   cron (or any cron-compatible implementation, such as anacron or cronie)
 
-# Remove temporary crontab entry on exit.
-cleanup() {
-	crontab -l | fgrep -i -v "${UPDATE_CMD}" | crontab -
-}
-
-# Clock applet. Generates update events every minute by dynamically adding a
-# task to the user's local crontab.
+# Clock applet.
 clock() {
 	output "$(icon "${ICON_CLOCK}") $(date +"${CLOCK_FORMAT}")"
-	read < "${TEMP_PATH}/clock"
+	sleep $((60 - $(date +"%S")))
 }
-
-# Command to use for updating the clock.
-UPDATE_CMD="touch '${TEMP_PATH}/clock'"
-
-# Create named pipe for update event.
-mkfifo "${TEMP_PATH}/clock"
-
-# Add update command to user's crontab.
-crontab -l | fgrep -i -v "${UPDATE_CMD}" | { cat; echo "* * * * * ${UPDATE_CMD}"; } | crontab -

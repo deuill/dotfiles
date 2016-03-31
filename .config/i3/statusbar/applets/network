@@ -1,24 +1,52 @@
 #!/bin/bash
-# Network applet for i3bar, using NetworkManager.
-# Requirements: dbus, networkmanager (nmcli command in particular)
+# Network applet for i3bar, using NetworkManager or Connman.
+# Requirements: dbus, networkmanager (nmcli) or connman (connmanctl, connman-gtk)
 
 onclick() {
 	case ${1} in
 	1)
-		gnome-control-center network
+		case "${NETWORK_BACKEND}" in
+		networkmanager)
+			gnome-control-center network
+			;;
+		connman)
+			connman-gtk --no-icon
+			;;
+		esac
 		;;
 	esac
 }
 
 waitforsignal() {
-	local signal="type='signal', interface='org.freedesktop.NetworkManager.AccessPoint'"
-	dbus-monitor --system --profile "${signal}" | grep -m 0 '^sig.*NetworkManager'
+	case "${NETWORK_BACKEND}" in
+	networkmanager)
+		local signal="type='signal', interface='org.freedesktop.NetworkManager.AccessPoint'"
+		dbus-monitor --system --profile "${signal}" | grep -m 0 '^sig.*NetworkManager'
+		;;
+	connman)
+		local signal="type='signal', interface='net.connman.Service'"
+		dbus-monitor --system --profile "${signal}" | grep -m 0 '^sig.*/net/connman'
+		;;
+	esac
 }
 
 network() {
 	local result=()
-	local wifi=$(nmcli -t -f ACTIVE,SSID,SIGNAL dev wifi | grep '^yes' | cut -d':' -f2-)
-	local wired=$(nmcli -t -f STATE,TYPE,CONNECTION dev | grep '^connected:ethernet' | cut -d':' -f3)
+
+	case "${NETWORK_BACKEND}" in
+	networkmanager)
+		local wired=$(nmcli -t -f STATE,TYPE,CONNECTION dev | grep '^connected:ethernet' | cut -d':' -f3)
+		local wifi=$(nmcli -t -f ACTIVE,SSID,SIGNAL dev wifi | grep '^yes' | cut -d':' -f2-)
+		;;
+	connman)
+		local __active="$(connmanctl services $(connmanctl services | awk '/^\*AO/ {print $3}'))"
+		local __ssid="$(awk -F' = ' '/Name =/ {print $2}' <(echo "${__active}"))"
+		local __signal="$(awk -F' = ' '/Strength =/ {print $2}' <(echo "${__active}"))"
+
+		local wired=""
+		local wifi="${__ssid}:${__signal}"
+		;;
+	esac
 
 	# Wired/Ethernet connection.
 	if [ "x${wired}" != "x" ]

@@ -1,6 +1,9 @@
 #!/bin/sh
 # Startup applications for i3.
 
+# Initialize XFCE session manager.
+xfce4-session &
+
 # Load Xresources file into X.
 xrdb ~/.Xresources
 

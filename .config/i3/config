@@ -30,6 +30,9 @@ assign [class="Skype"]       → $chat
 assign [class="Slack"]       → $chat
 assign [class="HipChat"]     → $chat
 
+# Rules for specific window classes
+for_window [class="Connman-gtk"] floating enable
+
 # -----------
 # KEYBINDINGS
 # -----------
@@ -138,7 +141,7 @@ bindsym $mod+Shift+q  mode $session
 # ----------
 
 # Default font.
-font pango:Inconsolata 10
+font pango:Inconsolata 11
 
 # Border style for new windows.
 new_window normal
@@ -212,14 +215,12 @@ mode $session {
 }
 
 bar {
-    output VGA1
-    output DP2
-    output LVDS1
+    output eDP1
 
     mode dock
     position top
 
-    font pango:Inconsolata, i3cons 10
+    font pango:Inconsolata, i3cons 11
     separator_symbol " • "
 
     workspace_buttons yes
