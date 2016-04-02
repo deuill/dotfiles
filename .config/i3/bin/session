@@ -9,10 +9,10 @@ session_lock() {
 	# Unsuspend notifications on exit.
 	trap 'killall -SIGUSR2 dunst' exit
 
-	# Find if `light-locker` is running and lock, otherwise use `i3lock`.
-	if [ $(pgrep 'light-locker') ]
+	# Find if `xflock4` exists and use that, otherwise use `i3lock`.
+	if [ "x$(which xflock4)" != "x" ]
 	then
-		light-locker-command -l
+		xflock4
 	else
 		# Create blurred-out screenshot of current screen.
 		scrot -z -e 'convert -resize 20% -fill "#222" -colorize 50% -blur 0x1 -resize 500% $f ~/.cache/i3/_i3lock.png' ~/.cache/i3/__i3lock.png

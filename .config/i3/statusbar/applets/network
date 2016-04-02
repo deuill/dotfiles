@@ -5,14 +5,7 @@
 onclick() {
 	case ${1} in
 	1)
-		case "${NETWORK_BACKEND}" in
-		networkmanager)
-			gnome-control-center network
-			;;
-		connman)
-			connman-gtk --no-icon
-			;;
-		esac
+		${NETWORK_CMD}
 		;;
 	esac
 }
@@ -39,12 +32,16 @@ network() {
 		local wifi=$(nmcli -t -f ACTIVE,SSID,SIGNAL dev wifi | grep '^yes' | cut -d':' -f2-)
 		;;
 	connman)
-		local __active="$(connmanctl services $(connmanctl services | awk '/^\*AO/ {print $3}'))"
-		local __ssid="$(awk -F' = ' '/Name =/ {print $2}' <(echo "${__active}"))"
-		local __signal="$(awk -F' = ' '/Strength =/ {print $2}' <(echo "${__active}"))"
+		local wired="$(connmanctl services | awk '/^\*A?[O|R].+ethernet_/ {print $3}')"
+		local __wifi_active="$(connmanctl services | awk '/^\*A?[O|R].+wifi_/ {print $3}')"
 
-		local wired=""
-		local wifi="${__ssid}:${__signal}"
+		if [ "x${__wifi_active}" != "x" ]
+		then
+			local __ssid="$(awk -F' = ' '/Name =/ {print $2}' <(echo "$(connmanctl services ${__wifi_active})"))"
+			local __signal="$(awk -F' = ' '/Strength =/ {print $2}' <(echo "$(connmanctl services ${__wifi_active})"))"
+
+			local wifi="${__ssid}:${__signal}"
+		fi
 		;;
 	esac
 

@@ -36,10 +36,10 @@ ICON_VOLUME_25="e810"
 ICON_VOLUME_50="e811"
 ICON_VOLUME_100="e812"
 
-ICON_MUSIC_IDLE="e813"
-ICON_MUSIC_PAUSE="e814"
+ICON_MUSIC_IDLE="e816"
+ICON_MUSIC_PAUSE="e813"
 ICON_MUSIC_STOP="e815"
-ICON_MUSIC_PLAY="e816"
+ICON_MUSIC_PLAY="e814"
 
 # Applet-specific configuration
 
@@ -57,9 +57,11 @@ MEMORY_UPDATE_INTERVAL="5"
 
 # Backend to use for network information, choices: `connman`, `networkmanager`
 NETWORK_BACKEND="connman"
+NETWORK_CMD="connman-gtk --no-icon"
 
 # Backend to use for player information, choices: `mpd`, `mpris`
 PLAYER_BACKEND="mpd"
+PLAYER_CMD="eval termite -t 'Music Player' -e ncmpcpp"
 
 # Script to use for controlling volume
 VOLUME_SCRIPT="~/.config/i3/bin/volume"

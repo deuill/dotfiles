@@ -19,6 +19,7 @@ set $misc   6: misc
 # Workspace assignments for applications
 assign [class="Firefox"]     → $www
 assign [class="Chromium"]    → $www
+assign [class="Geary"]       → $www
 assign [class="Emacs"]       → $code
 assign [class="Parole"]      → $media
 assign [class="Gimp"]        → $media
@@ -123,10 +124,10 @@ bindsym XF86AudioLowerVolume  exec --no-startup-id "~/.config/i3/bin/volume down
 bindsym XF86AudioMute         exec --no-startup-id "~/.config/i3/bin/volume mute && touch /tmp/i3statusbar.*/volume"
 
 # Media keys
-bindsym XF86AudioStop  exec --no-startup-id "playerctl stop"
-bindsym XF86AudioPlay  exec --no-startup-id "playerctl play-pause"
-bindsym XF86AudioNext  exec --no-startup-id "playerctl next"
-bindsym XF86AudioPrev  exec --no-startup-id "playerctl prev"
+bindsym $mod+Ctrl+Up     exec --no-startup-id "mpc stop"
+bindsym $mod+Ctrl+Down   exec --no-startup-id "mpc toggle"
+bindsym $mod+Ctrl+Left   exec --no-startup-id "mpc next"
+bindsym $mod+Ctrl+Right  exec --no-startup-id "mpc prev"
 
 # Modes
 bindsym $mod+r        mode "resize"

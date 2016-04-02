@@ -1,6 +1,14 @@
 #!/bin/bash
 # Player applet for i3bar, using playerctl (MPRIS) or mpc (MPD).
 
+onclick() {
+	case ${1} in
+	1)
+		${PLAYER_CMD}
+		;;
+	esac
+}
+
 waitforsignal() {
 	case "${PLAYER_BACKEND}" in
 	mpris)
@@ -40,11 +48,10 @@ player() {
 		return
 	esac
 
-	# Keep full title under 30 characters, adding an ellipsis if needed.
-	local title=$(echo ${artist} - ${track} | awk -v len=30 '{
-		if (length($0) > len) print substr($0, 1, len) "…"; else print;
-	}')
+	# Keep full title under 40 characters, adding an ellipsis if needed.
+	artist="$(echo "${artist}" | awk '{if(length($0)>20) print substr($0,1,20) "…"; else print}')"
+	track="$(echo "${track}" | awk '{if(length($0)>20) print substr($0,1,20) "…"; else print}')"
 
-	output "$(icon "${status_icon}") ${title}"
+	output "$(icon "${status_icon}") ${artist} - ${track}"
 	waitforsignal
 }
