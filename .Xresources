@@ -48,8 +48,8 @@ rofi.terminal:        i3-sensible-terminal
 rofi.lines:           10
 rofi.columns:         1
 rofi.eh:              2
-rofi.width:           50
-rofi.padding:         0
+rofi.width:           100
+rofi.padding:         480
 rofi.location:        0
 rofi.line-margin:     0
 rofi.fullscreen:      false
