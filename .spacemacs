@@ -23,15 +23,16 @@ values."
    '(
       emacs-lisp
       git
-      (dash :variables dash-helm-dash-docset-path "~/.cache/docsets")
-      (auto-completion :variables auto-completion-enable-help-tooltip t)
+      dash
+      auto-completion
       gtags
       markdown
       go
       php
-      (c-c++ :variables c-c++-enable-clang-support t)
+      c-c++
       html
       javascript
+      yaml
       spell-checking
       syntax-checking
       deft
@@ -96,22 +97,28 @@ values."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(monokai
-						 spacemacs-dark
-                         spacemacs-light
-                         solarized-light
-                         solarized-dark
-                         leuven
-                         zenburn)
+   dotspacemacs-themes
+   '(
+	  monokai
+	  spacemacs-dark
+	  spacemacs-light
+	  solarized-light
+	  solarized-dark
+	  leuven
+	  zenburn
+   )
    ;; If non nil the cursor color matches the state color in GUI Emacs.
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font. `powerline-scale' allows to quickly tweak the mode-line
    ;; size to make separators look not too crappy.
-   dotspacemacs-default-font '("Inconsolata"
-                               :size 16
-                               :weight normal
-                               :width normal
-                               :powerline-scale 1.4)
+   dotspacemacs-default-font
+   '(
+	  "Inconsolata"
+	  :size 16
+	  :weight normal
+	  :width normal
+	  :powerline-scale 1.4
+   )
    ;; The leader key
    dotspacemacs-leader-key "SPC"
    ;; The leader key accessible in `emacs state' and `insert state'
@@ -249,6 +256,9 @@ values."
     ;; Mode-line separator.
     powerline-default-separator 'slant
 
+    ;; Autocompleted docstrings appear in tooltips.
+    auto-completion-enable-help-tooltip t
+
     ;; Use simple NeoTree theme.
     neo-theme 'nerd
 
@@ -257,14 +267,26 @@ values."
     deft-extensions '("md" "txt")
     deft-directory "~/.notes"
 
+	;; Use `eww' for browsing Dash docsets.
+    helm-dash-browser-func 'eww
+
+    ;; Use common cache path for docsets.
+    dash-helm-dash-docset-path "~/.cache/docsets"
+
+    ;; Enable clang support for C/C++ layers.
+    c-c++-enable-clang-support t
+
     ;; Set color for column marker.
     fci-rule-color "#484848"
   )
 
-  ;; Generic sane defaults for most major modes.
-  (defun set-sane-defaults ()
+  ;; Generic sane defaults for programming language modes.
+  (defun set-prog-defaults ()
 	;; Enable line number display.
 	(linum-mode 1)
+
+    ;; Enable multiple cursor mode.
+    (evil-mc-mode 1)
 
 	;; Enable column marker.
 	(fci-mode 1)
@@ -273,8 +295,7 @@ values."
 	(dtrt-indent-mode 1)
   )
 
-  ;; Apply sane defaults for programming language modes.
-  (add-hook 'prog-mode-hook 'set-sane-defaults)
+  (add-hook 'prog-mode-hook 'set-prog-defaults)
 
   ;; C/C++ layer-specific configuration.
   ;(defun clang-format-on-save ()
