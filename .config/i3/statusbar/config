@@ -57,11 +57,12 @@ MEMORY_UPDATE_INTERVAL="5"
 
 # Backend to use for network information, choices: `connman`, `networkmanager`
 NETWORK_BACKEND="connman"
-NETWORK_CMD="connman-gtk --no-icon"
+NETWORK_CLICK_CMD="connman-gtk --no-icon"
 
 # Backend to use for player information, choices: `mpd`, `mpris`
 PLAYER_BACKEND="mpd"
-PLAYER_CMD="eval termite -t 'Music Player' -e ncmpcpp"
+PLAYER_CLICK_CMD="eval termite -t 'Music Player' -e ncmpcpp"
 
 # Script to use for controlling volume
 VOLUME_SCRIPT="~/.config/i3/bin/volume"
+VOLUME_CLICK_CMD="pavucontrol"

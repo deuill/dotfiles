@@ -5,7 +5,7 @@
 onclick() {
 	case ${1} in
 	1)
-		gnome-control-center sound
+		${VOLUME_CLICK_CMD}
 		;;
 	4)
 		(exec "${VOLUME_SCRIPT}" up)
@@ -39,7 +39,7 @@ volume() {
 		local volume_icon="${ICON_VOLUME_0}"
 	fi
 
-	output "$(icon "${volume_icon}") ${volume:--}%"
+	output "$(icon "${volume_icon}") ${volume:---}%"
 	read < "${TEMP_PATH}/volume"
 }
 

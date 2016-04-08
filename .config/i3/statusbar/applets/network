@@ -5,7 +5,7 @@
 onclick() {
 	case ${1} in
 	1)
-		${NETWORK_CMD}
+		${NETWORK_CLICK_CMD}
 		;;
 	esac
 }

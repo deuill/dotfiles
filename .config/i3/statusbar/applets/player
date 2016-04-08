@@ -4,7 +4,7 @@
 onclick() {
 	case ${1} in
 	1)
-		${PLAYER_CMD}
+		${PLAYER_CLICK_CMD}
 		;;
 	esac
 }

@@ -29,6 +29,7 @@ assign [class="HipChat"]     → $chat
 
 # Rules for specific window classes
 for_window [class="Connman-gtk"] floating enable
+for_window [class="Pavucontrol"] floating enable
 
 # -----------
 # KEYBINDINGS
