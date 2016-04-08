@@ -1,5 +1,9 @@
 [options]
-font = Inconsolata 11
+font = Inconsolata 12
+urgent_on_bell = true
+clickable_url = true
+scrollback_lines = 10000
+cursor_blink = off
 
 [colors]
 
