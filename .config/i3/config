@@ -17,15 +17,15 @@ set $media  5: media
 set $misc   6: misc
 
 # Workspace assignments for applications
-assign [class="Firefox"]     → $www
-assign [class="Chromium"]    → $www
-assign [class="Geary"]       → $www
-assign [class="Emacs"]       → $code
-assign [class="Parole"]      → $media
-assign [class="Gimp"]        → $media
-assign [class="Skype"]       → $chat
-assign [class="Slack"]       → $chat
-assign [class="HipChat"]     → $chat
+assign [class="Firefox"]  → $www
+assign [class="Chromium"] → $www
+assign [class="Geary"]    → $www
+assign [class="Emacs"]    → $code
+assign [class="Parole"]   → $media
+assign [class="Gimp"]     → $media
+assign [class="Skype"]    → $chat
+assign [class="Slack"]    → $chat
+assign [class="HipChat"]  → $chat
 
 # Rules for specific window classes
 for_window [class="Connman-gtk"] floating enable
