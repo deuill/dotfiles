@@ -20,31 +20,28 @@ values."
    ;; List of configuration layers to load. If it is the symbol `all' instead
    ;; of a list then all discovered layers will be installed.
    dotspacemacs-configuration-layers
-   '(
-      emacs-lisp
-      git
-      dash
-      auto-completion
-      gtags
-      markdown
-      go
-      php
-      c-c++
-      html
-      javascript
-      yaml
-      spell-checking
-      syntax-checking
-      deft
-   )
+   '(emacs-lisp
+     git
+     dash
+     auto-completion
+     gtags
+     markdown
+     go
+     php
+     c-c++
+     html
+     javascript
+     yaml
+     spell-checking
+     syntax-checking
+     deft)
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages then consider to create a layer, you can also put the
    ;; configuration in `dotspacemacs/user-config'.
    dotspacemacs-additional-packages
-   '(
-      dtrt-indent
-   )
+   '(dtrt-indent
+     writeroom-mode)
    ;; A list of packages and/or extensions that will not be install and loaded.
    dotspacemacs-excluded-packages '()
    ;; If non-nil spacemacs will delete any orphan packages, i.e. packages that
@@ -98,27 +95,23 @@ values."
    ;; Press <SPC> T n to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
    dotspacemacs-themes
-   '(
-	  monokai
-	  spacemacs-dark
-	  spacemacs-light
-	  solarized-light
-	  solarized-dark
-	  leuven
-	  zenburn
-   )
+   '(monokai
+     spacemacs-dark
+     spacemacs-light
+     solarized-light
+     solarized-dark
+     leuven
+     zenburn)
    ;; If non nil the cursor color matches the state color in GUI Emacs.
    dotspacemacs-colorize-cursor-according-to-state t
    ;; Default font. `powerline-scale' allows to quickly tweak the mode-line
    ;; size to make separators look not too crappy.
    dotspacemacs-default-font
-   '(
-	  "Inconsolata"
-	  :size 16
-	  :weight normal
-	  :width normal
-	  :powerline-scale 1.4
-   )
+   '("Inconsolata"
+     :size 16
+     :weight normal
+     :width normal
+     :powerline-scale 1.4)
    ;; The leader key
    dotspacemacs-leader-key "SPC"
    ;; The leader key accessible in `emacs state' and `insert state'
@@ -253,6 +246,9 @@ values."
     indent-tabs-mode t
     tab-width 4
 
+    ;; Have Page Up/Down move to start/end of buffer when possible.
+    scroll-error-top-bottom t
+
     ;; Mode-line separator.
     powerline-default-separator 'slant
 
@@ -267,7 +263,7 @@ values."
     deft-extensions '("md" "txt")
     deft-directory "~/.notes"
 
-	;; Use `eww' for browsing Dash docsets.
+    ;; Use `eww' for browsing Dash docsets.
     helm-dash-browser-func 'eww
 
     ;; Use common cache path for docsets.
@@ -278,30 +274,37 @@ values."
 
     ;; Set color for column marker.
     fci-rule-color "#484848"
-  )
+
+    ;; Set defaults for writeroom mode.
+    writeroom-restore-window-config t
+    writeroom-fullscreen-effect 'maximized)
+
+  ;; Hide empty line fringes by making color same as background.
+  (set-face-attribute
+   'fringe nil :foreground "#2d2d2d")
 
   ;; Generic sane defaults for programming language modes.
-  (defun set-prog-defaults ()
-	;; Enable line number display.
-	(linum-mode 1)
+  (defun set-prog-mode-defaults ()
+    ;; Enable line number display.
+    (linum-mode 1)
 
     ;; Enable multiple cursor mode.
     (evil-mc-mode 1)
 
-	;; Enable column marker.
-	(fci-mode 1)
+    ;; Enable column marker.
+    (fci-mode 1)
 
-	;; Attempt to automatically determine indentation settings from buffer.
-	(dtrt-indent-mode 1)
-  )
+    ;; Attempt to automatically determine indentation settings from buffer.
+    (dtrt-indent-mode 1))
 
-  (add-hook 'prog-mode-hook 'set-prog-defaults)
+  (add-hook 'prog-mode-hook 'set-prog-mode-defaults)
 
-  ;; C/C++ layer-specific configuration.
-  ;(defun clang-format-on-save ()
-  ;  (add-hook 'before-save-hook 'clang-format-buffer))
+  ;; Documentation file-specific defaults.
+  (defun set-doc-mode-defaults ()
+    ;; Enable distraction-free editing mode.
+    (writeroom-mode 1))
 
-  ;(add-hook 'c-mode-hook 'clang-format-on-save)
+  (add-hook 'markdown-mode-hook 'set-doc-mode-defaults)
 )
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
