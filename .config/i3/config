@@ -14,22 +14,26 @@ set $code   2: code
 set $cmd    3: cmd
 set $chat   4: chat
 set $media  5: media
-set $misc   6: misc
+set $games  6: games
+set $misc   7: misc
 
 # Workspace assignments for applications
-assign [class="Firefox"]  → $www
-assign [class="Chromium"] → $www
-assign [class="Geary"]    → $www
-assign [class="Emacs"]    → $code
-assign [class="Parole"]   → $media
-assign [class="Gimp"]     → $media
-assign [class="Skype"]    → $chat
-assign [class="Slack"]    → $chat
-assign [class="HipChat"]  → $chat
+assign [class="Firefox"]   → $www
+assign [class="Chromium"]  → $www
+assign [class="Geary"]     → $www
+assign [class="Emacs"]     → $code
+assign [class="Gnome-mpv"] → $media
+assign [class="Gimp"]      → $media
+assign [class="Skype"]     → $chat
+assign [class="Slack"]     → $chat
+assign [class="HipChat"]   → $chat
+assign [class="Hexchat"]   → $chat
+assign [class="Steam"]     → $games
 
 # Rules for specific window classes
 for_window [class="Connman-gtk"] floating enable
 for_window [class="Pavucontrol"] floating enable
+for_window [class="Blueberry.py"] floating enable
 
 # -----------
 # KEYBINDINGS
@@ -88,17 +92,17 @@ bindsym $mod+u  [urgent=latest] focus
 # Resize floating windows with modifider + mouse.
 floating_modifier $mod
 
+# Toggle between last used workspaces
+bindsym $mod+Tab  workspace back_and_forth
+
 # Switch to workspace
 bindsym $mod+1  workspace $www
 bindsym $mod+2  workspace $code
 bindsym $mod+3  workspace $cmd
 bindsym $mod+4  workspace $chat
 bindsym $mod+5  workspace $media
-bindsym $mod+6  workspace $misc
-bindsym $mod+7  workspace 7
-bindsym $mod+8  workspace 8
-bindsym $mod+9  workspace 9
-bindsym $mod+0  workspace 10
+bindsym $mod+6  workspace $games
+bindsym $mod+7  workspace $misc
 
 # Move focused window to workspace
 bindsym $mod+Shift+1  move container to workspace $www
@@ -106,11 +110,8 @@ bindsym $mod+Shift+2  move container to workspace $code
 bindsym $mod+Shift+3  move container to workspace $cmd
 bindsym $mod+Shift+4  move container to workspace $chat
 bindsym $mod+Shift+5  move container to workspace $media
-bindsym $mod+Shift+6  move container to workspace $misc
-bindsym $mod+Shift+7  move container to workspace 7
-bindsym $mod+Shift+8  move container to workspace 8
-bindsym $mod+Shift+9  move container to workspace 9
-bindsym $mod+Shift+0  move container to workspace 10
+bindsym $mod+Shift+6  move container to workspace $games
+bindsym $mod+Shift+7  move container to workspace $misc
 
 # Window manager
 bindsym $mod+p             exec "rofi -show window"

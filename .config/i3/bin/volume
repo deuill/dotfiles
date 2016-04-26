@@ -19,7 +19,7 @@ setvolume() {
 }
 
 volumeup() {
-	local amount=${1:-10}
+	local amount=${1:-5}
 	local current=$(getvolume | cut -d: -f1)
 
 	volumemute off
@@ -33,7 +33,7 @@ volumeup() {
 }
 
 volumedown() {
-	local amount=${1:-10}
+	local amount=${1:-5}
 
 	if [ $(($(getvolume | cut -d: -f1) - ${amount})) -le 0 ]
 	then

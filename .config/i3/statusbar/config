@@ -47,7 +47,7 @@ ICON_MUSIC_PLAY="e814"
 BATTERY_NAME="BAT1"
 
 # Clock date format, run `man date` for more information
-CLOCK_FORMAT="%a %d, %H:%M"
+CLOCK_FORMAT="%a %d %b, %H:%M"
 
 # Update interval for CPU applet, in seconds
 CPU_UPDATE_INTERVAL="5"
