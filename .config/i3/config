@@ -24,10 +24,10 @@ assign [class="Geary"]     → $www
 assign [class="Emacs"]     → $code
 assign [class="Gnome-mpv"] → $media
 assign [class="Gimp"]      → $media
-assign [class="Skype"]     → $chat
 assign [class="Slack"]     → $chat
 assign [class="HipChat"]   → $chat
 assign [class="Hexchat"]   → $chat
+assign [class="Pidgin"]    → $chat
 assign [class="Steam"]     → $games
 
 # Rules for specific window classes
@@ -215,9 +215,11 @@ mode $session {
 
 bar {
     output eDP1
+    output DP1
 
     mode dock
     position top
+    tray_output eDP1
 
     font pango:Inconsolata, i3cons 11
     separator_symbol " • "
@@ -226,7 +228,7 @@ bar {
     binding_mode_indicator yes
     strip_workspace_numbers yes
 
-    status_command "~/.config/i3/bin/statusbar player cpu memory network battery volume clock"
+    status_command "~/.config/i3/bin/statusbar player cpu memory network battery volume keyboard clock"
 
     colors {
         background  $background

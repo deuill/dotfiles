@@ -66,3 +66,6 @@ PLAYER_CLICK_CMD="eval termite -t 'Music Player' -e ncmpcpp"
 # Script to use for controlling volume
 VOLUME_SCRIPT="~/.config/i3/bin/volume"
 VOLUME_CLICK_CMD="pavucontrol"
+
+# Format to use for keyboard layout label, choices: long, short
+KEYBOARD_LAYOUT_TYPE="short"

@@ -45,7 +45,7 @@ mkfifo "${TEMP_PATH}/output"
 while true; do sleep infinity; done >> "${TEMP_PATH}/output" &
 
 # Applet index, used for ordering output.
-index=0
+applet_index=0
 
 for applet in "${@}"
 do
@@ -61,14 +61,14 @@ do
 		# Applet-local update function. Sends the text argument passed to the
 		# running bar instance for rendering.
 		output() {
-			read -d '' json <<-_EOF_
+			read -d '' applet_json <<-_EOF_
 				{
 					"name": "${applet}",
 					"full_text": "${1}"
 				},
 			_EOF_
 
-			echo ${index}:${json} >> "${TEMP_PATH}/output"
+			echo ${applet_index}:${applet_json} >> "${TEMP_PATH}/output"
 		}
 
 		# Execute optional cleanup function on exit.
@@ -79,7 +79,7 @@ do
 
 		# Only attempt to handle click events if onclick handler is defined for
 		# this applet.
-		if [ $(type -t onclick) = 'function' ]
+		if [ x$(type -t onclick) = 'xfunction' ]
 		then
 			# Create events pipe, used for sending click events through to applets.
 			mkfifo "${EVENT_PATH}/${applet}"
@@ -89,8 +89,8 @@ do
 			(
 				while read line < "${EVENT_PATH}/${applet}"
 				do
-					button=$(echo ${line} | jq -r '.button')
-					onclick "${button}" "${line}" &
+					event_button=$(echo ${line} | jq -r '.button')
+					onclick "${event_button}" "${line}" &
 				done
 			) &
 		fi
@@ -104,7 +104,7 @@ do
 		done
 	) > /dev/null 2>&1 &
 
-	index=$((${index} + 1))
+	applet_index=$((${applet_index} + 1))
 done
 
 # Update i3bar with applet output asynchronously.
