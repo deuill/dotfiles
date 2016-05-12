@@ -1,9 +1,6 @@
-;
-;
-; - * -mode:emacs - lisp - * -
-;
-; This file is loaded by Spacemacs at startup.
-; It must be stored in your home directory.
+;; -*- mode: emacs-lisp -*-
+;; This file is loaded by Spacemacs at startup.
+;; It must be stored in your home directory.
 
 (defun dotspacemacs/layers ()
   "Configuration Layers declaration.
@@ -240,6 +237,10 @@ values."
 )
 
 (defun dotspacemacs/user-config ()
+  ;; Custom keybindings.
+  (global-set-key (kbd "M-<up>") 'spacemacs/previous-useful-buffer)
+  (global-set-key (kbd "M-<down>") 'spacemacs/next-useful-buffer)
+
   ;; Generic global default settings.
   (setq-default
     ;; Set indentation to tabs.
@@ -263,11 +264,18 @@ values."
     deft-extensions '("md" "txt")
     deft-directory "~/.notes"
 
+    ;; Use global SSH configuration for TRAMP mode.
+    tramp-default-method "ssh"
+    tramp-use-ssh-controlmaster-options nil
+
     ;; Use `eww' for browsing Dash docsets.
     helm-dash-browser-func 'eww
 
     ;; Use common cache path for docsets.
     dash-helm-dash-docset-path "~/.cache/docsets"
+
+    ;; Make indentation detection with dtrt more conservative.
+    dtrt-indent-min-quality 90.0
 
     ;; Enable clang support for C/C++ layers.
     c-c++-enable-clang-support t
@@ -298,6 +306,7 @@ values."
     (dtrt-indent-mode 1))
 
   (add-hook 'prog-mode-hook 'set-prog-mode-defaults)
+  (add-hook 'css-mode-hook 'set-prog-mode-defaults)
 
   ;; Documentation file-specific defaults.
   (defun set-doc-mode-defaults ()
@@ -305,6 +314,9 @@ values."
     (writeroom-mode 1))
 
   (add-hook 'markdown-mode-hook 'set-doc-mode-defaults)
+
+  ;; Apply Spaceline configuration.
+  (spaceline-compile)
 )
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
