@@ -5,46 +5,57 @@
 # Listens for dbus messages for the currently selected battery and returns when
 # a matching message is sent.
 waitforsignal() {
-	local signal="type='signal', path='/org/freedesktop/UPower/devices/battery_${BATTERY_NAME}'"
+	local signal="type='signal', path='/org/freedesktop/UPower/devices/battery_${1}'"
 	dbus-monitor --system --profile "${signal}" | grep -m 0 '^sig.*UPower'
 }
 
 # Battery applet.
 battery() {
 	local sysdir="/sys/class/power_supply"
+	local current_battery=""
 
-	local status_file="${sysdir}/${BATTERY_NAME}/status"
-	local capacity_file="${sysdir}/${BATTERY_NAME}/capacity"
+	for current_battery in ${BATTERY_NAMES[@]}
+	do
+		local status_file="${sysdir}/${current_battery}/status"
+		local capacity_file="${sysdir}/${current_battery}/capacity"
 
-	local status=$(cat ${status_file})
-	local capacity=$(cat ${capacity_file})
+		local status=$(cat ${status_file})
+		local capacity=$(cat ${capacity_file})
 
-	case "${status}" in
-	Charging)
-		local battery_icon="${ICON_BATTERY_CHARGE}"
-		;;
-	Full)
-		local battery_icon="${ICON_BATTERY_100}"
-		;;
-	*)
-		if [ "${capacity}" -ge 90 ]
-		then
-			local battery_icon="${ICON_BATTERY_100}"
-		elif [ "${capacity}" -ge 60 ]
-		then
-			local battery_icon="${ICON_BATTERY_75}"
-		elif [ "${capacity}" -ge 30 ]
-		then
-			local battery_icon="${ICON_BATTERY_50}"
-		elif [ "${capacity}" -ge 10 ]
-		then
-			local battery_icon="${ICON_BATTERY_25}"
-		else
-			local battery_icon="${ICON_BATTERY_0}"
-		fi
-		;;
-	esac
+		case "${status}" in
+			Charging)
+				local battery_icon="${ICON_BATTERY_CHARGE}"
+				;;
+			Full)
+				local battery_icon="${ICON_BATTERY_100}"
+				;;
+			Discharging)
+				if [ "${capacity}" -ge 90 ]
+				then
+					local battery_icon="${ICON_BATTERY_100}"
+				elif [ "${capacity}" -ge 60 ]
+				then
+					local battery_icon="${ICON_BATTERY_75}"
+				elif [ "${capacity}" -ge 30 ]
+				then
+					local battery_icon="${ICON_BATTERY_50}"
+				elif [ "${capacity}" -ge 10 ]
+				then
+					local battery_icon="${ICON_BATTERY_25}"
+				else
+					local battery_icon="${ICON_BATTERY_0}"
+				fi
+				;;
+			*)
+				continue
+				;;
+		esac
 
-	output "$(icon "${battery_icon}") ${capacity}%"
-	waitforsignal
+		output "$(icon "${battery_icon}") ${capacity}%"
+		waitforsignal ${current_battery}
+
+		return
+	done
+
+	waitforsignal ${current_battery}
 }

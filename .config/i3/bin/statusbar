@@ -72,7 +72,10 @@ do
 		}
 
 		# Execute optional cleanup function on exit.
-		trap 'cleanup' EXIT
+		if [ x$(type -t cleanup) = 'xfunction' ]
+		then
+			trap 'cleanup' EXIT
+		fi
 
 		# Load applet file.
 		source "${APPLET_PATH}/${applet}"

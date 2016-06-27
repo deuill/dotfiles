@@ -6,9 +6,9 @@ DBUS_SEND="dbus-send --dest=ru.gentoo.KbddService /ru/gentoo/KbddService"
 
 onclick() {
 	case ${1} in
-		1)
-			$(${DBUS_SEND} ru.gentoo.kbdd.next_layout)
-			;;
+	1)
+		$(${DBUS_SEND} ru.gentoo.kbdd.next_layout)
+		;;
 	esac
 }
 
