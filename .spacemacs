@@ -18,10 +18,6 @@ values."
    ;; of a list then all discovered layers will be installed.
    dotspacemacs-configuration-layers
    '(emacs-lisp
-     git
-     dash
-     auto-completion
-     gtags
      markdown
      go
      php
@@ -29,8 +25,12 @@ values."
      html
      javascript
      yaml
+     auto-completion
      spell-checking
      syntax-checking
+     git
+     gtags
+     dash
      deft)
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
@@ -237,10 +237,6 @@ values."
 )
 
 (defun dotspacemacs/user-config ()
-  ;; Custom keybindings.
-  (global-set-key (kbd "M-<up>") 'spacemacs/previous-useful-buffer)
-  (global-set-key (kbd "M-<down>") 'spacemacs/next-useful-buffer)
-
   ;; Generic global default settings.
   (setq-default
     ;; Set indentation to tabs.
@@ -264,13 +260,6 @@ values."
     deft-extensions '("md" "txt")
     deft-directory "~/.notes"
 
-    ;; Use global SSH configuration for TRAMP mode.
-    tramp-default-method "ssh"
-    tramp-use-ssh-controlmaster-options nil
-
-    ;; Use `eww' for browsing Dash docsets.
-    helm-dash-browser-func 'eww
-
     ;; Use common cache path for docsets.
     dash-helm-dash-docset-path "~/.cache/docsets"
 
@@ -283,13 +272,12 @@ values."
     ;; Set color for column marker.
     fci-rule-color "#484848"
 
-    ;; Set defaults for writeroom mode.
+     ;; Set defaults for writeroom mode.
     writeroom-restore-window-config t
-    writeroom-fullscreen-effect 'maximized)
+    writeroom-fullscreen-effect 'maximized
 
-  ;; Hide empty line fringes by making color same as background.
-  (set-face-attribute
-   'fringe nil :foreground "#2d2d2d")
+    ;; Set defaults for Org mode.
+    org-enable-github-support t)
 
   ;; Generic sane defaults for programming language modes.
   (defun set-prog-mode-defaults ()
@@ -310,10 +298,20 @@ values."
 
   ;; Documentation file-specific defaults.
   (defun set-doc-mode-defaults ()
+    ;; Enable soft word-wrapping.
+    (visual-line-mode 1)
+
     ;; Enable distraction-free editing mode.
     (writeroom-mode 1))
 
   (add-hook 'markdown-mode-hook 'set-doc-mode-defaults)
+
+  ;; Custom keybindings.
+  (global-set-key (kbd "M-<up>") 'spacemacs/previous-useful-buffer)
+  (global-set-key (kbd "M-<down>") 'spacemacs/next-useful-buffer)
+
+  ;; Hide empty line fringes by making color same as background.
+  (set-face-attribute 'fringe nil :foreground "#2d2d2d")
 
   ;; Apply Spaceline configuration.
   (spaceline-compile)
