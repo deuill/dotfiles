@@ -1,5 +1,7 @@
-#!/bin/sh
+#!/bin/bash
 # Session management script for i3.
+
+LOCKERS=("xflock4" "light-locker" "i3lock")
 
 # Lock screen with i3lock.
 session_lock() {
@@ -9,21 +11,46 @@ session_lock() {
 	# Unsuspend notifications on exit.
 	trap 'killall -SIGUSR2 dunst' exit
 
-	# Find if `xflock4` exists and use that, otherwise use `i3lock`.
-	if [ "x$(which xflock4)" != "x" ]
-	then
-		xflock4
-	else
-		# Create blurred-out screenshot of current screen.
-		scrot -z -e 'convert -resize 20% -fill "#222" -colorize 50% -blur 0x1 -resize 500% $f ~/.cache/i3/_i3lock.png' ~/.cache/i3/__i3lock.png
-		convert -gravity center -composite ~/.cache/i3/_i3lock.png ~/.config/i3/assets/lock-overlay.png ~/.cache/i3/i3lock.png
+	# Iterate through list of supporter lockers and choose based on precedence.
+	for locker in ${LOCKERS[@]}
+	do
+		# Do not attempt to use non-existing locker.
+		if [ "x$(which ${locker})" == "x" ]
+		then
+			continue
+		fi
 
-		# Lock screen.
-		i3lock -u -i ~/.cache/i3/i3lock.png
+		# Lock screen using locker command.
+		case "${locker}" in
+			i3lock)
+				local tmp="$(mktemp -d)"
+				local assets="${HOME}/.config/i3/assets"
+				local effect="convert -resize 20% -fill '#222' -colorize 50% -blur 0x1 -resize 500% $$f ${tmp}/_i3lock.png"
 
-		# Remove cached file on exit.
-		trap 'rm ~/.cache/i3/*i3lock.png' EXIT
-	fi
+				# Create blurred-out screenshot of current screen.
+				scrot -z -e "${effect}" "${tmp}/__i3lock.png"
+				convert -gravity center -composite "${tmp}/_i3lock.png" "${assets}/lock-overlay.png" "${tmp}/i3lock.png"
+
+				# Lock screen.
+				i3lock -u -i "${tmp}/i3lock.png"
+
+				# Remove cached file on exit.
+				trap "rm -Rf ${tmp}" EXIT
+				;;
+			light-locker)
+				light-locker-command -l
+				;;
+			*)
+				${locker}
+				;;
+		esac
+
+		# Return early if locker command succeeded.
+		if [ $? -eq 0 ]
+		then
+			return
+		fi
+	done
 }
 
 # Suspend and lock screen.
