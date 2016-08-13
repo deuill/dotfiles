@@ -38,6 +38,7 @@ values."
    ;; configuration in `dotspacemacs/user-config'.
    dotspacemacs-additional-packages
    '(dtrt-indent
+     smart-tabs-mode
      writeroom-mode)
    ;; A list of packages and/or extensions that will not be install and loaded.
    dotspacemacs-excluded-packages '()
@@ -226,21 +227,20 @@ values."
    ;; Delete whitespace while saving buffer. Possible values are `all',
    ;; `trailing', `changed' or `nil'. Default is `changed' (cleanup whitespace
    ;; on changed lines) (default 'changed)
-   dotspacemacs-whitespace-cleanup 'changed
-   ))
+   dotspacemacs-whitespace-cleanup 'changed))
 
 (defun dotspacemacs/user-init ()
-  "Initialization function for user code.
-  It is called immediately after `dotspacemacs/init'.  You are free to put
-  almost any user code here.  The exception is org related code, which should
-  be placed in `dotspacemacs/user-config'."
-)
+  ;; Generic global pre-init settings.
+  (setq
+    ;; Set specific background color, consistent with Base16-Eighties colors.
+    monokai-bg "#2d2d2d"))
 
 (defun dotspacemacs/user-config ()
   ;; Generic global default settings.
   (setq-default
     ;; Set indentation to tabs.
     indent-tabs-mode t
+    c-basic-offset 4
     tab-width 4
 
     ;; Have Page Up/Down move to start/end of buffer when possible.
@@ -279,6 +279,14 @@ values."
     ;; Set defaults for Org mode.
     org-enable-github-support t)
 
+  ;; Custom keybindings.
+  (global-set-key (kbd "M-<up>") 'spacemacs/previous-useful-buffer)
+  (global-set-key (kbd "M-<down>") 'spacemacs/next-useful-buffer)
+
+  ;; Generic sane defaults for all modes.
+  (global-vi-tilde-fringe-mode -1)
+  (spaceline-compile)
+
   ;; Generic sane defaults for programming language modes.
   (defun set-prog-mode-defaults ()
     ;; Enable line number display.
@@ -306,15 +314,11 @@ values."
 
   (add-hook 'markdown-mode-hook 'set-doc-mode-defaults)
 
-  ;; Custom keybindings.
-  (global-set-key (kbd "M-<up>") 'spacemacs/previous-useful-buffer)
-  (global-set-key (kbd "M-<down>") 'spacemacs/next-useful-buffer)
+  ;; Lisp-specific defaults.
+  (defun set-lisp-mode-defaults ()
+    ;; Disable indentation with tabs.
+    (setq indent-tabs-mode nil))
 
-  ;; Hide empty line fringes by making color same as background.
-  (set-face-attribute 'fringe nil :foreground "#2d2d2d")
-
-  ;; Apply Spaceline configuration.
-  (spaceline-compile)
-)
+  (add-hook 'emacs-lisp-mode-hook 'set-lisp-mode-defaults))
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
