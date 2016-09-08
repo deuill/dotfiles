@@ -1,20 +1,20 @@
-# Set global variables
-set -x PATH $PATH $HOME/.go/bin
-set -x GOPATH $HOME/.go
-
-# Disable greeting text
+# Disable greeting text.
 set fish_greeting
 
+# Include local configuration.
+source $HOME/.config/fish/config.local
+
 # Custom theme.
-set theme 'shellder'
-source $HOME/.config/fish/themes/$theme.fish
+if [ -n $theme ]
+   source $HOME/.config/fish/themes/$theme.fish
+end
 
-# Custom aliases
-alias sc 'ag --pager "less -R"'
-alias emacs 'emacs -mm'
+# Custom aliases.
+alias sc    'ag --pager "less -R"'
 alias trash 'gvfs-trash'
-alias dot 'git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
+alias dot   'git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
 
-function ciff
+# Custom functions.
+function diff-color
 	diff -u $argv | colordiff | less -R
 end
