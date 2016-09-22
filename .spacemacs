@@ -298,6 +298,7 @@ you should place your code here."
   (setq-default
     ;; Set indentation to tabs.
     indent-tabs-mode t
+    standard-indent 4
     c-basic-offset 4
     tab-width 4
 
@@ -319,7 +320,8 @@ you should place your code here."
     deft-directory "~/.notes"
 
     ;; Use common cache path for docsets.
-    dash-helm-dash-docset-path "~/.cache/docsets"
+    helm-dash-docset-newpath "~/.cache/docsets"
+    helm-dash-browser-func 'eww-split
 
     ;; Make indentation detection with dtrt more conservative.
     dtrt-indent-min-quality 90.0
@@ -336,6 +338,12 @@ you should place your code here."
 
     ;; Set defaults for Org mode.
     org-enable-github-support t)
+
+  ;; Custom 'eww' browser function, for opening in a split window.
+  (defun eww-split (url)
+    (interactive)
+    (select-window (split-window-right))
+    (eww url))
 
   ;; Custom keybindings.
   (global-set-key (kbd "M-<up>") 'previous-buffer)
@@ -359,9 +367,6 @@ you should place your code here."
     ;; Attempt to automatically determine indentation settings from buffer.
     (dtrt-indent-mode 1))
 
-  (add-hook 'prog-mode-hook 'set-prog-mode-defaults)
-  (add-hook 'css-mode-hook 'set-prog-mode-defaults)
-
   ;; Documentation file-specific defaults.
   (defun set-doc-mode-defaults ()
     ;; Enable soft word-wrapping.
@@ -370,13 +375,14 @@ you should place your code here."
     ;; Enable distraction-free editing mode.
     (writeroom-mode 1))
 
-  (add-hook 'markdown-mode-hook 'set-doc-mode-defaults)
-
   ;; Lisp-specific defaults.
   (defun set-lisp-mode-defaults ()
     ;; Disable indentation with tabs.
     (setq indent-tabs-mode nil))
 
+  (add-hook 'prog-mode-hook 'set-prog-mode-defaults)
+  (add-hook 'css-mode-hook 'set-prog-mode-defaults)
+  (add-hook 'markdown-mode-hook 'set-doc-mode-defaults)
   (add-hook 'emacs-lisp-mode-hook 'set-lisp-mode-defaults))
 
 ;; Do not write anything past this comment. This is where Emacs will
