@@ -300,6 +300,7 @@ you should place your code here."
     indent-tabs-mode t
     standard-indent 4
     c-basic-offset 4
+    go-tab-width 4
     tab-width 4
 
     ;; Have Page Up/Down move to start/end of buffer when possible.
