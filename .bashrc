@@ -5,8 +5,8 @@
 # If not running interactively, don't do anything
 [[ $- != *i* ]] && return
 
-# Run fish shell instead of bash.
-[ -x /usr/bin/fish ] && exec fish
+# Set `fish` shell as default for Termite
+[[ $TERM == "xterm-termite" ]] && exec fish
 
 # Various includes and what-not.
 [[ -f ~/.bash_profile ]] && . ~/.bash_profile
