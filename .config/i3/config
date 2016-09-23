@@ -35,6 +35,9 @@ for_window [class="Connman-gtk"] floating enable
 for_window [class="Pavucontrol"] floating enable
 for_window [class="Blueberry.py"] floating enable
 
+for_window [class="Orage"] floating enable
+for_window [class="Orage" title="^Orage$"] move position 1660 22
+
 # -----------
 # KEYBINDINGS
 # -----------

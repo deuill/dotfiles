@@ -48,6 +48,7 @@ BATTERY_NAMES=("BAT1" "BAT0")
 
 # Clock date format, run `man date` for more information
 CLOCK_FORMAT="%a %d %b, %H:%M"
+CLOCK_CLICK_CMD="orage -t"
 
 # Update interval for CPU applet, in seconds
 CPU_UPDATE_INTERVAL="5"

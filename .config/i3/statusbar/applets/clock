@@ -2,7 +2,14 @@
 #
 # Clock applet for i3bar.
 
-# Clock applet.
+onclick() {
+	case ${1} in
+	1)
+		${CLOCK_CLICK_CMD}
+		;;
+	esac
+}
+
 clock() {
 	output "$(icon "${ICON_CLOCK}") $(date +"${CLOCK_FORMAT}")"
 	sleep $((60 - $(date +"%S")))
