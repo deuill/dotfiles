@@ -32,8 +32,8 @@ network() {
 		local wifi=$(nmcli -t -f ACTIVE,SSID,SIGNAL dev wifi | grep '^yes' | cut -d':' -f2-)
 		;;
 	connman)
-		local wired="$(connmanctl services | awk '/^\*A?[O|R].+ethernet_/ {print $3}')"
-		local __wifi_active="$(connmanctl services | awk '/^\*A?[O|R].+wifi_/ {print $3}')"
+		local wired="$(connmanctl services | awk '/^\*A?[O|R].+ethernet_/ {print $NF}')"
+		local __wifi_active="$(connmanctl services | awk '/^\*A?[O|R].+wifi_/ {print $NF}')"
 
 		if [ "x${__wifi_active}" != "x" ]
 		then
