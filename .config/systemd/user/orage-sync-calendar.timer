@@ -1,0 +1,10 @@
+[Unit]
+Description=Synchronize Orage Calendar
+ 
+[Timer]
+OnCalendar=*:0/30
+Persistent=true
+Unit=orage-calendar-sync.service
+ 
+[Install]
+WantedBy=orage-calendar-sync.service
