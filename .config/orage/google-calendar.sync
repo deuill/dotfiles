@@ -14,10 +14,11 @@ DATA_DIR="${HOME}/.local/share/orage/ical"
 # Where the "ab1234cd" part is the hash number of the iCal file provided by
 # Google Calendar.
 #
-source "${CONF_DIR}/sync-calendar.conf"
+source "${CONF_DIR}/google-calendar.conf"
 
 # Use temporary directory for files.
 TEMP_DIR=$(mktemp -d)
+mkdir -p "${DATA_DIR}"
 
 # Base URL for Google Calendar.
 BASE_URL="https://calendar.google.com/calendar/ical"
