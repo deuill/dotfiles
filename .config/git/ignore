@@ -1,0 +1,5 @@
+# Exclude GTAGS files by default.
+/GPATH
+/GRTAGS
+/GSYMS
+/GTAGS
