@@ -38,6 +38,7 @@ values."
      html
      javascript
      yaml
+     csv
      auto-completion
      spell-checking
      syntax-checking
@@ -334,6 +335,9 @@ you should place your code here."
 
     ;; Make indentation detection with dtrt more conservative.
     dtrt-indent-min-quality 90.0
+
+    ;; Enable metalinter for Go.
+    go-use-gometalinter t
 
     ;; Enable clang support for C/C++ layers.
     c-c++-enable-clang-support t
