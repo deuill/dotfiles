@@ -3,7 +3,7 @@ Description=Synchronize Orage Calendar
  
 [Service]
 Type=oneshot
-ExecStart=/bin/bash %h/.config/orage/sync-calendar
+ExecStart=/bin/bash %h/.config/orage/google-calendar.sync
  
 [Install]
 WantedBy=basic.target
