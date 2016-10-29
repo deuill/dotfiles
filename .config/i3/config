@@ -131,8 +131,8 @@ bindsym XF86AudioMute         exec --no-startup-id "~/.config/i3/bin/volume mute
 # Media keys
 bindsym $mod+Ctrl+Up     exec --no-startup-id "mpc stop"
 bindsym $mod+Ctrl+Down   exec --no-startup-id "mpc toggle"
-bindsym $mod+Ctrl+Left   exec --no-startup-id "mpc next"
-bindsym $mod+Ctrl+Right  exec --no-startup-id "mpc prev"
+bindsym $mod+Ctrl+Left   exec --no-startup-id "mpc prev"
+bindsym $mod+Ctrl+Right  exec --no-startup-id "mpc next"
 
 # Modes
 bindsym $mod+r        mode "resize"
