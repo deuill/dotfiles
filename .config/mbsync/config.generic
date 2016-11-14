@@ -1,0 +1,30 @@
+IMAPAccount ${USER}
+Host ${HOST}
+User ${USER}
+PassCmd "secret-tool lookup mail.sync.user ${USER}"
+UseIMAPS yes
+CertificateFile /etc/ssl/certs/ca-certificates.crt
+
+IMAPStore imap-remote
+Account ${USER}
+
+MaildirStore imap-local
+Path ~/.local/share/mail/${USER}/
+Inbox ~/.local/share/mail/${USER}/Inbox
+
+Channel imap-default
+Master :imap-remote:
+Slave :imap-local:
+Patterns INBOX
+
+Channel imap-others
+Master :imap-remote:INBOX/
+Slave :imap-local:
+Patterns * !INBOX
+
+Create Both
+SyncState *
+
+Group ${USER}
+Channel imap-default
+Channel imap-others

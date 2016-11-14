@@ -1,0 +1,39 @@
+IMAPAccount ${USER}
+Host ${HOST}
+User ${USER}
+PassCmd "secret-tool lookup mail.sync.user ${USER}"
+UseIMAPS yes
+CertificateFile /etc/ssl/certs/ca-certificates.crt
+
+IMAPStore gmail-remote
+Account ${USER}
+
+MaildirStore gmail-local
+Path ~/.local/share/mail/${USER}/
+Inbox ~/.local/share/mail/${USER}/Inbox
+
+Channel gmail-default
+Master :gmail-remote:
+Slave :gmail-local:
+Patterns INBOX
+
+Channel gmail-sent
+Master :gmail-remote:"[Gmail]/Sent Mail"
+slave  :gmail-local:Sent
+
+Channel gmail-trash
+Master :gmail-remote:"[Gmail]/Trash"
+slave  :gmail-local:Trash
+
+Channel gmail-archive
+Master :gmail-remote:"[Gmail]/All Mail"
+slave  :gmail-local:All
+
+Create Both
+SyncState *
+
+Group ${USER}
+Channel gmail-default
+Channel gmail-trash
+Channel gmail-archive
+Channel gmail-sent

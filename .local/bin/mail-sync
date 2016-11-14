@@ -1,0 +1,150 @@
+#!/bin/bash
+#
+# Synchronize and index IMAP email.
+
+set -o errexit
+set -o nounset
+
+# Global variables.
+
+MAIL_CONFDIR="${HOME}/.config/mail"
+source ${MAIL_CONFDIR}/config
+
+# Fetch all messages for specific account name.
+function fetch() {
+	local type="$1"
+
+	# Export variables for templates.
+	export USER="$2"
+	export HOST="$3"
+
+	# Set up account if needed.
+	if [[ ! -d ${MAIL_DATADIR}/${USER} ]]
+	then
+		echo "Please set password for ${USER}:"
+		secret-tool store --label "mail-sync ${USER}" mail.sync.user ${USER}
+
+		mkdir -p ${MAIL_DATADIR}/${USER}
+	fi
+
+	local paths=$(echo "$(find ${MAIL_DATADIR}/${USER} -name "cur" -type d -exec dirname '{}' \;)" | sort)
+	while IFS= read -r path
+	do
+		local folder="${path#${MAIL_DATADIR}/}"
+		local tag="$(echo ${path#${MAIL_DATADIR}/${USER}/} | tr -s '[:upper:]/. ' '[:lower:]-')"
+
+		# Find all messages with no corresponding folder for their tag, and copy
+		# to the correct folder.
+		local copy="$(notmuch search --output=messages tag:${tag} NOT folder:${folder} NOT folder:trash NOT tag:new)"
+		while IFS= read -r id
+		do
+			local files="$(notmuch search --output=files ${id})"
+			echo "${files}"
+		done <<< "${copy}"
+	done <<< "${paths}"
+
+	exit
+
+	# Synchronize and index mail from IMAP server.
+	mbsync -c <(envsubst < ${MBSYNC_CONFDIR}/config.${type}) ${USER}
+	notmuch --config=${NOTMUCH_CONFDIR}/config new
+}
+
+function send() {
+	local type="$1"
+
+	# Export variables for templates.
+	export USER="$2"
+	export HOST="$3"
+
+	msmtp -C <(envsubst < ${MSMTP_CONFDIR}/config.${type}) ${USER}
+}
+
+# Show notification for all new messages.
+function notify() {
+	local count=$(notmuch count "is:inbox tag:not-notified")
+
+	if [[ ${count} -gt 0 ]]
+	then
+		if [[ ${count} -gt 10 ]]
+		then
+			local title="Inbox"
+			local text=$(printf "%d new messages" ${count})
+		else
+			local summary=$(notmuch search --limit=1 --format="json" "is:inbox tag:not-notified")
+
+			local title=$(jq -r .[0].authors <<< "${summary}")
+			local text=$(jq -r .[0].subject <<< "${summary}")
+
+			if [[ ${count} -gt 1 ]]
+			then
+				text=$(printf "%s (%d more messages)" "${text}" $((${count} - 1)))
+			fi
+		fi
+
+		notify-send "${title}" "${text}"
+	fi
+
+	notmuch tag -not-notified "tag:not-notified"
+}
+
+function setup() {
+	# Export variables for templates.
+	export NAME="$1"
+	export USER="$2"
+
+	envsubst < ${NOTMUCH_CONFDIR}/config.template > ${NOTMUCH_CONFDIR}/config
+	ln -s ${NOTMUCH_CONFDIR}/config ~/.notmuch-config
+
+	envsubst < ${ASTROID_CONFDIR}/config.template > ${ASTROID_CONFDIR}/config
+
+}
+
+function usage() {
+	echo -e "Usage: mail-sync COMMAND [USER]\n"
+	echo -e "Commands:"
+	echo -e "  fetch  Fetch emails from remote server."
+	echo -e "  send   Send any queued emails."
+	echo -e "  setup  Setup default account settings."
+}
+
+if [[ -z "$1" ]]
+then
+	usage
+	exit 1
+fi
+
+action=${1}
+
+if [[ -z "$2" ]]
+then
+	echo "Error: Please specify an account name to fetch from."
+	exit 1
+fi
+
+account=$2
+
+if [[ ! -e ${MAIL_CONFDIR}/${account} ]]
+then
+	echo "Please create copy and edit new user configuration"
+	echo "for '${account}' in '${HOME}/.config/mail/${account}'."
+	exit 1
+fi
+
+case ${action} in
+fetch)
+	source ${MAIL_CONFDIR}/${account}
+	fetch "${TYPE}" "${USER}" "${IMAP}" && notify
+	;;
+send)
+	source ${MAIL_CONFDIR}/${account}
+	fetch "${TYPE}" "${USER}" "${SMTP}"
+	;;
+setup)
+	source ${MAIL_CONFDIR}/${account}
+	setup "${NAME}" "${USER}"
+	;;
+*)
+	usage
+	exit 1
+esac

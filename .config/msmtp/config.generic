@@ -1,0 +1,14 @@
+defaults
+auth           on
+tls            on
+tls_trust_file /etc/ssl/certs/ca-certificates.crt
+logfile        ${HOME}/.local/share/mail/${USER}/msmtp.log
+
+account      ${USER}
+host         ${HOST}
+port         587
+from         ${USER}
+user         ${USER}
+passwordeval "secret-tool lookup mail.sync.user ${USER}"
+
+account default: ${USER}
