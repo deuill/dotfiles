@@ -342,6 +342,9 @@ you should place your code here."
     ;; Enable clang support for C/C++ layers.
     c-c++-enable-clang-support t
 
+    ;; Have PHP-CS check against the PSR2 standard.
+    flycheck-phpcs-standard "PSR2"
+
     ;; Set color for column marker.
     fci-rule-color "#484848"
 
@@ -359,8 +362,8 @@ you should place your code here."
     (eww url))
 
   ;; Custom keybindings.
-  (global-set-key (kbd "M-<up>") 'previous-buffer)
-  (global-set-key (kbd "M-<down>") 'next-buffer)
+  (global-set-key (kbd "M-<up>") 'next-buffer)
+  (global-set-key (kbd "M-<down>") 'previous-buffer)
 
   ;; Generic sane defaults for all modes.
   (global-vi-tilde-fringe-mode -1)
