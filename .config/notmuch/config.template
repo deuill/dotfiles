@@ -1,9 +1,9 @@
 [database]
-path=${HOME}/.local/share/mail
+path=${MAIL_DATADIR}
 
 [user]
-name=${NAME}
-primary_email=${USER}
+name=${FULLNAME}
+primary_email=${USERNAME}
 
 [new]
 tags=new;not-notified;

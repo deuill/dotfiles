@@ -3,6 +3,6 @@ MAIL_DATADIR="${HOME}/.local/share/mail"
 
 # Configuration directories.
 MBSYNC_CONFDIR="${HOME}/.config/mbsync"
-MSMPTP_CONFDIR="${HOME}/.config/msmtp"
+MSMTP_CONFDIR="${HOME}/.config/msmtp"
 NOTMUCH_CONFDIR="${HOME}/.config/notmuch"
 ASTROID_CONFDIR="${HOME}/.config/astroid"

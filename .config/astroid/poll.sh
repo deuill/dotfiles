@@ -2,7 +2,7 @@
 #
 # Synchronize all configured accounts.
 
-for account in ${HOME}/.config/mail/*
+for account in $(basename ${HOME}/.config/mail/account.d/*)
 do
 	mail-sync fetch ${account} || exit $?
 done

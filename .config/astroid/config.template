@@ -3,7 +3,7 @@
         "config": {
             "version": "6"
         },
-        "notmuch_config": "${HOME}/.config/notmuch/config",
+        "notmuch_config": "${NOTMUCH_CONFDIR}/config",
         "debug": {
             "dryrun_sending": "false"
         },
@@ -39,7 +39,7 @@
         }
     },
     "editor": {
-        "cmd": "emacs --parent-id %3 %1",
+        "cmd": "emacs -xrm 'Emacs.menuBar:0' -bg 'white' -fs --parent-id %3 -q -l ${ASTROID_CONFDIR}/editor/init.el %1",
         "charset": "utf-8",
         "save_draft_on_force_quit": "true"
     },
@@ -95,16 +95,16 @@
         "history_lines": "1000"
     },
     "accounts": {
-        "${NAME}": {
-            "name": "${NAME}",
-            "email": "${USER}",
+        "${FULLNAME}": {
+            "name": "${FULLNAME}",
+            "email": "${USERNAME}",
             "gpgkey": "",
-            "sendmail": "msmtp --read-envelope-from -t",
+            "sendmail": "mail-sync send ${USERNAME}",
             "default": "true",
             "save_sent": "true",
-            "save_sent_to": "${HOME}/.local/share/mail/${USER}/.sent",
+            "save_sent_to": "${MAIL_DATADIR}/${USERNAME}/Sent/cur",
             "additional_sent_tags": "",
-            "save_drafts_to": "${HOME}/.local/share/mail/${USER}/.drafts",
+            "save_drafts_to": "${MAIL_DATADIR}/${USERNAME}/Drafts/cur",
             "signature_file": "",
             "signature_default_on": "true",
             "signature_attach": "false"

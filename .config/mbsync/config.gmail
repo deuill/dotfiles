@@ -1,16 +1,27 @@
-IMAPAccount ${USER}
-Host ${HOST}
-User ${USER}
-PassCmd "secret-tool lookup mail.sync.user ${USER}"
+# Configuration file for mbsync.
+#
+# This file is a template for Gmail-based accounts, and can be used with
+# mbsync with the following example command:
+#
+# mbsync <user> -c <(USERNAME=<user> envsubst < <conf>)
+#
+# Where <user> is something like "user@test.com". This is assuming that a
+# password is set for the above name in the `mail.sync.user <user>` key
+# in Gnome-Keyring.
+
+IMAPAccount ${USERNAME}
+Host imap.gmail.com
+User ${USERNAME}
+PassCmd "secret-tool lookup mail.sync.user ${USERNAME}"
 UseIMAPS yes
 CertificateFile /etc/ssl/certs/ca-certificates.crt
 
 IMAPStore gmail-remote
-Account ${USER}
+Account ${USERNAME}
 
 MaildirStore gmail-local
-Path ~/.local/share/mail/${USER}/
-Inbox ~/.local/share/mail/${USER}/Inbox
+Path ${MAIL_DATADIR}/${USERNAME}/
+Inbox ${MAIL_DATADIR}/${USERNAME}/Inbox
 
 Channel gmail-default
 Master :gmail-remote:
@@ -32,7 +43,7 @@ slave  :gmail-local:All
 Create Both
 SyncState *
 
-Group ${USER}
+Group ${USERNAME}
 Channel gmail-default
 Channel gmail-trash
 Channel gmail-archive

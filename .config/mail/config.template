@@ -1,0 +1,11 @@
+# Account type, can be 'generic', 'gmail'.
+TYPE=""
+
+# Full name and username for login.
+FULLNAME=""
+USERNAME=""
+
+# IMAP and SMTP server hostnames.
+# Gmail accounts generally do not need to set these.
+IMAP_HOSTNAME=""
+SMTP_HOSTNAME=""

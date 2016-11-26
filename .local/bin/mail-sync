@@ -3,66 +3,127 @@
 # Synchronize and index IMAP email.
 
 set -o errexit
-set -o nounset
 
 # Global variables.
 
-MAIL_CONFDIR="${HOME}/.config/mail"
-source ${MAIL_CONFDIR}/config
+export MAIL_CONFDIR="${HOME}/.config/mail"
+
+# Export all variables in global configuration automatically.
+set -o allexport
+source "${MAIL_CONFDIR}/config.global"
+set +o allexport
 
 # Fetch all messages for specific account name.
 function fetch() {
 	local type="$1"
 
 	# Export variables for templates.
-	export USER="$2"
-	export HOST="$3"
+	export USERNAME="$2"
+	export HOSTNAME="$3"
 
-	# Set up account if needed.
-	if [[ ! -d ${MAIL_DATADIR}/${USER} ]]
-	then
-		echo "Please set password for ${USER}:"
-		secret-tool store --label "mail-sync ${USER}" mail.sync.user ${USER}
+	# Local folders to sync between before and after fetching new emails.
+	local paths=$(sort <<< "$(find ${MAIL_DATADIR}/${USERNAME} -name "cur" -type d -exec dirname '{}' \;)")
 
-		mkdir -p ${MAIL_DATADIR}/${USER}
-	fi
-
-	local paths=$(echo "$(find ${MAIL_DATADIR}/${USER} -name "cur" -type d -exec dirname '{}' \;)" | sort)
-	while IFS= read -r path
+	for path in ${paths}
 	do
 		local folder="${path#${MAIL_DATADIR}/}"
-		local tag="$(echo ${path#${MAIL_DATADIR}/${USER}/} | tr -s '[:upper:]/. ' '[:lower:]-')"
+		local tag="$(echo ${path#${MAIL_DATADIR}/${USERNAME}/} | tr -s '[:upper:]/. ' '[:lower:]-')"
 
-		# Find all messages with no corresponding folder for their tag, and copy
-		# to the correct folder.
-		local copy="$(notmuch search --output=messages tag:${tag} NOT folder:${folder} NOT folder:trash NOT tag:new)"
-		while IFS= read -r id
+		# Copy all messages into the corresponding folder for their tag.
+		local ids=$(notmuch search --output=messages tag:"${tag}" NOT folder:"${folder}" NOT tag:"new")
+		for id in ${ids}
 		do
-			local files="$(notmuch search --output=files ${id})"
-			echo "${files}"
-		done <<< "${copy}"
+			local files=$(notmuch search --output=files "${id}")
+			while read file
+			do
+				# Copy file to correct folder.
+				if [[ -e "${file}" ]]
+				then
+					echo "Copied message from '${file}' to '${path}/cur'"
+					mkdir -p "${path}/cur"
+					cp "${file}" "${path}/cur"
+					break
+				fi
+			done <<< "${files}"
+		done <<< "${ids}"
+
+		# Remove all messages with no tags corresponding to their folders.
+		local ids=$(notmuch search --output=messages folder:"${folder}" NOT tag:"${tag}" NOT tag:"new")
+		for id in ${ids}
+		do
+			local files=$(notmuch search --output=files "${id}")
+			while read file
+			do
+				# Remove file from folder.
+				if [[ -e "${file}" ]]
+				then
+					echo "Removed message file '${file}'"
+					rm "${file}"
+					break
+				fi
+			done <<< "${files}"
+		done
 	done <<< "${paths}"
 
-	exit
-
 	# Synchronize and index mail from IMAP server.
-	mbsync -c <(envsubst < ${MBSYNC_CONFDIR}/config.${type}) ${USER}
-	notmuch --config=${NOTMUCH_CONFDIR}/config new
+	mbsync -c <(envsubst < "${MBSYNC_CONFDIR}/config.${type}") "${USERNAME}"
+	notmuch --config="${NOTMUCH_CONFDIR}/config" new
+
+	for path in ${paths}
+	do
+		local folder="${path#${MAIL_DATADIR}/}"
+		local tag="$(echo ${path#${MAIL_DATADIR}/${USERNAME}/} | tr -s '[:upper:]/. ' '[:lower:]-')"
+
+		# Tag new messages with specific folder name tag if none is set already.
+		notmuch tag +"${tag}" folder:"${folder}" NOT tag:"${tag}"
+
+		# Remove tags from messages that have been moved/deleted/retagged etc.
+		notmuch tag -"${tag}" tag:"${tag}" NOT folder:"${folder}" NOT folder:"trash"
+	done
+
+	# Remove 'new' tag and add 'unread' tag to all new messages.
+	notmuch tag -"new" +"unread" tag:"new"
+
+	# Remove 'unread' tag from messages in 'Sent' folder.
+	notmuch tag -"unread" folder:"sent"
 }
 
 function send() {
 	local type="$1"
 
 	# Export variables for templates.
-	export USER="$2"
-	export HOST="$3"
+	export USERNAME="$2"
+	export HOSTNAME="$3"
 
-	msmtp -C <(envsubst < ${MSMTP_CONFDIR}/config.${type}) ${USER}
+	# Add message to the queue.
+	local queuedir="${MAIL_DATADIR}/${USERNAME}/.queue"
+	local basename=$(date +%Y-%m-%d-%H.%M.%S)
+
+	mkdir -p "${queuedir}"
+	cat > "${queuedir}/${basename}.mail"
+
+	# Abort process if we're not online.
+	local state=$(connmanctl state | grep 'State' | awk '{print $3}')
+	[[ "${state}" != "online" ]] && return
+
+	# Send all queued email.
+	for mail in "${queuedir}"/*.mail
+	do
+		echo "Sending '${mail}..."
+		msmtp -C <(envsubst < "${MSMTP_CONFDIR}/config.${type}") "${USERNAME}" < "${mail}"
+		if [[ $? -eq 0 ]]
+		then
+			echo "Success"
+			rm "${mail}"
+		else
+			echo "Failure"
+		fi
+	done
 }
 
 # Show notification for all new messages.
 function notify() {
-	local count=$(notmuch count "is:inbox tag:not-notified")
+	local count=$(notmuch count is:"inbox" tag:"not-notified")
 
 	if [[ ${count} -gt 0 ]]
 	then
@@ -71,7 +132,7 @@ function notify() {
 			local title="Inbox"
 			local text=$(printf "%d new messages" ${count})
 		else
-			local summary=$(notmuch search --limit=1 --format="json" "is:inbox tag:not-notified")
+			local summary=$(notmuch search --limit=1 --format="json" is:"inbox" tag:"not-notified")
 
 			local title=$(jq -r .[0].authors <<< "${summary}")
 			local text=$(jq -r .[0].subject <<< "${summary}")
@@ -85,28 +146,75 @@ function notify() {
 		notify-send "${title}" "${text}"
 	fi
 
-	notmuch tag -not-notified "tag:not-notified"
+	notmuch tag -"not-notified" tag:"not-notified"
 }
 
 function setup() {
-	# Export variables for templates.
-	export NAME="$1"
-	export USER="$2"
+	local account="$1"
 
-	envsubst < ${NOTMUCH_CONFDIR}/config.template > ${NOTMUCH_CONFDIR}/config
-	ln -s ${NOTMUCH_CONFDIR}/config ~/.notmuch-config
+	# Create or load user configuration.
+	if [[ ! -e "${MAIL_CONFDIR}/account.d/${account}" ]]
+	then
+		mkdir -p "${MAIL_CONFDIR}/account.d"
+		cp "${MAIL_CONFDIR}/config.template" "${MAIL_CONFDIR}/account.d/${account}"
 
-	envsubst < ${ASTROID_CONFDIR}/config.template > ${ASTROID_CONFDIR}/config
+		read -p "Press enter to edit user configuration for '${account}': "
+		[[ -z "${EDITOR}" ]] && EDITOR="nano"
+		${EDITOR} "${MAIL_CONFDIR}/account.d/${account}"
 
+		echo "Please enter password for '${account}': "
+		secret-tool store --label "mail-sync ${account}" mail.sync.user "${account}"
+	else
+		echo "Using existing configuration file for '${account}'..."
+	fi
+
+	load_config "${account}"
+	lock "${account}"
+
+	mkdir -p "${MAIL_DATADIR}/${account}"
+
+	envsubst < "${NOTMUCH_CONFDIR}/config.template" > "${NOTMUCH_CONFDIR}/config"
+	ln -sf "${NOTMUCH_CONFDIR}/config" ~/.notmuch-config
+	notmuch --config="${NOTMUCH_CONFDIR}/config" new &> /dev/null
+
+	envsubst < "${ASTROID_CONFDIR}/config.template" > "${ASTROID_CONFDIR}/config"
+	echo "Setup complete."
+}
+
+function load_config() {
+	local account="$1"
+
+	if [[ ! -e "${MAIL_CONFDIR}/account.d/${account}" ]]
+	then
+		echo "Configuration for account '${account}' not found."
+		echo "Did you intend to run 'setup' instead?"
+		exit 1
+	fi
+
+	set -o allexport
+	source "${MAIL_CONFDIR}/account.d/${account}"
+	set +o allexport
+}
+
+function lock() {
+	local account="$1"
+
+	# Check for existing process and lock if none exists.
+	[[ -e "${MAIL_DATADIR}/${account}/.lock" ]] && exit
+	touch "${MAIL_DATADIR}/${account}/.lock" || exit
+
+	# Remove lock on exit.
+	trap "rm -f ${MAIL_DATADIR}/${account}/.lock" EXIT
 }
 
 function usage() {
-	echo -e "Usage: mail-sync COMMAND [USER]\n"
+	echo -e "Usage: mail-sync COMMAND [USERNAME]\n"
 	echo -e "Commands:"
 	echo -e "  fetch  Fetch emails from remote server."
 	echo -e "  send   Send any queued emails."
 	echo -e "  setup  Setup default account settings."
 }
+
 
 if [[ -z "$1" ]]
 then
@@ -114,7 +222,7 @@ then
 	exit 1
 fi
 
-action=${1}
+action="$1"
 
 if [[ -z "$2" ]]
 then
@@ -122,27 +230,23 @@ then
 	exit 1
 fi
 
-account=$2
-
-if [[ ! -e ${MAIL_CONFDIR}/${account} ]]
-then
-	echo "Please create copy and edit new user configuration"
-	echo "for '${account}' in '${HOME}/.config/mail/${account}'."
-	exit 1
-fi
+account="$2"
 
 case ${action} in
 fetch)
-	source ${MAIL_CONFDIR}/${account}
-	fetch "${TYPE}" "${USER}" "${IMAP}" && notify
+	load_config "${account}"
+	lock "${account}"
+
+	fetch "${TYPE}" "${USERNAME}" "${SMTP_HOSTNAME}" && notify
 	;;
 send)
-	source ${MAIL_CONFDIR}/${account}
-	fetch "${TYPE}" "${USER}" "${SMTP}"
+	load_config "${account}"
+	lock "${account}"
+
+	send "${TYPE}" "${USERNAME}" "${SMTP_HOSTNAME}"
 	;;
 setup)
-	source ${MAIL_CONFDIR}/${account}
-	setup "${NAME}" "${USER}"
+	setup "${account}"
 	;;
 *)
 	usage
