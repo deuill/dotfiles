@@ -21,9 +21,7 @@ function fetch() {
 	export USERNAME="$2"
 	export HOSTNAME="$3"
 
-	# Local folders to sync between before and after fetching new emails.
 	local paths=$(sort <<< "$(find ${MAIL_DATADIR}/${USERNAME} -name "cur" -type d -exec dirname '{}' \;)")
-
 	for path in ${paths}
 	do
 		local folder="${path#${MAIL_DATADIR}/}"
@@ -69,22 +67,27 @@ function fetch() {
 	mbsync -c <(envsubst < "${MBSYNC_CONFDIR}/config.${type}") "${USERNAME}"
 	notmuch --config="${NOTMUCH_CONFDIR}/config" new
 
+	local paths=$(sort <<< "$(find ${MAIL_DATADIR}/${USERNAME} -name "cur" -type d -exec dirname '{}' \;)")
 	for path in ${paths}
 	do
 		local folder="${path#${MAIL_DATADIR}/}"
 		local tag="$(echo ${path#${MAIL_DATADIR}/${USERNAME}/} | tr -s '[:upper:]/. ' '[:lower:]-')"
 
 		# Tag new messages with specific folder name tag if none is set already.
+		echo "Tagging '${tag}' all in '${folder}'..."
 		notmuch tag +"${tag}" folder:"${folder}" NOT tag:"${tag}"
 
 		# Remove tags from messages that have been moved/deleted/retagged etc.
+		echo "Untagging '${tag}' all moved from '${folder}'..."
 		notmuch tag -"${tag}" tag:"${tag}" NOT folder:"${folder}" NOT folder:"trash"
 	done
 
 	# Remove 'new' tag and add 'unread' tag to all new messages.
+	echo "Removing 'new' tag, adding 'unread' tag to all new email..."
 	notmuch tag -"new" +"unread" tag:"new"
 
 	# Remove 'unread' tag from messages in 'Sent' folder.
+	echo "Removing 'unread' tag from all sent messages..."
 	notmuch tag -"unread" folder:"sent"
 }
 
@@ -103,8 +106,7 @@ function send() {
 	cat > "${queuedir}/${basename}.mail"
 
 	# Abort process if we're not online.
-	local state=$(connmanctl state | grep 'State' | awk '{print $3}')
-	[[ "${state}" != "online" ]] && return
+	[[ "${NETWORK_STATUS}" != "online" ]] && return
 
 	# Send all queued email.
 	for mail in "${queuedir}"/*.mail
@@ -152,6 +154,13 @@ function notify() {
 function setup() {
 	local account="$1"
 
+	# Do not allow duplicate accounts to be set up.
+	if [[ -e "${MAIL_DATADIR}/${account}" ]]
+	then
+		echo "Account '${account}' already exists, aborting..."
+		exit 1
+	fi
+
 	# Create or load user configuration.
 	if [[ ! -e "${MAIL_CONFDIR}/account.d/${account}" ]]
 	then
@@ -168,16 +177,33 @@ function setup() {
 		echo "Using existing configuration file for '${account}'..."
 	fi
 
-	load_config "${account}"
-	lock "${account}"
-
 	mkdir -p "${MAIL_DATADIR}/${account}"
+	load_config "${account}"
 
-	envsubst < "${NOTMUCH_CONFDIR}/config.template" > "${NOTMUCH_CONFDIR}/config"
-	ln -sf "${NOTMUCH_CONFDIR}/config" ~/.notmuch-config
-	notmuch --config="${NOTMUCH_CONFDIR}/config" new &> /dev/null
+	if [[ -e "${NOTMUCH_CONFDIR}/config" ]]
+	then
+		local cmd="/^other_email/ {printf \"%s%s;\n\", \$0, \"${USERNAME}\"; next} {print}"
+		local tmp=$(awk "${cmd}" "${NOTMUCH_CONFDIR}/config")
+		echo "${tmp}" > "${NOTMUCH_CONFDIR}/config"
+	else
+		envsubst < "${NOTMUCH_CONFDIR}/config.template" > "${NOTMUCH_CONFDIR}/config"
+		notmuch --config="${NOTMUCH_CONFDIR}/config" new &> /dev/null
+		ln -sf "${NOTMUCH_CONFDIR}/config" ~/.notmuch-config
+	fi
 
-	envsubst < "${ASTROID_CONFDIR}/config.template" > "${ASTROID_CONFDIR}/config"
+	# Work around a bug in Astroid JSON handling, where object keys containing
+	# periods are incorrectly broken into sub-objects.
+	export ACCOUNT_NAME=$(tr '.@' '-' <<< "${USERNAME}")
+
+	if [[ -e "${ASTROID_CONFDIR}/config" ]]
+	then
+		local cmd=".[0].accounts = (.[0].accounts + .[1]) | .[0]"
+		local tmp=$(jq -s "${cmd}" "${ASTROID_CONFDIR}/config" <(jq -r ".accounts" "${ASTROID_CONFDIR}/config.template" | envsubst))
+		echo "${tmp}" > "${ASTROID_CONFDIR}/config"
+	else
+		envsubst < "${ASTROID_CONFDIR}/config.template" > "${ASTROID_CONFDIR}/config"
+	fi
+
 	echo "Setup complete."
 }
 
@@ -197,14 +223,12 @@ function load_config() {
 }
 
 function lock() {
-	local account="$1"
-
 	# Check for existing process and lock if none exists.
-	[[ -e "${MAIL_DATADIR}/${account}/.lock" ]] && exit
-	touch "${MAIL_DATADIR}/${account}/.lock" || exit
+	[[ -e "${MAIL_DATADIR}/.lock" ]] && exit
+	touch "${MAIL_DATADIR}/.lock" || exit
 
 	# Remove lock on exit.
-	trap "rm -f ${MAIL_DATADIR}/${account}/.lock" EXIT
+	trap "rm -f ${MAIL_DATADIR}/.lock" EXIT
 }
 
 function usage() {
@@ -231,18 +255,15 @@ then
 fi
 
 account="$2"
+lock
 
 case ${action} in
 fetch)
 	load_config "${account}"
-	lock "${account}"
-
 	fetch "${TYPE}" "${USERNAME}" "${SMTP_HOSTNAME}" && notify
 	;;
 send)
 	load_config "${account}"
-	lock "${account}"
-
 	send "${TYPE}" "${USERNAME}" "${SMTP_HOSTNAME}"
 	;;
 setup)

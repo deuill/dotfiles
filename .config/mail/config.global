@@ -6,3 +6,6 @@ MBSYNC_CONFDIR="${HOME}/.config/mbsync"
 MSMTP_CONFDIR="${HOME}/.config/msmtp"
 NOTMUCH_CONFDIR="${HOME}/.config/notmuch"
 ASTROID_CONFDIR="${HOME}/.config/astroid"
+
+# Connectivity status, 'online' or 'offline'.
+NETWORK_STATUS=$(connmanctl state | grep 'State' | awk '{print $3}')

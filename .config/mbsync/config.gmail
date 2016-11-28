@@ -26,25 +26,35 @@ Inbox ${MAIL_DATADIR}/${USERNAME}/Inbox
 Channel gmail-default
 Master :gmail-remote:
 Slave :gmail-local:
-Patterns INBOX
+Patterns * INBOX !"[Gmail]/*"
+
+Channel gmail-drafts
+Master :gmail-remote:"[Gmail]/Drafts"
+slave  :gmail-local:Drafts
 
 Channel gmail-sent
 Master :gmail-remote:"[Gmail]/Sent Mail"
 slave  :gmail-local:Sent
 
+Channel gmail-important
+Master :gmail-remote:"[Gmail]/Important"
+slave  :gmail-local:Important
+
+Channel gmail-spam
+Master :gmail-remote:"[Gmail]/Spam"
+slave  :gmail-local:Spam
+
 Channel gmail-trash
 Master :gmail-remote:"[Gmail]/Trash"
 slave  :gmail-local:Trash
-
-Channel gmail-archive
-Master :gmail-remote:"[Gmail]/All Mail"
-slave  :gmail-local:All
 
 Create Both
 SyncState *
 
 Group ${USERNAME}
 Channel gmail-default
-Channel gmail-trash
-Channel gmail-archive
+Channel gmail-drafts
 Channel gmail-sent
+Channel gmail-important
+Channel gmail-spam
+Channel gmail-trash

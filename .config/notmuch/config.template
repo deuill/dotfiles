@@ -4,6 +4,7 @@ path=${MAIL_DATADIR}
 [user]
 name=${FULLNAME}
 primary_email=${USERNAME}
+other_email=
 
 [new]
 tags=new;not-notified;

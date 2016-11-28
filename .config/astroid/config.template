@@ -95,7 +95,7 @@
         "history_lines": "1000"
     },
     "accounts": {
-        "${FULLNAME}": {
+        "${ACCOUNT_NAME}": {
             "name": "${FULLNAME}",
             "email": "${USERNAME}",
             "gpgkey": "",
