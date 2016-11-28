@@ -20,7 +20,7 @@ set $misc   7: misc
 # Workspace assignments for applications
 assign [class="Firefox"]   → $www
 assign [class="Chromium"]  → $www
-assign [class="Geary"]     → $www
+assign [class="Astroid"]   → $www
 assign [class="Emacs"]     → $code
 assign [class="Gnome-mpv"] → $media
 assign [class="Gimp"]      → $media
@@ -34,9 +34,7 @@ assign [class="Steam"]     → $games
 for_window [class="Connman-gtk"] floating enable
 for_window [class="Pavucontrol"] floating enable
 for_window [class="Blueberry.py"] floating enable
-
 for_window [class="Orage"] floating enable
-for_window [class="Orage" title="^Orage$"] move position 1660 22
 
 # -----------
 # KEYBINDINGS
