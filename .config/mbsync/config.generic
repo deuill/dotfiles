@@ -13,7 +13,7 @@ IMAPAccount ${USERNAME}
 Host ${HOSTNAME}
 User ${USERNAME}
 PassCmd "secret-tool lookup mail.sync.user ${USERNAME}"
-UseIMAPS yes
+SSLType IMAPS
 CertificateFile /etc/ssl/certs/ca-certificates.crt
 
 IMAPStore imap-remote
@@ -24,17 +24,12 @@ Path ${MAIL_DATADIR}/${USERNAME}/
 Inbox ${MAIL_DATADIR}/${USERNAME}/Inbox
 
 Channel imap-default
-Master :imap-remote:INBOX
-Slave :imap-local:Inbox
-
-Channel imap-others
-Master :imap-remote:INBOX/
+Master :imap-remote:
 Slave :imap-local:
-Patterns * !sent
+Patterns *
 
 Create Both
 SyncState *
 
 Group ${USERNAME}
 Channel imap-default
-Channel imap-others
