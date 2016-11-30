@@ -29,6 +29,7 @@ Slave :imap-local:
 Patterns *
 
 Create Both
+Sync Pull Push New ReNew Flags
 SyncState *
 
 Group ${USERNAME}

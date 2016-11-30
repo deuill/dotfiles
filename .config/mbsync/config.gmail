@@ -49,6 +49,7 @@ Master :gmail-remote:"[Gmail]/Trash"
 slave  :gmail-local:Trash
 
 Create Both
+Sync Pull Push New ReNew Flags
 SyncState *
 
 Group ${USERNAME}
