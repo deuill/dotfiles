@@ -43,7 +43,7 @@
  *                               rofi                                *
  *********************************************************************/
 
-rofi.font:            Inconsolata 11
+rofi.font:            Inconsolata 12
 rofi.terminal:        i3-sensible-terminal
 rofi.lines:           10
 rofi.columns:         1

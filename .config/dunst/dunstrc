@@ -1,5 +1,5 @@
 [global]
-font = Inconsolata 11
+font = Inconsolata 12
 
 # Allow a small subset of html markup:
 #   <b>bold</b>
