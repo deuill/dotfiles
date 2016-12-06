@@ -14,7 +14,7 @@ compton -CGfbz -D 2 -o 0 --backend glx --vsync opengl
 dunst &
 
 # Set keyboard map toggle via Alt + Shift combination.
-setxkbmap -model pc105 -layout us,gr -option grp:alt_shift_toggle
+setxkbmap -model pc105 -layout us,gr -option grp:alt_shift_toggle,caps:escape
 
 # Initialize 'kbdd' for keyboard layout handling.
 kbdd
