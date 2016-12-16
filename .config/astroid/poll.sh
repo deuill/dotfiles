@@ -4,5 +4,5 @@
 
 for account in $(basename ${HOME}/.config/mail/account.d/*)
 do
-	mail-sync fetch ${account} || exit $?
+	${HOME}/.local/bin/mail-sync fetch ${account} || exit $?
 done

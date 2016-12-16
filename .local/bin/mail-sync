@@ -180,15 +180,16 @@ function setup() {
 	mkdir -p "${MAIL_DATADIR}/${account}"
 	load_config "${account}"
 
-	if [[ -e "${NOTMUCH_CONFDIR}/config" ]]
+	if [[ ! -e "${NOTMUCH_CONFDIR}/config" ]]
+	then
+		envsubst < "${NOTMUCH_CONFDIR}/config.template" > "${NOTMUCH_CONFDIR}/config"
+		notmuch --config="${NOTMUCH_CONFDIR}/config" new &> /dev/null
+		ln -sf "${NOTMUCH_CONFDIR}/config" ~/.notmuch-config
+	elif [[ $(grep -qw "${USERNAME}" "${NOTMUCH_CONFDIR}/config" && echo "true") != "true" ]]
 	then
 		local cmd="/^other_email/ {printf \"%s%s;\n\", \$0, \"${USERNAME}\"; next} {print}"
 		local tmp=$(awk "${cmd}" "${NOTMUCH_CONFDIR}/config")
 		echo "${tmp}" > "${NOTMUCH_CONFDIR}/config"
-	else
-		envsubst < "${NOTMUCH_CONFDIR}/config.template" > "${NOTMUCH_CONFDIR}/config"
-		notmuch --config="${NOTMUCH_CONFDIR}/config" new &> /dev/null
-		ln -sf "${NOTMUCH_CONFDIR}/config" ~/.notmuch-config
 	fi
 
 	# Work around a bug in Astroid JSON handling, where object keys containing
@@ -224,6 +225,8 @@ function load_config() {
 
 function lock() {
 	# Check for existing process and lock if none exists.
+	mkdir -p "${MAIL_DATADIR}"
+
 	[[ -e "${MAIL_DATADIR}/.lock" ]] && exit
 	touch "${MAIL_DATADIR}/.lock" || exit
 

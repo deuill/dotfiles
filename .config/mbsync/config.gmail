@@ -13,7 +13,7 @@ IMAPAccount ${USERNAME}
 Host imap.gmail.com
 User ${USERNAME}
 PassCmd "secret-tool lookup mail.sync.user ${USERNAME}"
-UseIMAPS yes
+SSLType IMAPS
 CertificateFile /etc/ssl/certs/ca-certificates.crt
 
 IMAPStore gmail-remote
