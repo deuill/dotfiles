@@ -32,6 +32,7 @@ values."
    dotspacemacs-configuration-layers
    '(emacs-lisp
      markdown
+     org
      go
      php
      c-c++
@@ -57,7 +58,7 @@ values."
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
    ;; A list of packages that will not be installed and loaded.
-   dotspacemacs-excluded-packages '(vi-tilde-fringe)
+   dotspacemacs-excluded-packages '(vi-tilde-fringe org-bullets)
    ;; Defines the behaviour of Spacemacs when installing packages.
    ;; Possible values are `used-only', `used-but-keep-unused' and `all'.
    ;; `used-only' installs only explicitly used packages and uninstall any
@@ -293,8 +294,11 @@ executes.
 before packages are loaded. If you are unsure, you should try in setting them in
 `dotspacemacs/user-config' first."
   (setq
+   ;; Do not use variable-width fonts for headers.
+   monokai-use-variable-pitch nil
+
    ;; Set colors consistent with Base16-Eighties theme.
-   monokai-bg             "#2d2d2d"
+   monokai-background     "#2d2d2d"
    monokai-highlight-line "#323232"))
 
 (defun dotspacemacs/user-config ()
@@ -321,8 +325,15 @@ you should place your code here."
     ;; Autocompleted docstrings appear in tooltips.
     auto-completion-enable-help-tooltip t
 
+    ;; Use Helm for dumb-jump completions.
+    dumb-jump-selector 'helm
+
     ;; Use simple NeoTree theme.
     neo-theme 'nerd
+
+    ;; Org mode formatting rules.
+    org-ellipsis " …"
+    org-bullets-bullet-list '("•" "◦")
 
     ;; Set user defaults for Deft.
     deft-text-mode 'markdown-mode
@@ -349,17 +360,12 @@ you should place your code here."
     fci-rule-color "#484848"
 
      ;; Set defaults for writeroom mode.
+    writeroom-width 80
     writeroom-restore-window-config t
     writeroom-fullscreen-effect 'maximized
 
     ;; Set defaults for Org mode.
     org-enable-github-support t)
-
-  ;; Custom 'eww' browser function, for opening in a split window.
-  (defun eww-split (url)
-    (interactive)
-    (select-window (split-window-right))
-    (eww url))
 
   ;; Custom keybindings.
   (global-set-key (kbd "M-<up>") 'next-buffer)
@@ -390,6 +396,14 @@ you should place your code here."
     ;; Enable distraction-free editing mode.
     (writeroom-mode 1))
 
+  ;; Org-mode specific defaults.
+  (defun set-org-mode-defaults ()
+    ;; Set custom variables.
+    (setq-local writeroom-width 100)
+
+    ;; Inherit doc-mode defaults.
+    (set-doc-mode-defaults))
+
   ;; Lisp-specific defaults.
   (defun set-lisp-mode-defaults ()
     ;; Disable indentation with tabs.
@@ -397,8 +411,37 @@ you should place your code here."
 
   (add-hook 'prog-mode-hook 'set-prog-mode-defaults)
   (add-hook 'css-mode-hook 'set-prog-mode-defaults)
+
   (add-hook 'markdown-mode-hook 'set-doc-mode-defaults)
+
+  (add-hook 'org-mode-hook 'set-org-mode-defaults)
   (add-hook 'emacs-lisp-mode-hook 'set-lisp-mode-defaults))
+
+(defun eww-split (url)
+  "Loads eww content in split window"
+  (interactive)
+  (select-window (split-window-right))
+  (eww url))
+
+(defvar fci-mode-suppressed nil)
+
+(defun fci-enabled-p ()
+  "Checks if fci-mode is enabled for this session"
+  (and (boundp 'fci-mode) fci-mode))
+
+(defadvice popup-create (before suppress-fci-mode activate)
+  "Suspend fci-mode while popups are visible"
+  (let ((fci-enabled (fci-enabled-p)))
+    (when fci-enabled
+      (set (make-local-variable 'fci-mode-suppressed) fci-enabled)
+      (turn-off-fci-mode))))
+
+(defadvice popup-delete (after restore-fci-mode activate)
+  "Restore fci-mode when all popups have closed"
+  (when (and fci-mode-suppressed
+             (null popup-instances))
+    (setq fci-mode-suppressed nil)
+    (turn-on-fci-mode)))
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
