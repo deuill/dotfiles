@@ -338,8 +338,8 @@ you should place your code here."
     org-bullets-bullet-list '("•" "◦")
 
     ;; Set user defaults for Deft.
-    deft-text-mode 'markdown-mode
-    deft-extensions '("md" "txt")
+    deft-recursive t
+    deft-extensions '("org" "md")
     deft-directory "~/.notes"
 
     ;; Use common cache path for docsets.
@@ -369,6 +369,17 @@ you should place your code here."
     ;; Set defaults for Org mode.
     org-enable-github-support t)
 
+  (flycheck-define-checker proselint
+    "A linter for prose."
+    :command ("proselint" source-inplace)
+    :error-patterns
+    ((warning line-start (file-name) ":" line ":" column ": "
+              (id (one-or-more (not (any " "))))
+              (message (one-or-more not-newline)
+                       (zero-or-more "\n" (any " ") (one-or-more not-newline)))
+              line-end))
+    :modes (text-mode markdown-mode gfm-mode))
+
   ;; Custom keybindings.
   (global-set-key (kbd "M-<up>") 'next-buffer)
   (global-set-key (kbd "M-<down>") 'previous-buffer)
@@ -392,6 +403,10 @@ you should place your code here."
 
   ;; Documentation file-specific defaults.
   (defun set-doc-mode-defaults ()
+    ;; Enable `flycheck' with specific linters.
+    (add-to-list 'flycheck-checkers 'proselint)
+    (flycheck-mode 1)
+
     ;; Enable soft word-wrapping.
     (visual-line-mode 1)
 
