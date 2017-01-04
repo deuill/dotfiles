@@ -47,6 +47,7 @@ set $mod  Mod4
 bindsym $mod+Return   exec i3-sensible-terminal
 bindsym $mod+d        exec "rofi -show run"
 bindsym $mod+Shift+d  exec "rofi -show drun"
+bindsym $mod+Shift+f  exec "rofi -show files -modi files:~/.local/share/rofi/file-browser"
 
 # Change focus
 bindsym $mod+h      focus left

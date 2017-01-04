@@ -44,7 +44,6 @@ values."
      spell-checking
      syntax-checking
      git
-     gtags
      dash
      deft)
    ;; List of additional packages that will be installed without being
@@ -324,6 +323,9 @@ you should place your code here."
 
     ;; Autocompleted docstrings appear in tooltips.
     auto-completion-enable-help-tooltip t
+
+    ;; Use dumb-jump as default jump handler.
+    spacemacs-default-jump-handlers '(dumb-jump-go evil-goto-definition)
 
     ;; Use Helm for dumb-jump completions.
     dumb-jump-selector 'helm
