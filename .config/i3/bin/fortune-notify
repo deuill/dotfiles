@@ -1,0 +1,9 @@
+#!/bin/bash
+# Send notification message with fortune.
+
+fortune=$(fortune -cs $@)
+
+title=$(basename "$(head -n 1 <<< ${fortune} | tr -d '()')")
+text=$(tail -n +3 <<< "${fortune}" | sed "s|^[[:blank:]]*||g")
+
+notify-send --urgency=low "${title}" "${text}"
