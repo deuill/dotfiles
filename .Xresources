@@ -47,11 +47,12 @@ rofi.font:            Inconsolata 12
 rofi.terminal:        i3-sensible-terminal
 rofi.lines:           10
 rofi.columns:         1
-rofi.eh:              2
-rofi.width:           50
+rofi.eh:              1
+rofi.width:           -120
 rofi.padding:         0
 rofi.location:        0
 rofi.line-margin:     0
+rofi.line-padding:    10
 rofi.fullscreen:      false
 rofi.opacity:         100
 rofi.bw:              0
