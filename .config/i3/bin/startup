@@ -19,5 +19,8 @@ setxkbmap -model pc105 -layout us,gr -option grp:alt_shift_toggle,caps:escape
 # Initialize 'kbdd' for keyboard layout handling.
 kbdd
 
+# Restore previous session.
+~/.config/i3/bin/session restore
+
 # Set default background via 'feh'.
-feh --no-fehbg --bg-fill ~/.config/i3/assets/default-bg
+feh --no-fehbg --bg-fill ~/.cache/default-bg

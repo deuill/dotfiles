@@ -1,10 +1,114 @@
 #!/bin/bash
 # Session management script for i3.
 
-LOCKERS=("xflock4" "light-locker" "i3lock")
+ACTION=$1
+
+LOCKERS=("xflock4" "light-locker")
+SESSION_DIR="${HOME}/.cache/i3/session"
+
+function session--get-tree() {
+	local num="$1"
+
+	read -r -d '' cleanup <<-'EOM'
+		NR == 1      {next}               # Skip first line in document.
+		$0 ~ "// \"title" {next}          # Skip title match for window.
+		$0 ~ "// \"" {sub("// \"", "\"")} # Uncomment window definitions.
+		$0 ~ "//"    {next}               # Remove all other comments
+		{gsub("\\\\", ""); print}         # Remove all backslash escapes.
+	EOM
+
+	awk "${cleanup}" <<< $(i3-save-tree --workspace ${num}) | jq -sr '.'
+}
+
+function session--get-commands() {
+	local tree="$1"
+	local commands=()
+
+	local selector='.. | .swallows? | .[]? | .instance + .class'
+	local windows=$(wmctrl -l -p -x)
+
+	# Clean window instance and class names.
+	read -r -d '' cleanup <<-'EOM'
+		 {gsub("\\$\\^", "."); print substr($0, 3, length($0) - 4)}
+	EOM
+
+	local classes=$((jq "${selector}" | awk "${cleanup}") <<< "${tree}")
+
+	while read class
+	do
+		local info=$(awk '$4 ~ "'${class}'" {print $1 " " $3; exit}' <<< "${windows}")
+
+		local id=$(awk '{print $1}' <<< "${info}")
+		local pid=$(awk '{print $2}' <<< "${info}")
+
+		local title=$(awk -F'"' '$1 ~ "_NET_WM_NAME" {print $2}' <<< $(xprop -id "${id}"))
+		local cmd=$(ps -p "${pid}" -o args --no-headers)
+
+		commands+='{"title":"'"${title}"'","cmd":"'"${cmd}"'"}'
+	done <<< "${classes}"
+
+	jq -sr '.' <<< "${commands[@]}"
+}
+
+# Save session state for future restoration.
+function session-save() {
+	local layout=()
+	local commands=()
+
+	# Save layout for each workspace in turn.
+	local workspaces=$(i3-msg -t get_workspaces)
+
+	for i in $(seq 0 $(($(jq -r '. | length' <<< "${workspaces}") - 1)))
+	do
+		local num=$(jq -r ".[$i].num" <<< "${workspaces}")
+
+		# Get layout for workspace.
+		layout[$i]=$(session--get-tree "${num}")
+
+		# Get list of running commands for workspace.
+		commands[$i]=$(session--get-commands "${layout[$i]}")
+	done
+
+	# Create layout cache space and save state files.
+	mkdir -p "${SESSION_DIR}"
+
+	jq -r '.' <<< '{
+	    "layout":    '$(jq -sr '.' <<< "${layout[@]}")',
+	    "commands":  '$(jq -sr '.' <<< "${commands[@]}")',
+	    "workspaces":'"${workspaces[@]}"'
+	}' > "${SESSION_DIR}/session.json"
+}
+
+# Restore previously saved session.
+function session-restore() {
+	local session=$(cat "${SESSION_DIR}/session.json")
+	local temp=$(mktemp)
+
+	# Restore layout and running commands for each workspace.
+	for i in $(seq 0 $(($(jq -r '.workspaces | length' <<< "${session}") - 1)))
+	do
+		local name=$(jq -r ".workspaces[$i].name" <<< "${session}")
+		local output=$(jq -r ".workspaces[$i].output" <<< "${session}")
+
+		jq -r ".layout[$i]" <<< "${session}" > "${temp}"
+		i3-msg "workspace ${name}; append_layout ${temp}; move workspace to ${output}"
+
+		# Run all commands for workspace.
+		for c in $(seq 0 $(($(jq -r ".commands[$i] | length" <<< "${session}") - 1)))
+		do
+			exec $(jq -r ".commands[$i][$c].cmd" <<< "${session}") &
+		done
+	done
+
+	# Move back to first workspace.
+	i3-msg "workspace "$(jq -r '.workspaces[0].name' <<< "${session}")
+
+	# Clean up temporary files.
+	rm -f "${temp}"
+}
 
 # Lock screen with i3lock.
-session_lock() {
+function session-lock() {
 	# Suspend notifications while locked.
 	killall -SIGUSR1 dunst
 
@@ -22,21 +126,6 @@ session_lock() {
 
 		# Lock screen using locker command.
 		case "${locker}" in
-			i3lock)
-				local tmp="$(mktemp -d)"
-				local assets="${HOME}/.config/i3/assets"
-				local effect="convert -resize 20% -fill '#222' -colorize 50% -blur 0x1 -resize 500% $$f ${tmp}/_i3lock.png"
-
-				# Create blurred-out screenshot of current screen.
-				scrot -z -e "${effect}" "${tmp}/__i3lock.png"
-				convert -gravity center -composite "${tmp}/_i3lock.png" "${assets}/lock-overlay.png" "${tmp}/i3lock.png"
-
-				# Lock screen.
-				i3lock -u -i "${tmp}/i3lock.png"
-
-				# Remove cached file on exit.
-				trap "rm -Rf ${tmp}" EXIT
-				;;
 			light-locker)
 				light-locker-command -l
 				;;
@@ -53,46 +142,34 @@ session_lock() {
 	done
 }
 
-# Suspend and lock screen.
-session_suspend() {
-	session_lock
-	systemctl suspend
-}
-
-# Close all running applications and log out.
-session_logout() {
-	i3-msg exit
-}
-
-# Close all running applications and reboot.
-session_reboot() {
-	systemctl reboot
-}
-
-# Close all running applications and power off.
-session_poweroff() {
-	systemctl poweroff -i
-}
-
-ACTION=${1}
-
 case ${ACTION} in
-lock)
-	session_lock
-	;;
-suspend)
-	session_suspend
-	;;
-logout)
-	session_logout
-	;;
-reboot)
-	session_reboot
-	;;
-poweroff)
-	session_poweroff
-	;;
-*)
-	echo 'Unknown command, please use one of the following:'
-	echo "'lock', 'suspend', 'logout', 'reboot', 'poweroff'"
+	save)
+		session-save
+		;;
+	restore)
+		session-restore
+		;;
+	lock)
+		session-lock
+		;;
+	suspend)
+		session-lock
+		systemctl suspend
+		;;
+	logout)
+		session-save
+		i3-msg exit
+		;;
+	reboot)
+		session-save
+		systemctl reboot
+		;;
+	poweroff)
+		session-save
+		systemctl poweroff -i
+		;;
+	*)
+		echo 'Unknown command, please use one of the following:'
+		echo "'lock', 'suspend', 'logout', 'reboot', 'poweroff'"
+		;;
 esac
