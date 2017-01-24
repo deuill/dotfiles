@@ -44,6 +44,7 @@ values."
      spell-checking
      syntax-checking
      git
+     version-control
      dash
      deft)
    ;; List of additional packages that will be installed without being
@@ -162,7 +163,7 @@ values."
    ;; and TAB or <C-m> and RET.
    ;; In the terminal, these pairs are generally indistinguishable, so this only
    ;; works in the GUI. (default nil)
-   dotspacemacs-distinguish-gui-tab nil
+   dotspacemacs-distinguish-gui-tab t
    ;; If non nil `Y' is remapped to `y$' in Evil states. (default nil)
    dotspacemacs-remap-Y-to-y$ nil
    ;; If non-nil, the shift mappings `<' and `>' retain visual state if used
@@ -361,7 +362,10 @@ you should place your code here."
     ;; Set color for column marker.
     fci-rule-color "#484848"
 
-     ;; Set defaults for writeroom mode.
+    ;; Set highlighter for diff markers in margin.
+    version-control-diff-tool 'diff-hl
+
+    ;; Set defaults for writeroom mode.
     writeroom-width 80
     writeroom-restore-window-config t
     writeroom-fullscreen-effect 'maximized
@@ -369,26 +373,11 @@ you should place your code here."
     ;; Set defaults for Org mode.
     org-enable-github-support t)
 
-  (flycheck-define-checker proselint
-    "A linter for prose."
-    :command ("proselint" source-inplace)
-    :error-patterns
-    ((warning line-start (file-name) ":" line ":" column ": "
-              (id (one-or-more (not (any " "))))
-              (message (one-or-more not-newline)
-                       (zero-or-more "\n" (any " ") (one-or-more not-newline)))
-              line-end))
-    :modes (text-mode markdown-mode gfm-mode))
-
-  ;; Custom keybindings.
-  (global-set-key (kbd "M-<up>") 'next-buffer)
-  (global-set-key (kbd "M-<down>") 'previous-buffer)
-
-  ;; Generic sane defaults for all modes.
-  (spacemacs/toggle-mode-line-minor-modes-off)
-
   ;; Generic sane defaults for programming language modes.
   (defun set-prog-mode-defaults ()
+    ;; Enable diff markers in margins.
+    (diff-hl-mode 1)
+
     ;; Enable line number display.
     (linum-mode 1)
 
@@ -403,8 +392,9 @@ you should place your code here."
 
   ;; Documentation file-specific defaults.
   (defun set-doc-mode-defaults ()
-    ;; Enable `flycheck' with specific linters.
     (add-to-list 'flycheck-checkers 'proselint)
+
+    ;; Enable `flycheck' with specific linters.
     (flycheck-mode 1)
 
     ;; Enable soft word-wrapping.
@@ -432,7 +422,25 @@ you should place your code here."
   (add-hook 'markdown-mode-hook 'set-doc-mode-defaults)
 
   (add-hook 'org-mode-hook 'set-org-mode-defaults)
-  (add-hook 'emacs-lisp-mode-hook 'set-lisp-mode-defaults))
+  (add-hook 'emacs-lisp-mode-hook 'set-lisp-mode-defaults)
+
+  (flycheck-define-checker proselint
+    "A linter for prose."
+    :command ("proselint" source-inplace)
+    :error-patterns
+    ((warning line-start (file-name) ":" line ":" column ": "
+              (id (one-or-more (not (any " "))))
+              (message (one-or-more not-newline)
+                       (zero-or-more "\n" (any " ") (one-or-more not-newline)))
+              line-end))
+    :modes (text-mode markdown-mode gfm-mode))
+
+  ;; Custom keybindings.
+  (global-set-key (kbd "M-<up>") 'next-buffer)
+  (global-set-key (kbd "M-<down>") 'previous-buffer)
+
+  ;; Generic sane defaults for all modes.
+  (spacemacs/toggle-mode-line-minor-modes-off))
 
 (defun eww-split (url)
   "Loads eww content in split window"

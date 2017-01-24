@@ -70,6 +70,12 @@ bindsym $mod+Shift+Down   move down
 bindsym $mod+Shift+Up     move up
 bindsym $mod+Shift+Right  move right
 
+# Move workspace to output.
+bindsym $mod+Ctrl+Shift+Left   move workspace to output left
+bindsym $mod+Ctrl+Shift+Down   move workspace to output down
+bindsym $mod+Ctrl+Shift+Up     move workspace to output up
+bindsym $mod+Ctrl+Shift+Right  move workspace to output right
+
 # Window size
 bindsym $mod+f  fullscreen toggle
 
