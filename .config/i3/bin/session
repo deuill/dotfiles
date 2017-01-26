@@ -1,57 +1,67 @@
 #!/bin/bash
 # Session management script for i3.
 
-ACTION=$1
+# The sub-process to execute.
+action="$1"
 
-LOCKERS=("xflock4" "light-locker")
-SESSION_DIR="${HOME}/.cache/i3/session"
+# The list of available lockers.
+lockers=("xflock4" "light-locker")
 
-function session--get-tree() {
+# The cache directory for all persistent session data.
+cache_dir="${HOME}/.cache/i3"
+
+## Get window list for all workspaces.
+function session--windows() {
+	wmctrl -l -p -x | awk '{printf "%s %d %s\n", $1, $3, $4}'
+}
+
+## Get layout for workspace number.
+function session--workspace-layout() {
 	local num="$1"
 
 	read -r -d '' cleanup <<-'EOM'
-		NR == 1      {next}               # Skip first line in document.
+		NR == 1 {next}                    # Skip first line in document.
 		$0 ~ "// \"title" {next}          # Skip title match for window.
 		$0 ~ "// \"" {sub("// \"", "\"")} # Uncomment window definitions.
-		$0 ~ "//"    {next}               # Remove all other comments
+		$0 ~ "//" {next}                  # Remove all other comments
 		{gsub("\\\\", ""); print}         # Remove all backslash escapes.
 	EOM
 
 	awk "${cleanup}" <<< $(i3-save-tree --workspace ${num}) | jq -sr '.'
 }
 
-function session--get-commands() {
-	local tree="$1"
-	local commands=()
-
-	local selector='.. | .swallows? | .[]? | .instance + .class'
-	local windows=$(wmctrl -l -p -x)
+## Get window class list from layout.
+function session--layout-classes() {
+	local layout="$1"
 
 	# Clean window instance and class names.
 	read -r -d '' cleanup <<-'EOM'
 		 {gsub("\\$\\^", "."); print substr($0, 3, length($0) - 4)}
 	EOM
 
-	local classes=$((jq "${selector}" | awk "${cleanup}") <<< "${tree}")
+	jq '.. | .swallows? | .[]? | .instance + .class' <<< "${layout}" | awk "${cleanup}"
+}
+
+## Get command list from layout.
+function session--layout-commands() {
+	local commands=()
+	local windows=$(session--windows)
+	local classes=$(session--layout-classes "$1")
 
 	while read class
 	do
-		local info=$(awk '$4 ~ "'${class}'" {print $1 " " $3; exit}' <<< "${windows}")
-
-		local id=$(awk '{print $1}' <<< "${info}")
-		local pid=$(awk '{print $2}' <<< "${info}")
-
-		local title=$(awk -F'"' '$1 ~ "_NET_WM_NAME" {print $2}' <<< $(xprop -id "${id}"))
+		local id=$(awk '$3 ~ "'${class}'" {print $1; exit}' <<< "${windows}")
+		local pid=$(awk '$3 ~ "'${class}'" {print $2; exit}' <<< "${windows}")
 		local cmd=$(ps -p "${pid}" -o args --no-headers)
 
-		commands+='{"title":"'"${title}"'","cmd":"'"${cmd}"'"}'
+		commands+='"'"${cmd}"'"'
 	done <<< "${classes}"
 
 	jq -sr '.' <<< "${commands[@]}"
 }
 
-# Save session state for future restoration.
-function session-save() {
+## Save session state for future restoration.
+function session--save() {
 	local layout=()
 	local commands=()
 
@@ -63,26 +73,33 @@ function session-save() {
 		local num=$(jq -r ".[$i].num" <<< "${workspaces}")
 
 		# Get layout for workspace.
-		layout[$i]=$(session--get-tree "${num}")
+		layout[$i]=$(session--workspace-layout "${num}")
 
 		# Get list of running commands for workspace.
-		commands[$i]=$(session--get-commands "${layout[$i]}")
+		commands[$i]=$(session--layout-commands "${layout[$i]}")
 	done
-
-	# Create layout cache space and save state files.
-	mkdir -p "${SESSION_DIR}"
 
 	jq -r '.' <<< '{
 	    "layout":    '$(jq -sr '.' <<< "${layout[@]}")',
 	    "commands":  '$(jq -sr '.' <<< "${commands[@]}")',
 	    "workspaces":'"${workspaces[@]}"'
-	}' > "${SESSION_DIR}/session.json"
+	}' > "${cache_dir}/session.json"
 }
 
-# Restore previously saved session.
-function session-restore() {
-	local session=$(cat "${SESSION_DIR}/session.json")
+## Restore previously saved session.
+function session--restore() {
+	# Check for existing session file.
+	if [[ ! -e "${cache_dir}/session.json" ]]
+	then
+		echo "Session file does not exist, did you run '$0 save' first?"
+		exit 1
+	fi
+
+	local session=$(cat "${cache_dir}/session.json")
 	local temp=$(mktemp)
+
+	# Clean up temporary files on exit.
+	trap "rm -f ${temp}" exit
 
 	# Restore layout and running commands for each workspace.
 	for i in $(seq 0 $(($(jq -r '.workspaces | length' <<< "${session}") - 1)))
@@ -96,19 +113,16 @@ function session-restore() {
 		# Run all commands for workspace.
 		for c in $(seq 0 $(($(jq -r ".commands[$i] | length" <<< "${session}") - 1)))
 		do
-			exec $(jq -r ".commands[$i][$c].cmd" <<< "${session}") &
+			exec $(jq -r ".commands[$i][$c]" <<< "${session}") &
 		done
 	done
 
 	# Move back to first workspace.
 	i3-msg "workspace "$(jq -r '.workspaces[0].name' <<< "${session}")
-
-	# Clean up temporary files.
-	rm -f "${temp}"
 }
 
-# Lock screen with i3lock.
-function session-lock() {
+## Lock screen with pre-configured screen locker.
+function session--lock() {
 	# Suspend notifications while locked.
 	killall -SIGUSR1 dunst
 
@@ -116,13 +130,10 @@ function session-lock() {
 	trap 'killall -SIGUSR2 dunst' exit
 
 	# Iterate through list of supporter lockers and choose based on precedence.
-	for locker in ${LOCKERS[@]}
+	for locker in ${lockers[@]}
 	do
 		# Do not attempt to use non-existing locker.
-		if [ "x$(which ${locker})" == "x" ]
-		then
-			continue
-		fi
+		[[ "x$(which ${locker})" == "x" ]] && continue
 
 		# Lock screen using locker command.
 		case "${locker}" in
@@ -135,37 +146,52 @@ function session-lock() {
 		esac
 
 		# Return early if locker command succeeded.
-		if [ $? -eq 0 ]
-		then
-			return
-		fi
+		[[ $? -eq 0 ]] && return
 	done
 }
 
-case ${ACTION} in
+## Close all windows gracefully and exit active i3 session.
+function session--logout() {
+	# Fetch window list.
+	local windows=$(session--windows | awk '{print $1}')
+
+	# Save session state.
+	session--save
+
+	# Close all windows.
+	while read id; do wmctrl -ic "${id}"; done <<< "${windows}"
+
+	# Exit i3.
+	i3-msg exit
+}
+
+# Create shared cache directory.
+mkdir -p "${cache_dir}"
+
+# Select from available actions.
+case ${action} in
 	save)
-		session-save
+		session--save
 		;;
 	restore)
-		session-restore
+		session--restore
 		;;
 	lock)
-		session-lock
+		session--lock
 		;;
 	suspend)
-		session-lock
+		session--lock
 		systemctl suspend
 		;;
 	logout)
-		session-save
-		i3-msg exit
+		session--logout
 		;;
 	reboot)
-		session-save
+		session--save
 		systemctl reboot
 		;;
 	poweroff)
-		session-save
+		session--save
 		systemctl poweroff -i
 		;;
 	*)
