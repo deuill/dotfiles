@@ -117,8 +117,9 @@ function session--restore() {
 		done
 	done
 
-	# Move back to first workspace.
-	i3-msg "workspace "$(jq -r '.workspaces[0].name' <<< "${session}")
+	# Move to previously active workspaces.
+	local active=$(jq -r '.workspaces[] | select(.visible == true) | .name' <<< "${session}")
+	while read name; do i3-msg "workspace ${name}"; done <<< "${active}"
 }
 
 ## Lock screen with pre-configured screen locker.
@@ -155,9 +156,6 @@ function session--logout() {
 	# Fetch window list.
 	local windows=$(session--windows | awk '{print $1}')
 
-	# Save session state.
-	session--save
-
 	# Close all windows.
 	while read id; do wmctrl -ic "${id}"; done <<< "${windows}"
 
@@ -184,6 +182,7 @@ case ${action} in
 		systemctl suspend
 		;;
 	logout)
+		session--save
 		session--logout
 		;;
 	reboot)
