@@ -24,11 +24,9 @@ function diff-color
 	diff -u $argv | colordiff | less -R
 end
 
-# Start SSH agent if needed.
-if test -z "$SSH_ENV"
-	setenv SSH_ENV $HOME/.ssh/environment
-end
+# Defaults for GPG.
+set -e SSH_AGENT_PID
+set -x SSH_AUTH_SOCK $XDG_RUNTIME_DIR/gnupg/S.gpg-agent.ssh
+set -x GPG_TTY (tty)
 
-if not __ssh_agent_is_started
-	__ssh_agent_start
-end
+gpg-connect-agent updatestartuptty /bye >/dev/null
