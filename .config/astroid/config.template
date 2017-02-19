@@ -99,7 +99,7 @@
             "name": "${FULLNAME}",
             "email": "${USERNAME}",
             "gpgkey": "",
-            "sendmail": "mail-sync send ${USERNAME}",
+            "sendmail": "${HOME}/.local/bin/mail-sync send ${USERNAME}",
             "default": "true",
             "save_sent": "true",
             "save_sent_to": "${MAIL_DATADIR}/${USERNAME}/Sent/cur",

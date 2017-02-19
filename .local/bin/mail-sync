@@ -10,8 +10,31 @@ export MAIL_CONFDIR="${HOME}/.config/mail"
 
 # Export all variables in global configuration automatically.
 set -o allexport
-source "${MAIL_CONFDIR}/config.global"
+source "${MAIL_CONFDIR}/mail.conf"
 set +o allexport
+
+# Echoes a newline-separated list of local folders.
+function local-folders() {
+	local account="$1"
+	local maildir="${MAIL_DATADIR}/${account}"
+	local paths=$(sort <<< "$(find ${maildir} -name "cur" -type d -exec dirname '{}' \;)")
+
+	while read -r path
+	do
+		echo "${path#${MAIL_DATADIR}/}"
+	done <<< "${paths}"
+}
+
+# Echoes a newline-separated list of tag names for local folders.
+function local-folders-tags() {
+	local account="$1"
+	local folders=$(local-folders "${account}")
+
+	while read -r folder
+	do
+		echo "${folder#${account}/}" | tr -s '[:upper:][:punct:][:blank:]' '[:lower:]-'
+	done <<< "${folders}"
+}
 
 # Fetch all messages for specific account name.
 function fetch() {
@@ -21,76 +44,105 @@ function fetch() {
 	export USERNAME="$2"
 	export HOSTNAME="$3"
 
-	local paths=$(sort <<< "$(find ${MAIL_DATADIR}/${USERNAME} -name "cur" -type d -exec dirname '{}' \;)")
-	for path in ${paths}
-	do
-		local folder="${path#${MAIL_DATADIR}/}"
-		local tag="$(echo ${path#${MAIL_DATADIR}/${USERNAME}/} | tr -s '[:upper:]/. ' '[:lower:]-')"
+	# Process any local modifications before synching to server.
+	if [[ -d "${MAIL_DATADIR}/.notmuch" ]]
+	then
+		# Get list of local folders with their corresponding tags.
+		local folders=$(local-folders "${USERNAME}")
+		local tags=$(local-folders-tags "${USERNAME}")
 
-		# Copy all messages into the corresponding folder for their tag.
-		local ids=$(notmuch search --output=messages tag:"${tag}" NOT folder:"${folder}" NOT tag:"new")
-		for id in ${ids}
+		# Fetch all Notmuch tags with no corresponding folder.
+		while read -r tag
 		do
-			local files=$(notmuch search --output=files "${id}")
-			while read file
-			do
-				# Copy file to correct folder.
-				if [[ -e "${file}" ]]
-				then
-					echo "Copied message from '${file}' to '${path}/cur'"
-					mkdir -p "${path}/cur"
-					cp "${file}" "${path}/cur"
-					break
-				fi
-			done <<< "${files}"
-		done <<< "${ids}"
+			# Do not attempt to sync transient tags.
+			[[ "${tag}" =~ ${TRANSIENT_TAGS} ]] && continue
 
-		# Remove all messages with no tags corresponding to their folders.
-		local ids=$(notmuch search --output=messages folder:"${folder}" NOT tag:"${tag}" NOT tag:"new")
-		for id in ${ids}
+			# Skip existing tags.
+			grep -q "${tag}" <<< "${tags}" && continue
+
+			# Generate folder name for tag.
+			IFS=- read -r -d '' -a tmp < <(printf '%s\0' "${tag,,}")
+			local folder="${USERNAME}/"$(cut -d' ' -f2- <<< $(printf ' %s' "${tmp[@]^}"))
+
+			# Append new folder and tag name to list.
+			folders="${folders}${folder}"$'\n'
+			tags="${tags}${tag}"$'\n'
+		done <<< $(sort <<< "$(notmuch search --output=tags '*')")
+
+		for i in $(seq 1 $(wc -l <<< "${tags}"))
 		do
-			local files=$(notmuch search --output=files "${id}")
-			while read file
+			local tag=$(awk "NR==${i}" <<< "${tags}")
+			local folder=$(awk "NR==${i}" <<< "${folders}")
+
+			# Copy all messages into the corresponding folder for their tag.
+			local ids=$(notmuch search --output=messages tag:"${tag}" NOT folder:"${folder}" NOT tag:"new")
+			for id in ${ids}
 			do
-				# Remove file from folder.
-				if [[ -e "${file}" ]]
-				then
-					echo "Removed message file '${file}'"
-					rm "${file}"
-					break
-				fi
-			done <<< "${files}"
+				local files=$(notmuch search --output=files "${id}")
+				while read -r file
+				do
+					# Copy file to correct folder.
+					if [[ -e "${file}" ]]
+					then
+						local path="${MAIL_DATADIR}/${folder}"
+						echo "Copied message from '${file}' to '${path}/new'"
+
+						mkdir -p "${path}/new"
+						cp "${file}" "${path}/new"
+
+						break
+					fi
+				done <<< "${files}"
+			done
+
+			# Remove all messages with no tags corresponding to their folders.
+			local ids=$(notmuch search --output=messages folder:"${folder}" NOT tag:"${tag}" NOT tag:"new")
+			for id in ${ids}
+			do
+				local files=$(notmuch search --output=files "${id}")
+				while read -r file
+				do
+					# Remove file from folder.
+					if [[ -e "${file}" ]]
+					then
+						echo "Removed message file '${file}'"
+						rm "${file}"
+
+						break
+					fi
+				done <<< "${files}"
+			done
 		done
-	done <<< "${paths}"
+	fi
 
 	# Synchronize and index mail from IMAP server.
-	mbsync -c <(envsubst < "${MBSYNC_CONFDIR}/config.${type}") "${USERNAME}"
+	mbsync -c <(envsubst < "${MBSYNC_CONFDIR}/${type}.conf") "${USERNAME}"
 	notmuch --config="${NOTMUCH_CONFDIR}/config" new
 
-	local paths=$(sort <<< "$(find ${MAIL_DATADIR}/${USERNAME} -name "cur" -type d -exec dirname '{}' \;)")
-	for path in ${paths}
+	# Refresh list of local folders with their corresponding tags.
+	local folders=$(local-folders "${USERNAME}")
+	local tags=$(local-folders-tags "${USERNAME}")
+
+	for i in $(seq 1 $(wc -l <<< "${tags}"))
 	do
-		local folder="${path#${MAIL_DATADIR}/}"
-		local tag="$(echo ${path#${MAIL_DATADIR}/${USERNAME}/} | tr -s '[:upper:]/. ' '[:lower:]-')"
+		local tag=$(awk "NR==${i}" <<< "${tags}")
+		local folder=$(awk "NR==${i}" <<< "${folders}")
 
 		# Tag new messages with specific folder name tag if none is set already.
-		echo "Tagging '${tag}' all in '${folder}'..."
 		notmuch tag +"${tag}" folder:"${folder}" NOT tag:"${tag}"
 
 		# Remove tags from messages that have been moved/deleted/retagged etc.
-		echo "Untagging '${tag}' all moved from '${folder}'..."
 		notmuch tag -"${tag}" tag:"${tag}" NOT folder:"${folder}" NOT folder:"trash"
 	done
 
 	# Remove 'new' tag and add 'unread' tag to all new messages.
-	echo "Removing 'new' tag, adding 'unread' tag to all new email..."
 	notmuch tag -"new" +"unread" tag:"new"
 
 	# Remove 'unread' tag from messages in 'Sent' folder.
-	echo "Removing 'unread' tag from all sent messages..."
 	notmuch tag -"unread" folder:"sent"
 }
 
+# Send email message from standard input.
 function send() {
 	local type="$1"
 
@@ -112,7 +164,8 @@ function send() {
 	for mail in "${queuedir}"/*.mail
 	do
 		echo "Sending '${mail}..."
-		msmtp -C <(envsubst < "${MSMTP_CONFDIR}/config.${type}") "${USERNAME}" < "${mail}"
+		msmtp -C <(envsubst < "${MSMTP_CONFDIR}/${type}.conf") -t < "${mail}"
+
 		if [[ $? -eq 0 ]]
 		then
 			echo "Success"
@@ -151,6 +204,7 @@ function notify() {
 	notmuch tag -"not-notified" tag:"not-notified"
 }
 
+# Setup account configuration for `notmuch`, `mbsync`, `msmtp` etc.
 function setup() {
 	local account="$1"
 
@@ -162,14 +216,14 @@ function setup() {
 	fi
 
 	# Create or load user configuration.
-	if [[ ! -e "${MAIL_CONFDIR}/account.d/${account}" ]]
+	if [[ ! -e "${MAIL_CONFDIR}/account.d/${account}.conf" ]]
 	then
 		mkdir -p "${MAIL_CONFDIR}/account.d"
-		cp "${MAIL_CONFDIR}/config.template" "${MAIL_CONFDIR}/account.d/${account}"
+		cp "${MAIL_CONFDIR}/account.conf.template" "${MAIL_CONFDIR}/account.d/${account}.conf"
 
-		read -p "Press enter to edit user configuration for '${account}': "
+		read -r -p "Press enter to edit user configuration for '${account}': "
 		[[ -z "${EDITOR}" ]] && EDITOR="nano"
-		${EDITOR} "${MAIL_CONFDIR}/account.d/${account}"
+		${EDITOR} "${MAIL_CONFDIR}/account.d/${account}.conf"
 
 		echo "Please enter password for '${account}': "
 		secret-tool store --label "mail-sync ${account}" mail.sync.user "${account}"
@@ -177,8 +231,7 @@ function setup() {
 		echo "Using existing configuration file for '${account}'..."
 	fi
 
-	mkdir -p "${MAIL_DATADIR}/${account}"
-	load_config "${account}"
+	load-config "${account}"
 
 	if [[ ! -e "${NOTMUCH_CONFDIR}/config" ]]
 	then
@@ -208,32 +261,44 @@ function setup() {
 	echo "Setup complete."
 }
 
-function load_config() {
+# Checks if local account exists, and returns 0 if true, 1 if false.
+function account-exists() {
 	local account="$1"
 
-	if [[ ! -e "${MAIL_CONFDIR}/account.d/${account}" ]]
+	if [[ ! -e "${MAIL_CONFDIR}/account.d/${account}.conf" ]]
 	then
 		echo "Configuration for account '${account}' not found."
 		echo "Did you intend to run 'setup' instead?"
 		exit 1
 	fi
+}
+
+# Load configuration file for account into current environment.
+function load-config() {
+	local account="$1"
+
+	# Check if account exists and exit if not.
+	account-exists "${account}" || exit 1
+	mkdir -p "${MAIL_DATADIR}/${account}"
 
 	set -o allexport
-	source "${MAIL_CONFDIR}/account.d/${account}"
+	source "${MAIL_CONFDIR}/account.d/${account}.conf"
 	set +o allexport
 }
 
+# Lock process for concurrent runs of `mail-sync`.
 function lock() {
 	# Check for existing process and lock if none exists.
 	mkdir -p "${MAIL_DATADIR}"
 
-	[[ -e "${MAIL_DATADIR}/.lock" ]] && exit
-	touch "${MAIL_DATADIR}/.lock" || exit
+	[[ -e "${MAIL_DATADIR}/.lock" ]] && exit 0
+	touch "${MAIL_DATADIR}/.lock" || exit 0
 
 	# Remove lock on exit.
 	trap "rm -f ${MAIL_DATADIR}/.lock" EXIT
 }
 
+# Print usage information for `mail-sync`.
 function usage() {
 	echo -e "Usage: mail-sync COMMAND [USERNAME]\n"
 	echo -e "Commands:"
@@ -242,7 +307,7 @@ function usage() {
 	echo -e "  setup  Setup default account settings."
 }
 
-
+# Check for valid command name.
 if [[ -z "$1" ]]
 then
 	usage
@@ -251,6 +316,7 @@ fi
 
 action="$1"
 
+# Check for account name parameter.
 if [[ -z "$2" ]]
 then
 	echo "Error: Please specify an account name to fetch from."
@@ -262,11 +328,11 @@ lock
 
 case ${action} in
 fetch)
-	load_config "${account}"
+	load-config "${account}"
 	fetch "${TYPE}" "${USERNAME}" "${SMTP_HOSTNAME}" && notify
 	;;
 send)
-	load_config "${account}"
+	load-config "${account}"
 	send "${TYPE}" "${USERNAME}" "${SMTP_HOSTNAME}"
 	;;
 setup)
