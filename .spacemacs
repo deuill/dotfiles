@@ -136,7 +136,7 @@ values."
    ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
    ;; quickly tweak the mode-line size to make separators look not too crappy.
    dotspacemacs-default-font
-   '("Inconsolata"
+   '("Iosevka Light"
      :size 16
      :weight normal
      :width normal
@@ -182,7 +182,7 @@ values."
    dotspacemacs-display-default-layout nil
    ;; If non nil then the last auto saved layouts are resume automatically upon
    ;; start. (default nil)
-   dotspacemacs-auto-resume-layouts nil
+   dotspacemacs-auto-resume-layouts t
    ;; Size (in MB) above which spacemacs will prompt to open the large file
    ;; literally to avoid performance issues. Opening a file literally means that
    ;; no major mode or minor modes are active. (default is 1)
@@ -411,6 +411,12 @@ you should place your code here."
     ;; Inherit doc-mode defaults.
     (set-doc-mode-defaults))
 
+  (defun set-sh-mode-defaults ()
+    (add-to-list 'flycheck-checkers 'sh-shellcheck)
+
+    ;; Enable `flycheck' with specific linters.
+    (flycheck-mode 1))
+
   ;; Lisp-specific defaults.
   (defun set-lisp-mode-defaults ()
     ;; Disable indentation with tabs.
@@ -422,6 +428,7 @@ you should place your code here."
   (add-hook 'markdown-mode-hook 'set-doc-mode-defaults)
 
   (add-hook 'org-mode-hook 'set-org-mode-defaults)
+  (add-hook 'sh-mode-hook 'set-sh-mode-defaults)
   (add-hook 'emacs-lisp-mode-hook 'set-lisp-mode-defaults)
 
   (flycheck-define-checker proselint
