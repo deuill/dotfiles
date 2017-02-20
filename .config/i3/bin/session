@@ -15,9 +15,9 @@ function session--windows() {
 	wmctrl -l -p -x | awk '{printf "%s %d %s\n", $1, $3, $4}'
 }
 
-## Get layout for workspace number.
+## Get layout for workspace nameber.
 function session--workspace-layout() {
-	local num="$1"
+	local name="$1"
 
 	read -r -d '' cleanup <<-'EOM'
 		NR == 1 {next}                    # Skip first line in document.
@@ -27,7 +27,7 @@ function session--workspace-layout() {
 		{gsub("\\\\", ""); print}         # Remove all backslash escapes.
 	EOM
 
-	awk "${cleanup}" <<< $(i3-save-tree --workspace ${num}) | jq -sr '.'
+	awk "${cleanup}" <<< $(i3-save-tree --workspace "${name}") | jq -sr '.'
 }
 
 ## Get window class list from layout.
@@ -50,8 +50,8 @@ function session--layout-commands() {
 
 	while read class
 	do
-		local id=$(awk '$3 ~ "'${class}'" {print $1; exit}' <<< "${windows}")
-		local pid=$(awk '$3 ~ "'${class}'" {print $2; exit}' <<< "${windows}")
+		local id=$(awk '$3 ~ "'"${class}"'" {print $1; exit}' <<< "${windows}")
+		local pid=$(awk '$3 ~ "'"${class}"'" {print $2; exit}' <<< "${windows}")
 		local cmd=$(ps -p "${pid}" -o args --no-headers)
 
 		commands+='"'"${cmd}"'"'
@@ -70,10 +70,10 @@ function session--save() {
 
 	for i in $(seq 0 $(($(jq -r '. | length' <<< "${workspaces}") - 1)))
 	do
-		local num=$(jq -r ".[$i].num" <<< "${workspaces}")
+		local name=$(jq -r ".[$i].name" <<< "${workspaces}")
 
 		# Get layout for workspace.
-		layout[$i]=$(session--workspace-layout "${num}")
+		layout[$i]=$(session--workspace-layout "${name}")
 
 		# Get list of running commands for workspace.
 		commands[$i]=$(session--layout-commands "${layout[$i]}")
@@ -151,16 +151,13 @@ function session--lock() {
 	done
 }
 
-## Close all windows gracefully and exit active i3 session.
-function session--logout() {
+## Close all windows gracefully.
+function session--close() {
 	# Fetch window list.
 	local windows=$(session--windows | awk '{print $1}')
 
 	# Close all windows.
 	while read id; do wmctrl -ic "${id}"; done <<< "${windows}"
-
-	# Exit i3.
-	i3-msg exit
 }
 
 # Create shared cache directory.
@@ -178,19 +175,22 @@ case ${action} in
 		session--lock
 		;;
 	suspend)
-		session--lock
+		session--lock && sleep 1
 		systemctl suspend
 		;;
 	logout)
 		session--save
-		session--logout
+		session--close && sleep 1
+		i3-msg exit
 		;;
 	reboot)
 		session--save
+		session--close && sleep 1
 		systemctl reboot
 		;;
 	poweroff)
 		session--save
+		session--close && sleep 1
 		systemctl poweroff -i
 		;;
 	*)
