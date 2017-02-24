@@ -43,6 +43,7 @@ values."
      auto-completion
      spell-checking
      syntax-checking
+     gtags
      git
      version-control
      dash
@@ -58,7 +59,9 @@ values."
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
    ;; A list of packages that will not be installed and loaded.
-   dotspacemacs-excluded-packages '(vi-tilde-fringe org-bullets)
+   dotspacemacs-excluded-packages
+   '(vi-tilde-fringe
+     org-bullets)
    ;; Defines the behaviour of Spacemacs when installing packages.
    ;; Possible values are `used-only', `used-but-keep-unused' and `all'.
    ;; `used-only' installs only explicitly used packages and uninstall any
@@ -171,7 +174,7 @@ values."
    dotspacemacs-retain-visual-state-on-shift t
    ;; If non-nil, J and K move lines up and down when in visual mode.
    ;; (default nil)
-   dotspacemacs-visual-line-move-text nil
+   dotspacemacs-visual-line-move-text t
    ;; If non nil, inverse the meaning of `g' in `:substitute' Evil ex-command.
    ;; (default nil)
    dotspacemacs-ex-substitute-global nil
@@ -179,7 +182,7 @@ values."
    dotspacemacs-default-layout-name "Default"
    ;; If non nil the default layout name is displayed in the mode-line.
    ;; (default nil)
-   dotspacemacs-display-default-layout nil
+   dotspacemacs-display-default-layout t
    ;; If non nil then the last auto saved layouts are resume automatically upon
    ;; start. (default nil)
    dotspacemacs-auto-resume-layouts t
@@ -284,7 +287,7 @@ values."
    ;; `trailing' to delete only the whitespace at end of lines, `changed'to
    ;; delete only whitespace for changed lines or `nil' to disable cleanup.
    ;; (default nil)
-   dotspacemacs-whitespace-cleanup nil))
+   dotspacemacs-whitespace-cleanup 'changed))
 
 (defun dotspacemacs/user-init ()
   "Initialization function for user code.
@@ -363,7 +366,9 @@ you should place your code here."
     fci-rule-color "#484848"
 
     ;; Set highlighter for diff markers in margin.
-    version-control-diff-tool 'diff-hl
+    version-control-diff-tool 'git-gutter+
+    git-gutter-fr+-side 'left-fringe
+    left-fringe-width 20
 
     ;; Set defaults for writeroom mode.
     writeroom-width 80
@@ -373,64 +378,38 @@ you should place your code here."
     ;; Set defaults for Org mode.
     org-enable-github-support t)
 
-  ;; Generic sane defaults for programming language modes.
-  (defun set-prog-mode-defaults ()
-    ;; Enable diff markers in margins.
-    (diff-hl-mode 1)
-
-    ;; Enable line number display.
-    (linum-mode 1)
-
-    ;; Enable multiple cursor mode.
-    (evil-mc-mode 1)
-
-    ;; Enable column marker.
-    (fci-mode 1)
-
-    ;; Attempt to automatically determine indentation settings from buffer.
-    (dtrt-indent-mode 1))
-
-  ;; Documentation file-specific defaults.
-  (defun set-doc-mode-defaults ()
-    (add-to-list 'flycheck-checkers 'proselint)
-
-    ;; Enable `flycheck' with specific linters.
-    (flycheck-mode 1)
-
-    ;; Enable soft word-wrapping.
-    (visual-line-mode 1)
-
-    ;; Enable distraction-free editing mode.
-    (writeroom-mode 1))
-
-  ;; Org-mode specific defaults.
-  (defun set-org-mode-defaults ()
-    ;; Set custom variables.
-    (setq-local writeroom-width 100)
-
-    ;; Inherit doc-mode defaults.
-    (set-doc-mode-defaults))
-
-  (defun set-sh-mode-defaults ()
-    (add-to-list 'flycheck-checkers 'sh-shellcheck)
-
-    ;; Enable `flycheck' with specific linters.
-    (flycheck-mode 1))
-
-  ;; Lisp-specific defaults.
-  (defun set-lisp-mode-defaults ()
-    ;; Disable indentation with tabs.
-    (setq indent-tabs-mode nil))
-
+  ;; Mode-specific hooks and configuration.
   (add-hook 'prog-mode-hook 'set-prog-mode-defaults)
   (add-hook 'css-mode-hook 'set-prog-mode-defaults)
-
   (add-hook 'markdown-mode-hook 'set-doc-mode-defaults)
-
   (add-hook 'org-mode-hook 'set-org-mode-defaults)
+  (add-hook 'php-mode-hook 'set-php-mode-defaults)
   (add-hook 'sh-mode-hook 'set-sh-mode-defaults)
   (add-hook 'emacs-lisp-mode-hook 'set-lisp-mode-defaults)
 
+  ;; Custom keybindings.
+  (global-set-key (kbd "M-<up>") 'next-buffer)
+  (global-set-key (kbd "M-<down>") 'previous-buffer)
+
+  ;; Generic sane defaults for all modes.
+  (spacemacs/toggle-mode-line-minor-modes-off))
+
+;; Generic sane defaults for programming language modes.
+(defun set-prog-mode-defaults ()
+  ;; Enable line number display.
+  (linum-mode 1)
+
+  ;; Enable multiple cursor mode.
+  (evil-mc-mode 1)
+
+  ;; Enable column marker.
+  (fci-mode 1)
+
+  ;; Attempt to automatically determine indentation settings from buffer.
+  (dtrt-indent-mode 1))
+
+;; Documentation file-specific defaults.
+(defun set-doc-mode-defaults ()
   (flycheck-define-checker proselint
     "A linter for prose."
     :command ("proselint" source-inplace)
@@ -440,14 +419,45 @@ you should place your code here."
               (message (one-or-more not-newline)
                        (zero-or-more "\n" (any " ") (one-or-more not-newline)))
               line-end))
-    :modes (text-mode markdown-mode gfm-mode))
+    :modes (text-mode))
 
-  ;; Custom keybindings.
-  (global-set-key (kbd "M-<up>") 'next-buffer)
-  (global-set-key (kbd "M-<down>") 'previous-buffer)
+  (add-to-list 'flycheck-checkers 'proselint)
 
-  ;; Generic sane defaults for all modes.
-  (spacemacs/toggle-mode-line-minor-modes-off))
+  ;; Enable `flycheck' with specific linters.
+  (flycheck-mode 1)
+
+  ;; Enable soft word-wrapping.
+  (visual-line-mode 1)
+
+  ;; Enable distraction-free editing mode.
+  (writeroom-mode 1))
+
+;; Org-mode specific defaults.
+(defun set-org-mode-defaults ()
+  ;; Set custom variables.
+  (setq-local writeroom-width 100)
+
+  ;; Inherit doc-mode defaults.
+  (set-doc-mode-defaults))
+
+;; PHP-specific defaults.
+(defun set-php-mode-defaults ()
+  ;; Set PSR2 coding style as default.
+  (php-enable-psr2-coding-style)
+
+  ;; Inherit prog-mode defaults.
+  (set-prog-mode-defaults))
+
+(defun set-sh-mode-defaults ()
+  (add-to-list 'flycheck-checkers 'sh-shellcheck)
+
+  ;; Enable `flycheck' with specific linters.
+  (flycheck-mode 1))
+
+;; Lisp-specific defaults.
+(defun set-lisp-mode-defaults ()
+  ;; Disable indentation with tabs.
+  (setq indent-tabs-mode nil))
 
 (defun eww-split (url)
   "Loads eww content in split window"
