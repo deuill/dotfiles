@@ -54,7 +54,7 @@ function session--layout-commands() {
 		local pid=$(awk '$3 ~ "'"${class}"'" {print $2; exit}' <<< "${windows}")
 		local cmd=$(ps -p "${pid}" -o args --no-headers)
 
-		commands+='"'"${cmd}"'"'
+		commands+=('"'"${cmd}"'"')
 	done <<< "${classes}"
 
 	jq -sr '.' <<< "${commands[@]}"
@@ -82,7 +82,7 @@ function session--save() {
 	jq -r '.' <<< '{
 	    "layout":    '$(jq -sr '.' <<< "${layout[@]}")',
 	    "commands":  '$(jq -sr '.' <<< "${commands[@]}")',
-	    "workspaces":'"${workspaces[@]}"'
+	    "workspaces":'"${workspaces[*]}"'
 	}' > "${cache_dir}/session.json"
 }
 
@@ -131,7 +131,7 @@ function session--lock() {
 	trap 'killall -SIGUSR2 dunst' exit
 
 	# Iterate through list of supporter lockers and choose based on precedence.
-	for locker in ${lockers[@]}
+	for locker in ${lockers[*]}
 	do
 		# Do not attempt to use non-existing locker.
 		[[ "x$(which ${locker})" == "x" ]] && continue
