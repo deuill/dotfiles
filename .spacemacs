@@ -31,23 +31,33 @@ values."
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
    '(emacs-lisp
-     markdown
-     org
-     go
-     php
+     ;; Languages
      c-c++
+     csv
+     go
      html
      javascript
+     markdown
+     org
+     php
+     salt
+     sql
      yaml
-     csv
-     auto-completion
+     ;; Checking and linting
      spell-checking
      syntax-checking
+     ;; Tagging and completion
+     auto-completion
      gtags
-     git
-     version-control
+     ;; Tools
      dash
-     deft)
+     deft
+     shell
+     ;; Chat
+     jabber
+     ;; Source control
+     git
+     version-control)
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
@@ -182,7 +192,7 @@ values."
    dotspacemacs-default-layout-name "Default"
    ;; If non nil the default layout name is displayed in the mode-line.
    ;; (default nil)
-   dotspacemacs-display-default-layout t
+   dotspacemacs-display-default-layout nil
    ;; If non nil then the last auto saved layouts are resume automatically upon
    ;; start. (default nil)
    dotspacemacs-auto-resume-layouts t
@@ -221,6 +231,12 @@ values."
    ;; right; if there is insufficient space it displays it at the bottom.
    ;; (default 'bottom)
    dotspacemacs-which-key-position 'bottom
+   ;; Control where `switch-to-buffer' displays the buffer. If nil,
+   ;; `switch-to-buffer' displays the buffer in the current window even if
+   ;; another same-purpose window is available. If non-nil, `switch-to-buffer'
+   ;; displays the buffer in a same-purpose window even if the buffer can be
+   ;; displayed in the current window. (default nil)
+   dotspacemacs-switch-to-buffer-prefers-purpose nil
    ;; If non nil a progress bar is displayed when spacemacs is loading. This
    ;; may increase the boot time on some systems and emacs builds, set it to
    ;; nil to boost the loading time. (default t)
@@ -275,9 +291,9 @@ values."
    ;; (default nil)
    dotspacemacs-persistent-server nil
    ;; List of search tool executable names. Spacemacs uses the first installed
-   ;; tool of the list. Supported tools are `ag', `pt', `ack' and `grep'.
-   ;; (default '("ag" "pt" "ack" "grep"))
-   dotspacemacs-search-tools '("ag" "pt" "ack" "grep")
+   ;; tool of the list. Supported tools are `rg', `ag', `pt', `ack' and `grep'.
+   ;; (default '("rg" "ag" "pt" "ack" "grep"))
+   dotspacemacs-search-tools '("rg" "ag" "pt" "ack" "grep")
    ;; The default package repository used if no explicit repository has been
    ;; specified with an installed package.
    ;; Not used for now. (default nil)
@@ -331,9 +347,6 @@ you should place your code here."
     ;; Use dumb-jump as default jump handler.
     spacemacs-default-jump-handlers '(dumb-jump-go evil-goto-definition)
 
-    ;; Use Helm for dumb-jump completions.
-    dumb-jump-selector 'helm
-
     ;; Use simple NeoTree theme.
     neo-theme 'nerd
 
@@ -346,12 +359,19 @@ you should place your code here."
     deft-extensions '("org" "md")
     deft-directory "~/.notes"
 
+    ;; Projectile defaults.
+    projectile-globally-ignored-directories '("vendor")
+
     ;; Use common cache path for docsets.
     helm-dash-docset-newpath "~/.cache/docsets"
     helm-dash-browser-func 'eww-split
 
+    ;; Defaults for Magit.
+    magit-diff-refine-hunk t
+
     ;; Make indentation detection with dtrt more conservative.
     dtrt-indent-min-quality 90.0
+    dtrt-indent-active-mode-line-info ""
 
     ;; Enable metalinter for Go.
     go-use-gometalinter t
