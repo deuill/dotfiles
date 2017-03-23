@@ -347,10 +347,15 @@ you should place your code here."
     ;; Use dumb-jump as default jump handler.
     spacemacs-default-jump-handlers '(dumb-jump-go evil-goto-definition)
 
+    ;; Tie buffer and perspective removal.
+    persp-autokill-buffer-on-remove t
+    persp-autokill-persp-when-removed-last-buffer t
+
     ;; Use simple NeoTree theme.
     neo-theme 'nerd
 
-    ;; Org mode formatting rules.
+    ;; Set defaults for Org mode.
+    org-enable-github-support t
     org-ellipsis " …"
     org-bullets-bullet-list '("•" "◦")
 
@@ -394,9 +399,7 @@ you should place your code here."
     writeroom-width 80
     writeroom-restore-window-config t
     writeroom-fullscreen-effect 'maximized
-
-    ;; Set defaults for Org mode.
-    org-enable-github-support t)
+    writeroom-bottom-divider-width 0)
 
   ;; Mode-specific hooks and configuration.
   (add-hook 'prog-mode-hook 'set-prog-mode-defaults)
