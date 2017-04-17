@@ -48,13 +48,10 @@ values."
      syntax-checking
      ;; Tagging and completion
      auto-completion
-     gtags
      ;; Tools
      dash
      deft
      shell
-     ;; Chat
-     jabber
      ;; Source control
      git
      version-control)
@@ -313,12 +310,18 @@ executes.
 before packages are loaded. If you are unsure, you should try in setting them in
 `dotspacemacs/user-config' first."
   (setq
+   ;; Use custom file for additional settings.
+   custom-file "~/.emacs.d/.cache/custom-settings.el"
+
    ;; Do not use variable-width fonts for headers.
    monokai-use-variable-pitch nil
 
    ;; Set colors consistent with Base16-Eighties theme.
    monokai-background     "#2d2d2d"
-   monokai-highlight-line "#323232"))
+   monokai-highlight-line "#323232")
+
+  ;; Load additional settings.
+  (load "~/.emacs.d/.cache/custom-settings.el"))
 
 (defun dotspacemacs/user-config ()
   "Configuration function for user code.
@@ -414,6 +417,9 @@ you should place your code here."
   (global-set-key (kbd "M-<up>") 'next-buffer)
   (global-set-key (kbd "M-<down>") 'previous-buffer)
 
+  ;; Have SPC TAB limit to the current perspective.
+  (spacemacs/set-leader-keys "TAB" 'alternate-buffer-in-persp)
+
   ;; Generic sane defaults for all modes.
   (spacemacs/toggle-mode-line-minor-modes-off))
 
@@ -507,6 +513,12 @@ you should place your code here."
              (null popup-instances))
     (setq fci-mode-suppressed nil)
     (turn-on-fci-mode)))
+
+(defun alternate-buffer-in-persp ()
+    "Switch back and forth between current and last buffer in the current perspective."
+    (interactive)
+    (with-persp-buffer-list ()
+      (switch-to-buffer (other-buffer (current-buffer) t))))
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
