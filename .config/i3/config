@@ -20,21 +20,18 @@ set $misc   7: misc
 # Workspace assignments for applications
 assign [class="Firefox"]   → $www
 assign [class="Chromium"]  → $www
-assign [class="Astroid"]   → $www
+assign [class="Geary"]     → $www
 assign [class="Emacs"]     → $code
 assign [class="Gnome-mpv"] → $media
 assign [class="Gimp"]      → $media
-assign [class="Slack"]     → $chat
-assign [class="HipChat"]   → $chat
-assign [class="Hexchat"]   → $chat
-assign [class="Pidgin"]    → $chat
 assign [class="Steam"]     → $games
 
 # Rules for specific window classes
-for_window [class="Connman-gtk"] floating enable
-for_window [class="Pavucontrol"] floating enable
+for_window [class="Connman-gtk"]  floating enable
+for_window [class="Pavucontrol"]  floating enable
 for_window [class="Blueberry.py"] floating enable
-for_window [class="Orage"] floating enable
+for_window [class="Orage"]        floating enable
+for_window [title="Authy"]        floating enable
 
 # -----------
 # KEYBINDINGS
@@ -129,16 +126,24 @@ bindsym $mod+Shift+c       reload
 bindsym $mod+Shift+r       restart
 bindsym $mod+Shift+Delete  exec --no-startup-id ~/.config/i3/bin/session lock
 
-# Volume keys
-bindsym XF86AudioRaiseVolume  exec --no-startup-id "~/.config/i3/bin/volume up && touch /tmp/i3statusbar.*/volume"
-bindsym XF86AudioLowerVolume  exec --no-startup-id "~/.config/i3/bin/volume down && touch /tmp/i3statusbar.*/volume"
-bindsym XF86AudioMute         exec --no-startup-id "~/.config/i3/bin/volume mute && touch /tmp/i3statusbar.*/volume"
+# Volume and media keys
+bindsym XF86AudioRaiseVolume  exec --no-startup-id "pactl set-sink-mute @DEFAULT_SINK@ false; pactl set-sink-volume @DEFAULT_SINK@ +5%; touch /tmp/i3statusbar.*/volume"
+bindsym XF86AudioLowerVolume  exec --no-startup-id "pactl set-sink-mute @DEFAULT_SINK@ false; pactl set-sink-volume @DEFAULT_SINK@ -5%; touch /tmp/i3statusbar.*/volume"
+bindsym XF86AudioMute         exec --no-startup-id "pactl set-sink-mute @DEFAULT_SINK@ toggle; touch /tmp/i3statusbar.*/volume"
 
-# Media keys
-bindsym $mod+Ctrl+Up     exec --no-startup-id "mpc stop"
-bindsym $mod+Ctrl+Down   exec --no-startup-id "mpc toggle"
-bindsym $mod+Ctrl+Left   exec --no-startup-id "mpc prev"
-bindsym $mod+Ctrl+Right  exec --no-startup-id "mpc next"
+bindsym XF86AudioStop  exec --no-startup-id "playerctl stop"
+bindsym $mod+Ctrl+Up   exec --no-startup-id "playerctl stop"
+
+bindsym XF86AudioPlay   exec --no-startup-id "playerctl play"
+bindsym XF86AudioPause  exec --no-startup-id "playerctl pause"
+bindsym $mod+Ctrl+Down  exec --no-startup-id "playerctl play-pause"
+
+
+bindsym XF86AudioPrev   exec --no-startup-id "playerctl previous"
+bindsym $mod+Ctrl+Left  exec --no-startup-id "playerctl previous"
+
+bindsym XF86AudioNext    exec --no-startup-id "playerctl next"
+bindsym $mod+Ctrl+Right  exec --no-startup-id "playerctl next"
 
 # Modes
 bindsym $mod+r        mode "resize"
@@ -152,7 +157,8 @@ bindsym $mod+Shift+q  mode $session
 font pango:Iosevka Term 12
 
 # Border style for new windows.
-new_window normal
+new_window pixel 1
+for_window [class=".*"] border pixel 1
 
 # Color names.
 set $background  #282828
