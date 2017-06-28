@@ -8,7 +8,7 @@ xfce4-session &
 xrdb ~/.Xresources
 
 # Initialize 'compton' composite manager.
-compton -CGfbz -D 2 -o 0 --backend glx --vsync opengl
+compton -b
 
 # Start 'dunst' for notifications.
 dunst &

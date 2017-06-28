@@ -170,7 +170,7 @@ set $urgent      #ab4642
 # Window manager colors.
 # Class                  Border       Background   Text         Indicator
 client.focused           $focused     $focused     $foreground  $focused
-client.focused_inactive  $focused     $focused     $unfocused   $focused
+client.focused_inactive  $focused     $background  $unfocused   $focused
 client.unfocused         $background  $background  $unfocused   $background
 client.urgent            $urgent      $urgent      $background  $urgent
 client.background                     $background
@@ -181,38 +181,20 @@ client.background                     $background
 
 mode "resize" {
         # These bindings trigger as soon as you enter the resize mode.
-
-        # They resize the border in the direction you pressed, e.g. when pressing
-        # left, the window is resized so that it has more space on its left
-
-        bindsym  l           resize shrink left 10 px or 10 ppt
-        bindsym  Shift+l     resize grow   left 10 px or 10 ppt
-
-        bindsym  k           resize shrink down 10 px or 10 ppt
-        bindsym  Shift+k     resize grow   down 10 px or 10 ppt
-
-        bindsym  i           resize shrink up 10 px or 10 ppt
-        bindsym  Shift+i     resize grow   up 10 px or 10 ppt
-
-        bindsym  j           resize shrink right 10 px or 10 ppt
-        bindsym  Shift+j     resize grow   right 10 px or 10 ppt
+        bindsym k  resize grow   up   10 px or 10 ppt
+        bindsym j  resize shrink up   10 px or 10 ppt
+        bindsym h  resize grow   left 10 px or 10 ppt
+        bindsym l  resize shrink left 10 px or 10 ppt
 
         # Same bindings, but for the arrow keys
-        bindsym  Left        resize shrink left 10 px or 10 ppt
-        bindsym  Shift+Left  resize grow   left 10 px or 10 ppt
-
-        bindsym  Down        resize shrink down 10 px or 10 ppt
-        bindsym  Shift+Down  resize grow   down 10 px or 10 ppt
-
-        bindsym  Up          resize shrink up 10 px or 10 ppt
-        bindsym  Shift+Up    resize grow   up 10 px or 10 ppt
-
-        bindsym  Right        resize shrink right 10 px or 10 ppt
-        bindsym  Shift+Right  resize grow   right 10 px or 10 ppt
+        bindsym Up     resize grow   up   10 px or 10 ppt
+        bindsym Down   resize shrink up   10 px or 10 ppt
+        bindsym Left   resize grow   left 10 px or 10 ppt
+        bindsym Right  resize shrink left 10 px or 10 ppt
 
         # Back to normal mode: Enter or Escape
-        bindsym  Return       mode "default"
-        bindsym  Escape       mode "default"
+        bindsym Return  mode "default"
+        bindsym Escape  mode "default"
 }
 
 set $session "Session: (s) Suspend, (l) Logout, (r) Reboot, (p) Power off"

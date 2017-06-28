@@ -61,6 +61,7 @@ rofi.separator-style: none
 rofi.hide-scrollbar:  true
 rofi.fuzzy:           true
 rofi.color-enabled:   true
+rofi.matching:        fuzzy
 
 #define bg_external argb:bb282828
 #define bg_internal #282828
