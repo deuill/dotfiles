@@ -138,7 +138,6 @@ bindsym XF86AudioPlay   exec --no-startup-id "playerctl play"
 bindsym XF86AudioPause  exec --no-startup-id "playerctl pause"
 bindsym $mod+Ctrl+Down  exec --no-startup-id "playerctl play-pause"
 
-
 bindsym XF86AudioPrev   exec --no-startup-id "playerctl previous"
 bindsym $mod+Ctrl+Left  exec --no-startup-id "playerctl previous"
 
@@ -157,6 +156,7 @@ bindsym $mod+Shift+q  mode $session
 font pango:Iosevka Term 12
 
 # Border style for new windows.
+hide_edge_borders both
 new_window pixel 1
 for_window [class=".*"] border pixel 1
 
@@ -169,8 +169,8 @@ set $urgent      #ab4642
 
 # Window manager colors.
 # Class                  Border       Background   Text         Indicator
-client.focused           $focused     $focused     $foreground  $focused
-client.focused_inactive  $focused     $background  $unfocused   $focused
+client.focused           $background  $background  $foreground  $focused
+client.focused_inactive  $background  $background  $unfocused   $focused
 client.unfocused         $background  $background  $unfocused   $background
 client.urgent            $urgent      $urgent      $background  $urgent
 client.background                     $background
