@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Screen Locker
+Icon=preferences-desktop-screensaver
+Exec=light-locker
+NoDisplay=true
+OnlyShowIn=GNOME-Flashback;
+NotShowIn=GNOME;Unity;

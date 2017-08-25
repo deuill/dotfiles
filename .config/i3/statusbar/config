@@ -48,7 +48,7 @@ BATTERY_NAMES=("BAT1" "BAT0")
 
 # Clock date format, run `man date` for more information
 CLOCK_FORMAT="%a %d %b, %H:%M"
-CLOCK_CLICK_CMD="orage -t"
+CLOCK_CLICK_CMD="gnome-calendar"
 
 # Update interval for CPU applet, in seconds
 CPU_UPDATE_INTERVAL="5"
@@ -57,16 +57,16 @@ CPU_UPDATE_INTERVAL="5"
 MEMORY_UPDATE_INTERVAL="5"
 
 # Backend to use for network information, choices: `connman`, `networkmanager`
-NETWORK_BACKEND="connman"
-NETWORK_CLICK_CMD="connman-gtk --no-icon"
+NETWORK_BACKEND="networkmanager"
+NETWORK_CLICK_CMD="gnome-control-center network"
 
 # Backend to use for player information, choices: `mpd`, `mpris`
-PLAYER_BACKEND="mpd"
-PLAYER_CLICK_CMD="eval termite -t 'Music Player' -e ncmpcpp"
+PLAYER_BACKEND="mpris"
+PLAYER_CLICK_CMD="gnome-mpv"
 
 # Script to use for controlling volume
 VOLUME_SCRIPT="~/.config/i3/bin/volume"
-VOLUME_CLICK_CMD="pavucontrol"
+VOLUME_CLICK_CMD="gnome-control-center sound"
 
 # Format to use for keyboard layout label, choices: long, short
 KEYBOARD_LAYOUT_TYPE="short"

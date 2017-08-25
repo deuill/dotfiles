@@ -181,7 +181,7 @@ case ${action} in
 	logout)
 		session--save
 		session--close && sleep 1
-		i3-msg exit
+		gnome-session-quit --logout --no-prompt
 		;;
 	reboot)
 		session--save

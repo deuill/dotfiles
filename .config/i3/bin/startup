@@ -1,26 +1,14 @@
 #!/bin/sh
 # Startup applications for i3.
 
-# Initialize XFCE session manager.
-xfce4-session &
+# Initialize 'kbdd' for keyboard layout handling.
+kbdd
 
 # Load Xresources file into X.
 xrdb ~/.Xresources
 
-# Initialize 'compton' composite manager.
-compton -b
-
-# Start 'dunst' for notifications.
-dunst &
-
 # Set keyboard map toggle via Alt + Shift combination.
 setxkbmap -model pc105 -layout us,gr -option grp:alt_shift_toggle,caps:escape
 
-# Initialize 'kbdd' for keyboard layout handling.
-kbdd
-
 # Restore previous session.
 ~/.config/i3/bin/session restore
-
-# Set default background via 'feh'.
-feh --no-fehbg --bg-fill ~/.cache/default-bg
