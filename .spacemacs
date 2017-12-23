@@ -52,6 +52,7 @@ This function should only modify configuration layer settings."
      dash
      deft
      docker
+     gtags
      helm
      restclient
      shell
@@ -449,6 +450,9 @@ you should place your code here."
     git-gutter-fr+-side 'left-fringe
     left-fringe-width 20
 
+    ;; Set defaults for gtags integration.
+    ggtags-mode-line-project-name nil
+
     ;; Set defaults for writeroom mode.
     writeroom-width 100
     writeroom-restore-window-config t
@@ -473,7 +477,7 @@ you should place your code here."
 
   (add-hook 'markdown-mode-hook 'set-doc-mode-defaults)
   (add-hook 'org-mode-hook 'set-doc-mode-defaults)
-  (add-hook 'confluence-mode-hook 'set-doc-mode-defaults)
+  (add-hook 'Info-mode-hook 'set-doc-mode-defaults)
 
   (add-hook 'php-mode-hook 'set-php-mode-defaults)
   (add-hook 'sh-mode-hook 'set-sh-mode-defaults)

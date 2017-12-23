@@ -22,7 +22,7 @@ assign [class="Firefox"]   → $www
 assign [class="Chromium"]  → $www
 assign [class="Geary"]     → $www
 assign [class="Emacs"]     → $code
-assign [class="Gnome-mpv"] → $media
+assign [class="Totem"]     → $media
 assign [class="Gimp"]      → $media
 assign [class="Steam"]     → $games
 

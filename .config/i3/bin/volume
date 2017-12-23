@@ -1,13 +1,13 @@
 #!/bin/bash
 # Control and query volume levels for Pulseaudio.
 
-getvolume() {
+volume-get() {
 	local vol=$(echo "${SINKS}" | grep -A 15 '* index' | awk '/volume: front/{ print $5 }' | sed 's/[%|,]//g')
 	local muted=$(echo "${SINKS}" | grep -A 15 '* index' | awk '/muted:/{ print $2 }')
 	echo "${vol}:${muted}"
 }
 
-setvolume() {
+volume-set() {
 	local amount="${1}"
 
 	if [ "x${1}" == "x" ]
@@ -18,11 +18,11 @@ setvolume() {
 	pactl set-sink-volume ${ACTIVE_SINK} ${1}%
 }
 
-volumeup() {
+volume-up() {
 	local amount=${1:-5}
-	local current=$(getvolume | cut -d: -f1)
+	local current=$(volume-get | cut -d: -f1)
 
-	volumemute off
+	volume-mute off
 
 	if [ $((${current} + ${amount})) -gt 100 ]
 	then
@@ -32,20 +32,20 @@ volumeup() {
 	pactl set-sink-volume ${ACTIVE_SINK} +${amount}%
 }
 
-volumedown() {
+volume-down() {
 	local amount=${1:-5}
 
-	if [ $(($(getvolume | cut -d: -f1) - ${amount})) -le 0 ]
+	if [ $(($(volume-get | cut -d: -f1) - ${amount})) -le 0 ]
 	then
-		volumemute on
+		volume-mute on
 	else
-		volumemute off
+		volume-mute off
 	fi
 	
 	pactl set-sink-volume ${ACTIVE_SINK} -${amount}%
 }
 
-volumemute() {
+volume-mute() {
 	local status=${1:-toggle}
 
 	case ${status} in
@@ -71,19 +71,19 @@ ACTION=${1:-get}
 
 case ${ACTION} in
 get)
-	getvolume
+	volume-get
 	;;
 set)
-	setvolume ${2}
+	volume-set ${2}
 	;;
 up)
-	volumeup ${2}
+	volume-up ${2}
 	;;
 down)
-	volumedown ${2}
+	volume-down ${2}
 	;;
 mute)
-	volumemute ${2}
+	volume-mute ${2}
 	;;
 *)
 	echo 'Unknown command, please use one of the following:'

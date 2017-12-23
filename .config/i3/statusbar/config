@@ -62,7 +62,7 @@ NETWORK_CLICK_CMD="gnome-control-center network"
 
 # Backend to use for player information, choices: `mpd`, `mpris`
 PLAYER_BACKEND="mpris"
-PLAYER_CLICK_CMD="gnome-mpv"
+PLAYER_CLICK_CMD="termite -e ncmpcpp"
 
 # Script to use for controlling volume
 VOLUME_SCRIPT="~/.config/i3/bin/volume"
