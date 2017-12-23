@@ -6,7 +6,7 @@
 [[ $- != *i* ]] && return
 
 # Set `fish` shell as default for Termite
-[[ $TERM == "xterm-termite" ]] && exec fish
+[[ $TERM == "xterm-termite" || $TERM == "xterm-256color" ]] && exec fish
 
 # Various includes and what-not.
 [[ -f ~/.bash_profile ]] && . ~/.bash_profile

@@ -39,7 +39,6 @@ This function should only modify configuration layer settings."
      markdown
      org
      php
-     salt
      scheme
      sql
      yaml
@@ -48,6 +47,8 @@ This function should only modify configuration layer settings."
      syntax-checking
      ;; Tagging and completion
      auto-completion
+     ;; UI
+     neotree
      ;; Tools
      dash
      deft
@@ -66,7 +67,8 @@ This function should only modify configuration layer settings."
    dotspacemacs-additional-packages
    '(dtrt-indent
      smart-tabs-mode
-     writeroom-mode)
+     writeroom-mode
+     dictionary)
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
    ;; A list of packages that will not be installed and loaded.
@@ -100,6 +102,13 @@ It should only modify the values of Spacemacs settings."
    ;; Maximum allowed time in seconds to contact an ELPA repository.
    ;; (default 5)
    dotspacemacs-elpa-timeout 5
+   ;; If non-nil then Spacelpa repository is the primary source to install
+   ;; a locked version of packages. If nil then Spacemacs will install the lastest
+   ;; version of packages from MELPA. (default nil)
+   dotspacemacs-use-spacelpa t
+   ;; If non-nil then verify the signature for downloaded Spacelpa archives.
+   ;; (default nil)
+   dotspacemacs-verify-spacelpa-archives nil
    ;; If non-nil then spacemacs will check for updates at startup
    ;; when the current branch is not `develop'. Note that checking for
    ;; new versions works via git commands, thus it calls GitHub services
@@ -107,8 +116,8 @@ It should only modify the values of Spacemacs settings."
    dotspacemacs-check-for-update nil
    ;; If non-nil, a form that evaluates to a package directory. For example, to
    ;; use different package directories for different Emacs versions, set this
-   ;; to `emacs-version'. (default nil)
-   dotspacemacs-elpa-subdirectory nil
+   ;; to `emacs-version'. (default 'emacs-version)
+   dotspacemacs-elpa-subdirectory 'emacs-version
    ;; One of `vim', `emacs' or `hybrid'.
    ;; `hybrid' is like `vim' except that `insert state' is replaced by the
    ;; `hybrid state' with `emacs' key bindings. The value can also be a list
@@ -336,7 +345,7 @@ It should only modify the values of Spacemacs settings."
    dotspacemacs-icon-title-format nil
    ;; Delete whitespace while saving buffer. Possible values are `all'
    ;; to aggressively delete empty line and long sequences of whitespace,
-   ;; `trailing' to delete only the whitespace at end of lines, `changed'to
+   ;; `trailing' to delete only the whitespace at end of lines, `changed' to
    ;; delete only whitespace for changed lines or `nil' to disable cleanup.
    ;; (default nil)
    dotspacemacs-whitespace-cleanup 'changed
@@ -497,6 +506,9 @@ you should place your code here."
 
 ;; Generic sane defaults for programming language modes.
 (defun set-prog-mode-defaults ()
+  ;; Enable multiple cursors support.
+  (evil-mc-mode 1)
+
   ;; Enable column marker.
   (fci-mode 1)
 
