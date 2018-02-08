@@ -2,9 +2,6 @@
  *                               fonts                               *
  *********************************************************************/
 
-Xft.dpi: 96
-*dpi:    96
-
 Xft.antialias: 1
 Xft.hinting:   0
 Xft.hintstyle: hintnone
