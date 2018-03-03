@@ -1,0 +1,176 @@
+#!/bin/bash
+#
+# Notmuch integration with mail-sync.
+
+# Echoes a newline-separated list of local folders.
+function local-folders() {
+	local account="$1"
+	local maildir="${MAIL_DATADIR}/${account}"
+	local paths=$(sort <<< "$(find ${maildir} -name "cur" -type d -exec dirname '{}' \;)")
+
+	while read -r path
+	do
+		echo "${path#${MAIL_DATADIR}/}"
+	done <<< "${paths}"
+}
+
+# Echoes a newline-separated list of tag names for local folders.
+function local-folders-tags() {
+	local account="$1"
+	local folders=$(local-folders "${account}")
+
+	while read -r folder
+	do
+		echo "${folder#${account}/}" | tr -s '[:upper:][:punct:][:blank:]' '[:lower:]-'
+	done <<< "${folders}"
+}
+
+# Synchronize Notmuch index with maildir.
+function fetch-pre-hook() {
+	local account="$1"
+
+	# Don't run pre-sync step if Notmuch folder hasn't been set up.
+	[[ ! -d "${MAIL_DATADIR}/.notmuch" ]] && return 0
+
+	# Get list of local folders with their corresponding tags.
+	local folders=$(local-folders "${account}")
+	local tags=$(local-folders-tags "${account}")
+
+	# Fetch all Notmuch tags with no corresponding folder.
+	while read -r tag
+	do
+		# Skip account name tag.
+		[[ "${tag}" = "${account}" ]] && continue
+
+		# Do not attempt to sync transient tags.
+		[[ "${tag}" =~ ${TRANSIENT_TAGS} ]] && continue
+
+		# Skip existing tags.
+		grep -q "${tag}" <<< "${tags}" && continue
+
+		# Generate folder name for tag.
+		IFS=- read -r -d '' -a tmp < <(printf '%s\0' "${tag,,}")
+		local folder="${account}/"$(cut -d' ' -f2- <<< $(printf ' %s' "${tmp[@]^}"))
+
+		# Append new folder and tag name to list.
+		folders="${folders}"$'\n'"${folder}"
+		tags="${tags}"$'\n'"${tag}"
+	done <<< $(sort <<< "$(notmuch search --output=tags tag:${account})")
+
+	for i in $(seq 1 $(wc -l <<< "${tags}"))
+	do
+		local tag=$(awk "NR==${i}" <<< "${tags}")
+		local folder=$(awk "NR==${i}" <<< "${folders}")
+
+		# Copy all messages into the corresponding folder for their tag.
+		local ids=$(notmuch search --output=messages tag:"${account}" AND tag:"${tag}" NOT folder:"${folder}" NOT tag:"new")
+		for id in ${ids}
+		do
+			local files=$(notmuch search --output=files "${id}")
+			while read -r file
+			do
+				# Copy file to correct folder.
+				if [[ -e "${file}" ]]
+				then
+					local copy="${MAIL_DATADIR}/${folder}/new/$(date +'%N')_${id}:${file##*:}"
+					echo "Copied message from '${file}' to '${copy}'"
+
+					# mkdir -p $(dirname "${copy}")
+					# cp "${file}" "${copy}"
+
+					break
+				fi
+			done <<< "${files}"
+		done
+
+		# Remove all messages with no tags corresponding to their folders.
+		local ids=$(notmuch search --output=messages tag:"${account}" AND folder:"${folder}" NOT tag:"${tag}" NOT tag:"new")
+		for id in ${ids}
+		do
+			local files=$(notmuch search --output=files "${id}")
+			while read -r file
+			do
+				# Remove file from folder.
+				if [[ -e "${file}" ]]
+				then
+					echo "Removed message file '${file}'"
+					# rm "${file}"
+
+					break
+				fi
+			done <<< "${files}"
+		done
+	done
+}
+
+# Update Notmuch index for new emails.
+function fetch-post-hook() {
+	local account="$1"
+
+	# Initialize or synchronize Notmuch database.
+	notmuch new
+
+	# Refresh list of local folders with their corresponding tags.
+	local folders=$(local-folders "${account}")
+	local tags=$(local-folders-tags "${account}")
+
+	# Add account username as tag on all messages for this account.
+	notmuch tag +"${account}" path:"${account}/**" NOT tag:"${account}"
+
+	for i in $(seq 1 $(wc -l <<< "${tags}"))
+	do
+		local tag=$(awk "NR==${i}" <<< "${tags}")
+		local folder=$(awk "NR==${i}" <<< "${folders}")
+
+		# Tag new messages with specific folder name tag if none is set already.
+		notmuch tag +"${tag}" tag:"${account}" AND folder:"${folder}" NOT tag:"${tag}"
+
+		# Remove tags from messages that have been moved/deleted/retagged etc.
+		notmuch tag -"${tag}" tag:"${account}" AND tag:"${tag}" NOT folder:"${folder}" NOT folder:"trash"
+	done
+
+	# Remove 'new' tag and add 'unread' tag to all new messages.
+	notmuch tag -"new" +"unread" tag:"${account}" AND tag:"new"
+
+	# Remove 'unread' tag from messages in 'Sent' folder.
+	notmuch tag -"unread" tag:"${account}" AND folder:"sent"
+
+	# Show notification for all new messages.
+	local count=$(notmuch count tag:"${account}" AND tag:"inbox" AND tag:"not-notified")
+
+	if [[ ${count} -gt 10 ]]
+	then
+		notify-send "Inbox" "$(printf '%d new messages' ${count})"
+	elif [[ ${count} -gt 0 ]]
+	then
+		local summary=$(notmuch search --limit=1 --format="json" tag:"${account}" AND tag:"inbox" AND tag:"not-notified")
+		local title=$(jq -r '.[0].authors' <<< "${summary}")
+
+		if [[ ${count} -gt 1 ]]
+		then
+			local text=$(printf "%s (%d more messages)" "${text}" $((${count} - 1)))
+		else
+			local text=$(jq -r '.[0].subject' <<< "${summary}")
+		fi
+
+		notify-send "${title}" "${text}"
+	fi
+}
+
+function account-setup-pre-hook() {
+	true
+}
+
+function account-setup-post-hook() {
+	if [[ ! -e "${NOTMUCH_CONFDIR}/config" ]]
+	then
+		envsubst < "${NOTMUCH_CONFDIR}/config.template" > "${NOTMUCH_CONFDIR}/config"
+		notmuch new &> /dev/null
+	elif grep -qw "${account}" "${NOTMUCH_CONFDIR}/config"
+	then
+		local cmd="/^other_email/ {printf \"%s%s;\n\", \$0, \"${account}\"; next} {print}"
+		local tmp=$(awk "${cmd}" "${NOTMUCH_CONFDIR}/config")
+		echo "${tmp}" > "${NOTMUCH_CONFDIR}/config"
+	fi
+
+}

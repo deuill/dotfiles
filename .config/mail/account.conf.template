@@ -1,6 +1,9 @@
 # Account type, can be 'generic', 'gmail'.
 TYPE=""
 
+# Mail backend, can be 'notmuch' or 'mu'.
+BACKEND=""
+
 # Full name and username for login.
 FULLNAME=""
 USERNAME=""

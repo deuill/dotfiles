@@ -1,0 +1,19 @@
+#!/bin/bash
+#
+# Mu integration with mail-sync.
+
+function fetch-pre-hook() {
+	true
+}
+
+function fetch-post-hook() {
+	true
+}
+
+function account-setup-pre-hook() {
+	true
+}
+
+function account-setup-post-hook() {
+	true
+}
