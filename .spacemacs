@@ -54,6 +54,7 @@ This function should only modify configuration layer settings."
      auto-completion
      ;; UI
      neotree
+     ibuffer
      ;; Tools
      dash
      deft
@@ -482,6 +483,9 @@ you should place your code here."
     persp-autokill-buffer-on-remove t
     persp-autokill-persp-when-removed-last-buffer t
 
+    ;; Defaults for iBuffer mode.
+    ibuffer-group-buffers-by 'projects
+
     ;; Use simple NeoTree theme.
     neo-theme 'nerd
 
@@ -551,6 +555,10 @@ you should place your code here."
     shr-use-fonts nil
     shr-color-visible-luminance-min 75)
 
+  ;; Global keybindings.
+  (global-set-key (kbd "S-<right>") 'next-buffer)
+  (global-set-key (kbd "S-<left>") 'previous-buffer)
+
   ;; Mode-specific hooks and configuration.
   (add-hook 'prog-mode-hook 'set-prog-mode-defaults)
   (add-hook 'css-mode-hook 'set-prog-mode-defaults)
@@ -565,12 +573,6 @@ you should place your code here."
   (add-hook 'sql-mode-hook 'set-sql-mode-defaults)
   (add-to-list 'spacemacs-indent-sensitive-modes 'sql-mode)
   (add-hook 'deft-mode-hook 'set-deft-mode-defaults)
-
-  ;; Custom keybindings.
-  (global-set-key (kbd "M-<up>") 'next-buffer)
-  (global-set-key (kbd "M-<down>") 'previous-buffer)
-  (spacemacs/set-leader-keys
-    "TAB" 'alternate-buffer-in-persp)
 
   ;; Generic sane defaults for all modes.
   (spacemacs/toggle-mode-line-minor-modes-off))
@@ -664,12 +666,6 @@ you should place your code here."
              (null popup-instances))
     (setq fci-mode-suppressed nil)
     (turn-on-fci-mode)))
-
-(defun alternate-buffer-in-persp ()
-  "Switch back and forth between current and last buffer in the current perspective."
-  (interactive)
-  (with-persp-buffer-list ()
-    (switch-to-buffer (other-buffer (current-buffer) t))))
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
