@@ -4,11 +4,5 @@
 # Initialize 'kbdd' for keyboard layout handling.
 kbdd
 
-# Load Xresources file into X.
-xrdb ~/.Xresources
-
-# Set keyboard map toggle via Alt + Shift combination.
-setxkbmap -model pc105 -layout us,gr -option grp:alt_shift_toggle,caps:escape
-
 # Restore previous session.
-~/.config/i3/bin/session restore
+$HOME/.config/i3/bin/session restore

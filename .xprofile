@@ -1,0 +1,13 @@
+#!/bin/sh
+
+# Set configuration defaults.
+xrdb -merge $HOME/.Xresources
+
+# Set display scaling.
+gsettings set org.gnome.desktop.interface text-scaling-factor 1
+printf '*dpi: 96' | xrdb -merge
+xrandr --dpi 96
+
+# Set keyboard map toggle via Alt + Shift combination.
+setxkbmap -model pc105 -layout us,gr -option grp:alt_shift_toggle,caps:escape
+xset r rate 400 80
