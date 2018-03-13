@@ -556,8 +556,10 @@ you should place your code here."
     shr-color-visible-luminance-min 75)
 
   ;; Global keybindings.
-  (global-set-key (kbd "S-<right>") 'next-buffer)
-  (global-set-key (kbd "S-<left>") 'previous-buffer)
+  (global-set-key (kbd "M-<up>") 'next-buffer)
+  (global-set-key (kbd "M-<down>") 'previous-buffer)
+  (spacemacs/set-leader-keys
+    "TAB" 'alternate-buffers)
 
   ;; Mode-specific hooks and configuration.
   (add-hook 'prog-mode-hook 'set-prog-mode-defaults)
@@ -666,6 +668,11 @@ you should place your code here."
              (null popup-instances))
     (setq fci-mode-suppressed nil)
     (turn-on-fci-mode)))
+
+(defun alternate-buffers ()
+  "Switch between buffers in the current perspective"
+  (interactive)
+  (switch-to-buffer nil))
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
