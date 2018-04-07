@@ -3,17 +3,18 @@
 # Mu integration with mail-sync.
 
 function fetch-pre-hook() {
-	true
+	return 0
 }
 
 function fetch-post-hook() {
-	true
+	local account="$1"
+	mu index --muhome="${MAIL_DATADIR}/.mu" --maildir="${MAIL_DATADIR}/${account}"
 }
 
 function account-setup-pre-hook() {
-	true
+	return 0
 }
 
 function account-setup-post-hook() {
-	true
+	return 0
 }

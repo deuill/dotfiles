@@ -73,7 +73,7 @@ function account-setup() {
 		cp "${MAIL_CONFDIR}/account.conf.template" "${MAIL_CONFDIR}/account.d/${account}.conf"
 
 		read -r -p "Press enter to edit user configuration for '${account}': "
-		${EDITOR:=nano} "${MAIL_CONFDIR}/account.d/${account}.conf"
+		${EDITOR:=vi} "${MAIL_CONFDIR}/account.d/${account}.conf"
 
 		echo "Please enter password for '${account}': "
 		secret-tool store --label "mail-sync ${account}" mail.sync.user "${account}"
@@ -113,6 +113,13 @@ function load-account-config() {
 	set +o allexport
 
 	# Load backend library.
+	if [[ ! -e "${MAIL_LIBDIR}/${BACKEND}" ]]
+	then
+		echo "Configuration for backend '${BACKEND}' not found."
+		echo "Make sure you specified a valid backend for the account."
+		return 1
+	fi
+
 	source "${MAIL_LIBDIR}/${BACKEND}"
 }
 
@@ -167,8 +174,7 @@ function main() {
 		exit 1
 	fi
 
-	load-global-config
-	lock
+	load-global-config && lock
 
 	case "${action}" in
 		fetch)
