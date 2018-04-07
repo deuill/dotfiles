@@ -34,14 +34,14 @@ assign [class="Steam"]     → $games
 set $mod  Mod4
 
 # Application aliases.
-set $rofi rofi -run-command 'bash -ic {cmd}'
+set $rofi rofi -run-command 'bash -ic "{cmd}"'
 
 # Application launching
 bindsym $mod+Return  exec i3-sensible-terminal
-bindsym $mod+d       exec "$rofi -show run"
-bindsym $mod+Shift+d exec "$rofi -show drun"
-bindsym $mod+Shift+f exec "$rofi -show files -modi files:~/.local/share/rofi/file-browser"
-bindsym $mod+equal   exec "bash ~/.config/i3/bin/fortune-notify"
+bindsym $mod+d       exec $rofi -show run
+bindsym $mod+Shift+d exec $rofi -show drun
+bindsym $mod+Shift+f exec $rofi -show files -modi files:~/.local/share/rofi/file-browser
+bindsym $mod+equal   exec bash ~/.config/i3/bin/fortune-notify
 
 # Change focus
 bindsym $mod+h      focus left
@@ -119,29 +119,29 @@ bindsym $mod+Shift+6  move container to workspace $games
 bindsym $mod+Shift+7  move container to workspace $misc
 
 # Window manager
-bindsym $mod+p             exec "$rofi -show window"
+bindsym $mod+p             exec $rofi -show window
 bindsym $mod+q             kill
 bindsym $mod+Shift+c       reload
 bindsym $mod+Shift+r       restart
 bindsym $mod+Shift+Delete  exec --no-startup-id ~/.config/i3/bin/session lock
 
 # Volume and media keys
-bindsym XF86AudioRaiseVolume  exec --no-startup-id "pactl set-sink-mute @DEFAULT_SINK@ false; pactl set-sink-volume @DEFAULT_SINK@ +5%; touch /tmp/i3statusbar.*/volume"
-bindsym XF86AudioLowerVolume  exec --no-startup-id "pactl set-sink-mute @DEFAULT_SINK@ false; pactl set-sink-volume @DEFAULT_SINK@ -5%; touch /tmp/i3statusbar.*/volume"
-bindsym XF86AudioMute         exec --no-startup-id "pactl set-sink-mute @DEFAULT_SINK@ toggle; touch /tmp/i3statusbar.*/volume"
+bindsym XF86AudioRaiseVolume  exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ false; pactl set-sink-volume @DEFAULT_SINK@ +5%; touch /tmp/i3statusbar.*/volume
+bindsym XF86AudioLowerVolume  exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ false; pactl set-sink-volume @DEFAULT_SINK@ -5%; touch /tmp/i3statusbar.*/volume
+bindsym XF86AudioMute         exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle; touch /tmp/i3statusbar.*/volume
 
-bindsym XF86AudioStop  exec --no-startup-id "playerctl stop"
-bindsym $mod+Ctrl+Up   exec --no-startup-id "playerctl stop"
+bindsym XF86AudioStop  exec --no-startup-id playerctl stop
+bindsym $mod+Ctrl+Up   exec --no-startup-id playerctl stop
 
-bindsym XF86AudioPlay   exec --no-startup-id "playerctl play"
-bindsym XF86AudioPause  exec --no-startup-id "playerctl pause"
-bindsym $mod+Ctrl+Down  exec --no-startup-id "playerctl play-pause"
+bindsym XF86AudioPlay   exec --no-startup-id playerctl play
+bindsym XF86AudioPause  exec --no-startup-id playerctl pause
+bindsym $mod+Ctrl+Down  exec --no-startup-id playerctl play-pause
 
-bindsym XF86AudioPrev   exec --no-startup-id "playerctl previous"
-bindsym $mod+Ctrl+Left  exec --no-startup-id "playerctl previous"
+bindsym XF86AudioPrev   exec --no-startup-id playerctl previous
+bindsym $mod+Ctrl+Left  exec --no-startup-id playerctl previous
 
-bindsym XF86AudioNext    exec --no-startup-id "playerctl next"
-bindsym $mod+Ctrl+Right  exec --no-startup-id "playerctl next"
+bindsym XF86AudioNext    exec --no-startup-id playerctl next
+bindsym $mod+Ctrl+Right  exec --no-startup-id playerctl next
 
 # Modes
 bindsym $mod+r        mode "resize"
