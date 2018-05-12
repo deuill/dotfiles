@@ -22,8 +22,10 @@ assign [class="Firefox"]   → $www
 assign [class="Chromium"]  → $www
 assign [class="Geary"]     → $www
 assign [class="Emacs"]     → $code
+assign [class="Dino"]      → $chat
 assign [class="Totem"]     → $media
 assign [class="Gimp"]      → $media
+assign [class="Lollypop"]  → $media
 assign [class="Steam"]     → $games
 
 # -----------
@@ -126,9 +128,9 @@ bindsym $mod+Shift+r       restart
 bindsym $mod+Shift+Delete  exec --no-startup-id ~/.config/i3/bin/session lock
 
 # Volume and media keys
-bindsym XF86AudioRaiseVolume  exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ false; pactl set-sink-volume @DEFAULT_SINK@ +5%; touch /tmp/i3statusbar.*/volume
-bindsym XF86AudioLowerVolume  exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ false; pactl set-sink-volume @DEFAULT_SINK@ -5%; touch /tmp/i3statusbar.*/volume
-bindsym XF86AudioMute         exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle; touch /tmp/i3statusbar.*/volume
+bindsym XF86AudioRaiseVolume  exec --no-startup-id "pactl set-sink-mute @DEFAULT_SINK@ false; pactl set-sink-volume @DEFAULT_SINK@ +5%; touch /tmp/i3statusbar.*/volume"
+bindsym XF86AudioLowerVolume  exec --no-startup-id "pactl set-sink-mute @DEFAULT_SINK@ false; pactl set-sink-volume @DEFAULT_SINK@ -5%; touch /tmp/i3statusbar.*/volume"
+bindsym XF86AudioMute         exec --no-startup-id "pactl set-sink-mute @DEFAULT_SINK@ toggle; touch /tmp/i3statusbar.*/volume"
 
 bindsym XF86AudioStop  exec --no-startup-id playerctl stop
 bindsym $mod+Ctrl+Up   exec --no-startup-id playerctl stop
