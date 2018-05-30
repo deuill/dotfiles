@@ -20,7 +20,7 @@ This function should only modify configuration layer settings."
    ;; installation feature and you have to explicitly list a layer in the
    ;; variable `dotspacemacs-configuration-layers' to install it.
    ;; (default 'unused)
-   dotspacemacs-enable-lazy-installation 'unused
+   dotspacemacs-enable-lazy-installation nil
 
    ;; If non-nil then Spacemacs will ask for confirmation before installing
    ;; a layer lazily. (default t)
@@ -63,6 +63,7 @@ This function should only modify configuration layer settings."
      helm
      restclient
      shell
+     xclipboard
      ;; Source control
      git
      version-control)
@@ -76,7 +77,7 @@ This function should only modify configuration layer settings."
      color-identifiers-mode
      smart-tabs-mode
      writeroom-mode
-     dictionary)
+     geben)
 
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -103,6 +104,25 @@ It should only modify the values of Spacemacs settings."
   ;; This setq-default sexp is an exhaustive list of all the supported
   ;; spacemacs settings.
   (setq-default
+   ;; If non-nil then enable support for the portable dumper. You'll need
+   ;; to compile Emacs 27 from source following the instructions in file
+   ;; EXPERIMENTAL.org at to root of the git repository.
+   ;; (default nil)
+   dotspacemacs-enable-emacs-pdumper nil
+
+   ;; File path pointing to emacs 27.1 executable compiled with support
+   ;; for the portable dumper (this is currently the branch pdumper).
+   ;; (default "emacs")
+   dotspacemacs-emacs-pdumper-executable-file "emacs"
+
+   ;; Name of the Spacemacs dump file. This is the file will be created by the
+   ;; portable dumper in the cache directory under dumps sub-directory.
+   ;; To load it when starting Emacs add the parameter `--dump-file'
+   ;; when invoking Emacs 27.1 executable on the command line, for instance:
+   ;;   ./emacs --dump-file=~/.emacs.d/.cache/dumps/spacemacs.pdmp
+   ;; (default spacemacs.pdmp)
+   dotspacemacs-emacs-dumper-dump-file "spacemacs.pdmp"
+
    ;; If non-nil ELPA repositories are contacted via HTTPS whenever it's
    ;; possible. Set it to nil if you have no way to use HTTPS in your
    ;; environment, otherwise it is strongly recommended to let it set to t.
@@ -198,7 +218,7 @@ It should only modify the values of Spacemacs settings."
 
    ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
    ;; quickly tweak the mode-line size to make separators look not too crappy.
-   dotspacemacs-default-font '("Iosevka Term" :size 16 :weight semi-light :width normal)
+   dotspacemacs-default-font '("Iosevka Term" :weight light :width normal)
 
    ;; The leader key
    dotspacemacs-leader-key "SPC"
@@ -206,6 +226,7 @@ It should only modify the values of Spacemacs settings."
    ;; The key used for Emacs commands `M-x' (after pressing on the leader key).
    ;; (default "SPC")
    dotspacemacs-emacs-command-key ":"
+
    ;; The key used for Vim Ex commands (default ":")
    dotspacemacs-ex-command-key ":"
 
@@ -239,6 +260,7 @@ It should only modify the values of Spacemacs settings."
    ;; If non-nil, `J' and `K' move lines up and down when in visual mode.
    ;; (default nil)
    dotspacemacs-visual-line-move-text t
+
    ;; If non-nil, inverse the meaning of `g' in `:substitute' Evil ex-command.
    ;; (default nil)
    dotspacemacs-ex-substitute-global nil
@@ -253,6 +275,7 @@ It should only modify the values of Spacemacs settings."
    ;; If non-nil then the last auto saved layouts are resumed automatically upon
    ;; start. (default nil)
    dotspacemacs-auto-resume-layouts t
+
    ;; If non-nil, auto-generate layout name when creating new layouts. Only has
    ;; effect when using the "jump to layout by number" commands. (default nil)
    dotspacemacs-auto-generate-layout-names nil
@@ -261,6 +284,7 @@ It should only modify the values of Spacemacs settings."
    ;; literally to avoid performance issues. Opening a file literally means that
    ;; no major mode or minor modes are active. (default is 1)
    dotspacemacs-large-file-size 5
+
    ;; Location where to auto-save files. Possible values are `original' to
    ;; auto-save the file in-place, `cache' to auto-save the file to another
    ;; file stored in the cache directory and `nil' to disable auto-saving.
@@ -291,9 +315,11 @@ It should only modify the values of Spacemacs settings."
    ;; `p' several times cycles through the elements in the `kill-ring'.
    ;; (default nil)
    dotspacemacs-enable-paste-transient-state t
+
    ;; Which-key delay in seconds. The which-key buffer is the popup listing
    ;; the commands bound to the current keystroke sequence. (default 0.4)
    dotspacemacs-which-key-delay 0.25
+
    ;; Which-key frame position. Possible values are `right', `bottom' and
    ;; `right-then-bottom'. right-then-bottom tries to display the frame to the
    ;; right; if there is insufficient space it displays it at the bottom.
@@ -409,6 +435,7 @@ It should only modify the values of Spacemacs settings."
    ;; %Z - like %z, but including the end-of-line format
    ;; (default "%I@%S")
    dotspacemacs-frame-title-format "%a - Spacemacs"
+
    ;; Format specification for setting the icon title format
    ;; (default nil - same as frame-title-format)
    dotspacemacs-icon-title-format nil
@@ -419,6 +446,7 @@ It should only modify the values of Spacemacs settings."
    ;; delete only whitespace for changed lines or `nil' to disable cleanup.
    ;; (default nil)
    dotspacemacs-whitespace-cleanup 'changed
+
    ;; Either nil or a number of seconds. If non-nil zone out after the specified
    ;; number of seconds. (default nil)
    dotspacemacs-zone-out-when-idle nil
@@ -493,6 +521,7 @@ you should place your code here."
     org-enable-github-support t
     org-ellipsis " …"
     org-bullets-bullet-list '("•" "◦")
+    org-projectile-file "TODO.org"
 
     ;; Set user defaults for Deft.
     deft-recursive t
@@ -566,7 +595,7 @@ you should place your code here."
   (add-hook 'css-mode-hook 'set-prog-mode-defaults)
 
   (add-hook 'markdown-mode-hook 'set-doc-mode-defaults)
-  (add-hook 'org-mode-hook 'set-doc-mode-defaults)
+  (add-hook 'org-mode-hook 'set-org-mode-defaults)
   (add-hook 'Info-mode-hook 'set-doc-mode-defaults)
 
   (add-hook 'php-mode-hook 'set-php-mode-defaults)
@@ -613,6 +642,11 @@ you should place your code here."
 
   ;; Enable distraction-free editing mode.
   (writeroom-mode 1))
+
+;; Orgmode-specific defaults.
+(defun set-org-mode-defaults ()
+  ;; Inherit doc-mode defaults.
+  (set-doc-mode-defaults))
 
 ;; PHP-specific defaults.
 (defun set-php-mode-defaults ()
