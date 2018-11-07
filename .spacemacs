@@ -33,10 +33,10 @@ This function should only modify configuration layer settings."
 
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
-   '(emacs-lisp
-     ;; Languages
+   '(;; Languages
      c-c++
      csv
+     emacs-lisp
      go
      html
      javascript
@@ -61,6 +61,7 @@ This function should only modify configuration layer settings."
      docker
      gtags
      helm
+     lsp
      restclient
      shell
      xclipboard
@@ -76,8 +77,7 @@ This function should only modify configuration layer settings."
    '(dtrt-indent
      color-identifiers-mode
      smart-tabs-mode
-     writeroom-mode
-     geben)
+     writeroom-mode)
 
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -143,7 +143,7 @@ It should only modify the values of Spacemacs settings."
 
    ;; If non-nil then Spacelpa repository is the primary source to install
    ;; a locked version of packages. If nil then Spacemacs will install the
-   ;; lastest version of packages from MELPA. (default nil)
+   ;; latest version of packages from MELPA. (default nil)
    dotspacemacs-use-spacelpa nil
 
    ;; If non-nil then verify the signature for downloaded Spacelpa archives.
@@ -210,7 +210,7 @@ It should only modify the values of Spacemacs settings."
    ;; to create your own spaceline theme. Value can be a symbol or list with\
    ;; additional properties.
    ;; (default '(spacemacs :separator wave :separator-scale 1.5))
-   dotspacemacs-mode-line-theme '(spacemacs :separator wave :separator-scale 1.5)
+   dotspacemacs-mode-line-theme '(spacemacs :separator slant :separator-scale 1.5)
 
    ;; If non-nil the cursor color matches the state color in GUI Emacs.
    ;; (default t)
@@ -220,7 +220,7 @@ It should only modify the values of Spacemacs settings."
    ;; quickly tweak the mode-line size to make separators look not too crappy.
    dotspacemacs-default-font '("Iosevka Term" :weight light :width normal)
 
-   ;; The leader key
+   ;; The leader key (default "SPC")
    dotspacemacs-leader-key "SPC"
 
    ;; The key used for Emacs commands `M-x' (after pressing on the leader key).
@@ -367,7 +367,9 @@ It should only modify the values of Spacemacs settings."
    ;; If non-nil show the color guide hint for transient state keys. (default t)
    dotspacemacs-show-transient-state-color-guide t
 
-   ;; If non-nil unicode symbols are displayed in the mode line. (default t)
+   ;; If non-nil unicode symbols are displayed in the mode line.
+   ;; If you use Emacs as a daemon and wants unicode characters only in GUI set
+   ;; the value to quoted `display-graphic-p'. (default t)
    dotspacemacs-mode-line-unicode-symbols t
 
    ;; If non-nil smooth scrolling (native-scrolling) is enabled. Smooth
@@ -407,6 +409,17 @@ It should only modify the values of Spacemacs settings."
    ;; `current', `all' or `nil'. Default is `all' (highlight any scope and
    ;; emphasis the current one). (default 'all)
    dotspacemacs-highlight-delimiters 'all
+
+   ;; If non-nil, start an Emacs server if one is not already running.
+   ;; (default nil)
+   dotspacemacs-enable-server nil
+
+   ;; Set the emacs server socket location.
+   ;; If nil, uses whatever the Emacs default is, otherwise a directory path
+   ;; like \"~/.emacs.d/server\". It has no effect if
+   ;; `dotspacemacs-enable-server' is nil.
+   ;; (default nil)
+   dotspacemacs-server-socket-dir nil
 
    ;; If non-nil, advise quit functions to keep server open when quitting.
    ;; (default nil)
@@ -495,11 +508,11 @@ you should place your code here."
     ;; Have fill commands break at 100 column widths.
     fill-column 100
 
+    ;; Reduce performance impact of long lines.
+    bidi-display-reordering nil
+
     ;; Have Page Up/Down move to start/end of buffer when possible.
     scroll-error-top-bottom t
-
-    ;; Mode-line separator.
-    powerline-default-separator 'slant
 
     ;; Autocompleted docstrings appear in tooltips.
     auto-completion-enable-help-tooltip t
@@ -515,13 +528,19 @@ you should place your code here."
     ibuffer-group-buffers-by 'projects
 
     ;; Use simple NeoTree theme.
-    neo-theme 'nerd
+    neo-theme 'icons
+    neo-banner-message nil
+    neo-mode-line-type 'none
 
     ;; Set defaults for Org mode.
     org-enable-github-support t
     org-ellipsis " …"
     org-bullets-bullet-list '("•" "◦")
     org-projectile-file "TODO.org"
+
+    ;; Set defaults for Markdown mode.
+    markdown-hide-markup t
+    markdown-fontify-code-blocks-natively t
 
     ;; Set user defaults for Deft.
     deft-recursive t
@@ -541,13 +560,21 @@ you should place your code here."
     ;; Defaults for Magit.
     magit-diff-refine-hunk t
     magit-revision-show-gravatars nil
+    git-commit-mode-hook '(set-git-commit-defaults)
 
     ;; Make indentation detection with dtrt more conservative.
-    dtrt-indent-min-quality 85.0
+    dtrt-indent-min-quality 90.0
     dtrt-indent-active-mode-line-info ""
 
-    ;; Enable metalinter for Go.
-    go-use-gometalinter t
+    ;; Defaults for Go.
+    go-backend 'lsp
+    go-use-golangci-lint t
+    go-format-before-save t
+    godoc-at-point-function 'godoc-gogetdoc
+
+    ;; Defaults for SQL.
+    sql-auto-indent nil
+    sql-capitalize-keywords t
 
     ;; Enable clang support for C/C++ layers.
     c-c++-enable-clang-support t
@@ -568,6 +595,13 @@ you should place your code here."
     writeroom-restore-window-config t
     writeroom-fullscreen-effect 'maximized
     writeroom-bottom-divider-width 0
+
+    ;; Defaults for LSP UI.
+    ;; lsp-eldoc-hook '(lsp-document-highlight)
+    lsp-ui-doc-border "#484848"
+    lsp-ui-doc-max-width 100
+    lsp-ui-doc-position 'bottom
+    lsp-eldoc-render-all nil
 
     ;; Configuration for Ediff.
     ediff-window-setup-function 'ediff-setup-windows-plain
@@ -595,24 +629,23 @@ you should place your code here."
   (add-hook 'css-mode-hook 'set-prog-mode-defaults)
 
   (add-hook 'markdown-mode-hook 'set-doc-mode-defaults)
-  (add-hook 'org-mode-hook 'set-org-mode-defaults)
+  (add-hook 'org-mode-hook 'set-doc-mode-defaults)
   (add-hook 'Info-mode-hook 'set-doc-mode-defaults)
 
   (add-hook 'php-mode-hook 'set-php-mode-defaults)
   (add-hook 'sh-mode-hook 'set-sh-mode-defaults)
   (add-hook 'emacs-lisp-mode-hook 'set-lisp-mode-defaults)
   (add-hook 'sql-mode-hook 'set-sql-mode-defaults)
-  (add-to-list 'spacemacs-indent-sensitive-modes 'sql-mode)
   (add-hook 'deft-mode-hook 'set-deft-mode-defaults)
+  (add-hook 'git-commit-mode-hook 'set-git-commit-defaults)
+
+  (add-to-list 'spacemacs-indent-sensitive-modes 'sql-mode)
 
   ;; Generic sane defaults for all modes.
   (spacemacs/toggle-mode-line-minor-modes-off))
 
 ;; Generic sane defaults for programming language modes.
 (defun set-prog-mode-defaults ()
-  ;; Enable multiple cursors support.
-  (evil-mc-mode 1)
-
   ;; Enable column marker.
   (fci-mode 1)
 
@@ -624,29 +657,28 @@ you should place your code here."
   (flycheck-define-checker proselint
     "A linter for prose."
     :command ("proselint" source-inplace)
+    :modes (text-mode markdown-mode org-mode)
     :error-patterns
     ((warning line-start (file-name) ":" line ":" column ": "
               (id (one-or-more (not (any " "))))
               (message (one-or-more not-newline)
                        (zero-or-more "\n" (any " ") (one-or-more not-newline)))
-              line-end))
-    :modes (text-mode markdown-mode org-mode))
+              line-end)))
 
   (add-to-list 'flycheck-checkers 'proselint)
 
   ;; Enable `flycheck' with specific linters.
   (flycheck-mode 1)
 
-  ;; Enable soft word-wrapping.
-  (visual-line-mode 1)
+  (setq
+   ;; Disable indentation with tabs.
+   indent-tabs-mode nil)
 
   ;; Enable distraction-free editing mode.
-  (writeroom-mode 1))
+  (writeroom-mode 1)
 
-;; Orgmode-specific defaults.
-(defun set-org-mode-defaults ()
-  ;; Inherit doc-mode defaults.
-  (set-doc-mode-defaults))
+  ;; Enable soft word-wrapping.
+  (visual-line-mode 1))
 
 ;; PHP-specific defaults.
 (defun set-php-mode-defaults ()
@@ -677,6 +709,11 @@ you should place your code here."
   ;; Enable distraction-free editing mode.
   (writeroom-mode 1))
 
+;; Defaults for Git commit messages.
+(defun set-git-commit-defaults ()
+  ;; Disable tab indentation.
+  (setq-local indent-tabs-mode nil))
+
 (defun eww-split (url)
   "Loads eww content in split window"
   (interactive)
@@ -706,7 +743,7 @@ you should place your code here."
 (defun alternate-buffers ()
   "Switch between buffers in the current perspective"
   (interactive)
-  (switch-to-buffer nil))
+  (with-persp-buffer-list () (switch-to-buffer nil)))
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
