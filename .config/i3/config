@@ -4,6 +4,7 @@
 
 # Application autostart.
 exec --no-startup-id "~/.config/i3/bin/startup"
+exec_always --no-startup-id "~/.xprofile"
 
 # Window manipulation.
 focus_follows_mouse no
@@ -18,11 +19,11 @@ set $games  6: games
 set $misc   7: misc
 
 # Workspace assignments for applications
-assign [class="Firefox"]   → $www
-assign [class="Chromium"]  → $www
+assign [class="Firefox"  window_type="normal"]  → $www
+assign [class="Chromium" window_role="browser"] → $www
 assign [class="Geary"]     → $www
 assign [class="Emacs"]     → $code
-assign [class="Dino"]      → $chat
+assign [class="Gajim"]     → $chat
 assign [class="Totem"]     → $media
 assign [class="Gimp"]      → $media
 assign [class="Lollypop"]  → $media
@@ -154,7 +155,7 @@ bindsym $mod+Shift+q  mode $session
 # ----------
 
 # Default font.
-font pango:Iosevka Term 12
+font pango:Iosevka SS02 12
 
 # Border style for new windows.
 hide_edge_borders both
@@ -221,7 +222,7 @@ bar {
     tray_output eDP1
     tray_output DP1
 
-    font pango:Iosevka Term, i3cons 12
+    font pango:Iosevka SS02, i3cons 12
     separator_symbol " • "
 
     workspace_buttons yes

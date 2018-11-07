@@ -52,7 +52,7 @@ Xft.rgba:      none
  *                               rofi                                *
  *********************************************************************/
 
-rofi.font:            Iosevka Term 12
+rofi.font:            Iosevka SS02 12
 rofi.terminal:        i3-sensible-terminal
 rofi.lines:           10
 rofi.columns:         1
