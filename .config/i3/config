@@ -155,7 +155,7 @@ bindsym $mod+Shift+q  mode $session
 # ----------
 
 # Default font.
-font pango:Iosevka SS02 12
+font pango:Iosevka Term SS02 12
 
 # Border style for new windows.
 hide_edge_borders both
@@ -222,7 +222,7 @@ bar {
     tray_output eDP1
     tray_output DP1
 
-    font pango:Iosevka SS02, i3cons 12
+    font pango:Iosevka Term SS02, i3cons 12
     separator_symbol " • "
 
     workspace_buttons yes

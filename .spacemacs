@@ -218,7 +218,7 @@ It should only modify the values of Spacemacs settings."
 
    ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
    ;; quickly tweak the mode-line size to make separators look not too crappy.
-   dotspacemacs-default-font '("Iosevka SS02" :weight light :width normal)
+   dotspacemacs-default-font '("Iosevka Term SS02" :weight light :width normal)
 
    ;; The leader key (default "SPC")
    dotspacemacs-leader-key "SPC"
@@ -567,7 +567,7 @@ you should place your code here."
     dtrt-indent-active-mode-line-info ""
 
     ;; Defaults for Go.
-    go-backend 'lsp
+    go-backend 'go-mode
     go-use-golangci-lint t
     go-format-before-save t
     godoc-at-point-function 'godoc-gogetdoc
