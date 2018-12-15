@@ -1,12 +1,21 @@
 #!/bin/sh
 
+# Determine scale from screen size.
+if [ `xdpyinfo | awk '/dimensions/ {print $2}' | awk -F 'x' '{print $2}'` -lt 1200 ]
+then SCALE=1.12
+else SCALE=1.65
+fi
+
+# Shared variables.
+DPI=`echo "96 * $SCALE" | bc`
+
 # Set configuration defaults.
 xrdb -merge $HOME/.Xresources
 
 # Set display scaling.
-gsettings set org.gnome.desktop.interface text-scaling-factor 1
-printf '*dpi: 96' | xrdb -merge
-xrandr --dpi 96
+gsettings set org.gnome.desktop.interface text-scaling-factor $SCALE
+printf '*dpi: %f\nXft.dpi: %f' $DPI $DPI | xrdb -merge
+xrandr --dpi $DPI
 
 # Set keyboard map toggle via Alt + Shift combination.
 setxkbmap -model pc105 -layout us,gr -option grp:alt_shift_toggle,caps:escape
