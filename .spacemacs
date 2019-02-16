@@ -1,4 +1,4 @@
-;; -*- mode: emacs-lisp -*-
+;; -*- mode: emacs-lisp; lexical-binding: t -*-
 ;; This file is loaded by Spacemacs at startup.
 ;; It must be stored in your home directory.
 
@@ -61,6 +61,7 @@ This function should only modify configuration layer settings."
      docker
      gtags
      helm
+     kubernetes
      lsp
      restclient
      shell
@@ -74,10 +75,7 @@ This function should only modify configuration layer settings."
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
    dotspacemacs-additional-packages
-   '(dtrt-indent
-     color-identifiers-mode
-     smart-tabs-mode
-     writeroom-mode)
+   '(dtrt-indent)
 
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -112,8 +110,8 @@ It should only modify the values of Spacemacs settings."
 
    ;; File path pointing to emacs 27.1 executable compiled with support
    ;; for the portable dumper (this is currently the branch pdumper).
-   ;; (default "emacs")
-   dotspacemacs-emacs-pdumper-executable-file "emacs"
+   ;; (default "emacs-27.0.50")
+   dotspacemacs-emacs-pdumper-executable-file "emacs-27.0.50"
 
    ;; Name of the Spacemacs dump file. This is the file will be created by the
    ;; portable dumper in the cache directory under dumps sub-directory.
@@ -201,14 +199,14 @@ It should only modify the values of Spacemacs settings."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press `SPC T n' to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   dotspacemacs-themes '(monokai spacemacs-dark spacemacs-light)
+   dotspacemacs-themes '(monokai)
 
    ;; Set the theme for the Spaceline. Supported themes are `spacemacs',
-   ;; `all-the-icons', `custom', `vim-powerline' and `vanilla'. The first three
-   ;; are spaceline themes. `vanilla' is default Emacs mode-line. `custom' is a
-   ;; user defined themes, refer to the DOCUMENTATION.org for more info on how
-   ;; to create your own spaceline theme. Value can be a symbol or list with\
-   ;; additional properties.
+   ;; `all-the-icons', `custom', `doom', `vim-powerline' and `vanilla'. The
+   ;; first three are spaceline themes. `doom' is the doom-emacs mode-line.
+   ;; `vanilla' is default Emacs mode-line. `custom' is a user defined themes,
+   ;; refer to the DOCUMENTATION.org for more info on how to create your own
+   ;; spaceline theme. Value can be a symbol or list with additional properties.
    ;; (default '(spacemacs :separator wave :separator-scale 1.5))
    dotspacemacs-mode-line-theme '(spacemacs :separator slant :separator-scale 1.5)
 
@@ -447,7 +445,7 @@ It should only modify the values of Spacemacs settings."
    ;; %z - mnemonics of buffer, terminal, and keyboard coding systems
    ;; %Z - like %z, but including the end-of-line format
    ;; (default "%I@%S")
-   dotspacemacs-frame-title-format "%a - Spacemacs"
+   dotspacemacs-frame-title-format "%b - Spacemacs"
 
    ;; Format specification for setting the icon title format
    ;; (default nil - same as frame-title-format)
@@ -517,6 +515,9 @@ you should place your code here."
     ;; Autocompleted docstrings appear in tooltips.
     auto-completion-enable-help-tooltip t
 
+    ;; Stretch cursor to fill width of character underneath.
+    x-stretch-cursor t
+
     ;; Use dumb-jump as default jump handler.
     spacemacs-default-jump-handlers '(dumb-jump-go evil-goto-definition)
 
@@ -548,7 +549,10 @@ you should place your code here."
     deft-directory "~/Documents/Notes"
 
     ;; Set default shell.
-    shell-default-shell 'ansi-term
+    shell-default-shell 'eshell
+
+    ;; Additional options for search via Helm.
+    helm-ag-command-option "--trim"
 
     ;; Projectile defaults.
     projectile-globally-ignored-directories '("vendor")
@@ -560,7 +564,7 @@ you should place your code here."
     ;; Defaults for Magit.
     magit-diff-refine-hunk t
     magit-revision-show-gravatars nil
-    git-commit-mode-hook '(set-git-commit-defaults)
+    git-commit-mode-hook '(set-git-commit-mode-defaults)
 
     ;; Make indentation detection with dtrt more conservative.
     dtrt-indent-min-quality 90.0
@@ -581,9 +585,6 @@ you should place your code here."
 
     ;; Have PHP-CS check against the PSR2 standard.
     flycheck-phpcs-standard "PSR2"
-
-    ;; Set color for column marker.
-    fci-rule-color "#484848"
 
     ;; Set highlighter for diff markers in margin.
     version-control-diff-tool 'git-gutter+
@@ -628,7 +629,7 @@ you should place your code here."
   (add-hook 'prog-mode-hook 'set-prog-mode-defaults)
   (add-hook 'css-mode-hook 'set-prog-mode-defaults)
 
-  (add-hook 'markdown-mode-hook 'set-doc-mode-defaults)
+  (add-hook 'markdown-mode-hook 'set-markdown-mode-defaults)
   (add-hook 'org-mode-hook 'set-doc-mode-defaults)
   (add-hook 'Info-mode-hook 'set-doc-mode-defaults)
 
@@ -637,7 +638,7 @@ you should place your code here."
   (add-hook 'emacs-lisp-mode-hook 'set-lisp-mode-defaults)
   (add-hook 'sql-mode-hook 'set-sql-mode-defaults)
   (add-hook 'deft-mode-hook 'set-deft-mode-defaults)
-  (add-hook 'git-commit-mode-hook 'set-git-commit-defaults)
+  (add-hook 'git-commit-mode-hook 'set-git-commit-mode-defaults)
 
   (add-to-list 'spacemacs-indent-sensitive-modes 'sql-mode)
 
@@ -680,6 +681,14 @@ you should place your code here."
   ;; Enable soft word-wrapping.
   (visual-line-mode 1))
 
+;; Markdown-specific defaults.
+(defun set-markdown-mode-defaults ()
+  ;; Hard-wrap lines at pre-defined fill length.
+  (auto-fill-mode)
+
+  ;; Inherit doc-mode defaults.
+  (set-doc-mode-defaults))
+
 ;; PHP-specific defaults.
 (defun set-php-mode-defaults ()
   ;; Set PSR2 coding style as default.
@@ -710,7 +719,7 @@ you should place your code here."
   (writeroom-mode 1))
 
 ;; Defaults for Git commit messages.
-(defun set-git-commit-defaults ()
+(defun set-git-commit-mode-defaults ()
   ;; Disable tab indentation.
   (setq-local indent-tabs-mode nil))
 
