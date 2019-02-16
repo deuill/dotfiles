@@ -5,7 +5,7 @@
 action="$1"
 
 # The list of available lockers.
-lockers=("xflock4" "light-locker")
+lockers=("xflock4" "light-locker" "gnome-screensaver")
 
 # The cache directory for all persistent session data.
 cache_dir="${HOME}/.cache/i3"
@@ -140,6 +140,9 @@ function session--lock() {
 		case "${locker}" in
 			light-locker)
 				light-locker-command -l
+				;;
+			gnome-screensaver)
+				gnome-screensaver-command -l
 				;;
 			*)
 				${locker}
