@@ -53,9 +53,10 @@ This function should only modify configuration layer settings."
      ;; Tagging and completion
      auto-completion
      ;; UI
-     neotree
+     treemacs
      ibuffer
      ;; Tools
+     dap
      dash
      deft
      docker
@@ -106,12 +107,12 @@ It should only modify the values of Spacemacs settings."
    ;; to compile Emacs 27 from source following the instructions in file
    ;; EXPERIMENTAL.org at to root of the git repository.
    ;; (default nil)
-   dotspacemacs-enable-emacs-pdumper nil
+   dotspacemacs-enable-emacs-pdumper t
 
    ;; File path pointing to emacs 27.1 executable compiled with support
    ;; for the portable dumper (this is currently the branch pdumper).
    ;; (default "emacs-27.0.50")
-   dotspacemacs-emacs-pdumper-executable-file "emacs-27.0.50"
+   dotspacemacs-emacs-pdumper-executable-file "emacs"
 
    ;; Name of the Spacemacs dump file. This is the file will be created by the
    ;; portable dumper in the cache directory under dumps sub-directory.
@@ -189,6 +190,11 @@ It should only modify the values of Spacemacs settings."
    ;; True if the home buffer should respond to resize events. (default t)
    dotspacemacs-startup-buffer-responsive t
 
+   ;; Default major mode for a new empty buffer. Possible values are mode
+   ;; names such as `text-mode'; and `nil' to use Fundamental mode.
+   ;; (default `text-mode')
+   dotspacemacs-new-empty-buffer-major-mode 'text-mode
+
    ;; Default major mode of the scratch buffer (default `text-mode')
    dotspacemacs-scratch-mode 'text-mode
 
@@ -216,7 +222,7 @@ It should only modify the values of Spacemacs settings."
 
    ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
    ;; quickly tweak the mode-line size to make separators look not too crappy.
-   dotspacemacs-default-font '("Iosevka Term SS02" :weight light :width normal)
+   dotspacemacs-default-font '("Iosevka Term SS02" :size 10.75 :weight light :width normal)
 
    ;; The leader key (default "SPC")
    dotspacemacs-leader-key "SPC"
@@ -349,6 +355,11 @@ It should only modify the values of Spacemacs settings."
    ;; (default nil) (Emacs 24.4+ only)
    dotspacemacs-maximized-at-startup nil
 
+   ;; If non-nil the frame is undecorated when Emacs starts up. Combine this
+   ;; variable with `dotspacemacs-maximized-at-startup' in OSX to obtain
+   ;; borderless fullscreen. (default nil)
+   dotspacemacs-undecorated-at-startup nil
+
    ;; A value from the range (0..100), in increasing opacity, which describes
    ;; the transparency level of a frame when it's active or selected.
    ;; Transparency can be toggled through `toggle-transparency'. (default 90)
@@ -376,10 +387,14 @@ It should only modify the values of Spacemacs settings."
    dotspacemacs-smooth-scrolling t
 
    ;; Control line numbers activation.
-   ;; If set to `t' or `relative' line numbers are turned on in all `prog-mode' and
-   ;; `text-mode' derivatives. If set to `relative', line numbers are relative.
+   ;; If set to `t', `relative' or `visual' then line numbers are enabled in all
+   ;; `prog-mode' and `text-mode' derivatives. If set to `relative', line
+   ;; numbers are relative. If set to `visual', line numbers are also relative,
+   ;; but lines are only visual lines are counted. For example, folded lines
+   ;; will not be counted and wrapped lines are counted as multiple lines.
    ;; This variable can also be set to a property list for finer control:
    ;; '(:relative nil
+   ;;   :visual nil
    ;;   :disabled-for-modes dired-mode
    ;;                       doc-view-mode
    ;;                       markdown-mode
@@ -387,6 +402,7 @@ It should only modify the values of Spacemacs settings."
    ;;                       pdf-view-mode
    ;;                       text-mode
    ;;   :size-limit-kb 1000)
+   ;; When used in a plist, `visual' takes precedence over `relative'.
    ;; (default nil)
    dotspacemacs-line-numbers nil
 
@@ -410,7 +426,7 @@ It should only modify the values of Spacemacs settings."
 
    ;; If non-nil, start an Emacs server if one is not already running.
    ;; (default nil)
-   dotspacemacs-enable-server nil
+   dotspacemacs-enable-server t
 
    ;; Set the emacs server socket location.
    ;; If nil, uses whatever the Emacs default is, otherwise a directory path
@@ -467,13 +483,20 @@ It should only modify the values of Spacemacs settings."
    ;; (default nil)
    dotspacemacs-pretty-docs nil))
 
+(defun dotspacemacs/user-env ()
+  "Environment variables setup.
+This function defines the environment variables for your Emacs session. By
+default it calls `spacemacs/load-spacemacs-env' which loads the environment
+variables declared in `~/.spacemacs.env' or `~/.spacemacs.d/.spacemacs.env'.
+See the header of this file for more information."
+  (spacemacs/load-spacemacs-env))
+
 (defun dotspacemacs/user-init ()
-  "Initialization function for user code.
-It is called immediately after `dotspacemacs/init', before layer configuration
-executes.
- This function is mostly useful for variables that need to be set
-before packages are loaded. If you are unsure, you should try in setting them in
-`dotspacemacs/user-config' first."
+  "Initialization for user code:
+This function is called immediately after `dotspacemacs/init', before layer
+configuration.
+It is mostly for variables that should be set before packages are loaded.
+If you are unsure, try setting them in `dotspacemacs/user-config' first."
   (setq
    ;; Use custom file for additional settings.
    custom-file "~/.emacs.d/.cache/custom-settings.el"
@@ -487,6 +510,13 @@ before packages are loaded. If you are unsure, you should try in setting them in
 
   ;; Load additional settings.
   (load "~/.emacs.d/.cache/custom-settings.el"))
+
+(defun dotspacemacs/user-load ()
+  "Library to load while dumping.
+This function is called only while dumping Spacemacs configuration. You can
+`require' or `load' the libraries of your choice that will be included in the
+dump."
+  )
 
 (defun dotspacemacs/user-config ()
   "Configuration function for user code.
@@ -540,7 +570,6 @@ you should place your code here."
     org-projectile-file "TODO.org"
 
     ;; Set defaults for Markdown mode.
-    markdown-hide-markup t
     markdown-fontify-code-blocks-natively t
 
     ;; Set user defaults for Deft.
@@ -551,7 +580,7 @@ you should place your code here."
     ;; Set default shell.
     shell-default-shell 'eshell
 
-    ;; Additional options for search via Helm.
+    ;; Additional options for Helm.
     helm-ag-command-option "--trim"
 
     ;; Projectile defaults.
@@ -571,14 +600,13 @@ you should place your code here."
     dtrt-indent-active-mode-line-info ""
 
     ;; Defaults for Go.
-    go-backend 'go-mode
-    go-use-golangci-lint t
+    go-backend 'lsp
+    go-linter 'golangci-lint
     go-format-before-save t
     godoc-at-point-function 'godoc-gogetdoc
 
     ;; Defaults for SQL.
     sql-auto-indent nil
-    sql-capitalize-keywords t
 
     ;; Enable clang support for C/C++ layers.
     c-c++-enable-clang-support t
@@ -597,12 +625,11 @@ you should place your code here."
     writeroom-fullscreen-effect 'maximized
     writeroom-bottom-divider-width 0
 
-    ;; Defaults for LSP UI.
-    ;; lsp-eldoc-hook '(lsp-document-highlight)
-    lsp-ui-doc-border "#484848"
-    lsp-ui-doc-max-width 100
-    lsp-ui-doc-position 'bottom
-    lsp-eldoc-render-all nil
+    ;; Defaults for LSP.
+    lsp-auto-guess-root t
+    lsp-ui-sideline-enable nil
+    lsp-ui-doc-border "#757575"
+    lsp-ui-doc-max-width 80
 
     ;; Configuration for Ediff.
     ediff-window-setup-function 'ediff-setup-windows-plain
@@ -619,11 +646,33 @@ you should place your code here."
     shr-use-fonts nil
     shr-color-visible-luminance-min 75)
 
+
   ;; Global keybindings.
-  (global-set-key (kbd "M-<up>") 'next-buffer)
   (global-set-key (kbd "M-<down>") 'previous-buffer)
+  (global-set-key (kbd "M-<up>") 'next-buffer)
+
+  (global-set-key (kbd "<mouse-6>") 'previous-buffer)
+  (global-set-key (kbd "<mouse-7>") 'next-buffer)
+
   (spacemacs/set-leader-keys
     "TAB" 'alternate-buffers)
+
+  (with-eval-after-load 'helm
+    (define-key helm-map (kbd "<left>") 'helm-previous-source)
+    (define-key helm-map (kbd "<right>") 'helm-next-source)
+    (customize-set-variable 'helm-ff-lynx-style-map t)
+    (customize-set-variable 'helm-imenu-lynx-style-map t)
+    (customize-set-variable 'helm-semantic-lynx-style-map t)
+    (customize-set-variable 'helm-occur-use-ioccur-style-keys t))
+
+  (with-eval-after-load 'transient
+    (define-key transient-map        (kbd "<escape>") 'transient-quit-one)
+    (define-key transient-edit-map   (kbd "<escape>") 'transient-quit-one)
+    (define-key transient-sticky-map (kbd "<escape>") 'transient-quit-seq))
+
+  (with-eval-after-load 'sql
+	;; Ask for port when connecting to Postgres databases.
+	(setq sql-postgres-login-params (append (default-value 'sql-postgres-login-params) '(port :default 5432))))
 
   ;; Mode-specific hooks and configuration.
   (add-hook 'prog-mode-hook 'set-prog-mode-defaults)
@@ -643,7 +692,7 @@ you should place your code here."
   (add-to-list 'spacemacs-indent-sensitive-modes 'sql-mode)
 
   ;; Generic sane defaults for all modes.
-  (spacemacs/toggle-mode-line-minor-modes-off))
+  (spaceline-toggle-minor-modes-off))
 
 ;; Generic sane defaults for programming language modes.
 (defun set-prog-mode-defaults ()
