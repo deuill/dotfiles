@@ -3,38 +3,40 @@
 # ---------
 
 # Application autostart.
-exec --no-startup-id "~/.config/i3/bin/startup"
+exec        --no-startup-id "~/.config/i3/bin/startup"
 exec_always --no-startup-id "~/.xprofile"
 
 # Window manipulation.
 focus_follows_mouse no
 
 # Workspace names.
-set $www    1: www
-set $code   2: code
-set $cmd    3: cmd
-set $chat   4: chat
-set $media  5: media
-set $games  6: games
-set $misc   7: misc
+set $www   1: www
+set $code  2: code
+set $cmd   3: cmd
+set $chat  4: chat
+set $media 5: media
+set $games 6: games
+set $misc  7: misc
 
 # Workspace assignments for applications
-assign [class="Firefox"  window_type="normal"]  → $www
+assign [class="firefox"  window_role="browser"] → $www
 assign [class="Chromium" window_role="browser"] → $www
-assign [class="Geary"]     → $www
-assign [class="Emacs"]     → $code
-assign [class="Gajim"]     → $chat
-assign [class="Totem"]     → $media
-assign [class="Gimp"]      → $media
-assign [class="Lollypop"]  → $media
-assign [class="Steam"]     → $games
+assign [class="Geary"]    → $www
+assign [class="Emacs"]    → $code
+assign [class="Gajim"]    → $chat
+assign [class="Dino"]     → $chat
+assign [class="Totem"]    → $media
+assign [class="Gimp"]     → $media
+assign [class="Lollypop"] → $media
+assign [class="Spotify"]  → $media
+assign [class="Steam"]    → $games
 
 # -----------
 # KEYBINDINGS
 # -----------
 
 # Default modifier key is the 'Super' key.
-set $mod  Mod4
+set $mod Mod4
 
 # Application aliases.
 set $rofi rofi -run-command 'bash -ic "{cmd}"'
@@ -42,75 +44,76 @@ set $rofi rofi -run-command 'bash -ic "{cmd}"'
 # Application launching
 bindsym $mod+Return  exec i3-sensible-terminal
 bindsym $mod+d       exec $rofi -show drun -show-icons
+bindsym button8      exec $rofi -show drun -show-icons
 bindsym $mod+Shift+d exec $rofi -show run
 bindsym $mod+Shift+f exec $rofi -show files -modi files:~/.local/share/rofi/file-browser
 bindsym $mod+equal   exec bash ~/.config/i3/bin/fortune-notify
 
 # Change focus
-bindsym $mod+h      focus left
-bindsym $mod+j      focus down
-bindsym $mod+k      focus up
-bindsym $mod+l      focus right
-bindsym $mod+Left   focus left
-bindsym $mod+Down   focus down
-bindsym $mod+Up     focus up
-bindsym $mod+Right  focus right
+bindsym $mod+h     focus left
+bindsym $mod+j     focus down
+bindsym $mod+k     focus up
+bindsym $mod+l     focus right
+bindsym $mod+Left  focus left
+bindsym $mod+Down  focus down
+bindsym $mod+Up    focus up
+bindsym $mod+Right focus right
 
 # Move focused window
-bindsym $mod+Shift+h      move left
-bindsym $mod+Shift+j      move down
-bindsym $mod+Shift+k      move up
-bindsym $mod+Shift+l      move right
-bindsym $mod+Shift+Left   move left
-bindsym $mod+Shift+Down   move down
-bindsym $mod+Shift+Up     move up
-bindsym $mod+Shift+Right  move right
+bindsym $mod+Shift+h     move left
+bindsym $mod+Shift+j     move down
+bindsym $mod+Shift+k     move up
+bindsym $mod+Shift+l     move right
+bindsym $mod+Shift+Left  move left
+bindsym $mod+Shift+Down  move down
+bindsym $mod+Shift+Up    move up
+bindsym $mod+Shift+Right move right
 
 # Move workspace to output.
-bindsym $mod+Ctrl+Shift+Left   move workspace to output left
-bindsym $mod+Ctrl+Shift+Down   move workspace to output down
-bindsym $mod+Ctrl+Shift+Up     move workspace to output up
-bindsym $mod+Ctrl+Shift+Right  move workspace to output right
+bindsym $mod+Ctrl+Shift+Left  move workspace to output left
+bindsym $mod+Ctrl+Shift+Down  move workspace to output down
+bindsym $mod+Ctrl+Shift+Up    move workspace to output up
+bindsym $mod+Ctrl+Shift+Right move workspace to output right
 
 # Window size
-bindsym $mod+f  fullscreen toggle
+bindsym $mod+f fullscreen toggle
 
 # Horizontal/vertical orientation switching
-bindsym $mod+bracketleft   split h
-bindsym $mod+bracketright  split v
+bindsym $mod+bracketleft  split h
+bindsym $mod+bracketright split v
 
 # Change container layout (stacked, tabbed, toggle split)
-bindsym $mod+s  layout stacking
-bindsym $mod+w  layout tabbed
-bindsym $mod+e  layout toggle split
+bindsym $mod+s layout stacking
+bindsym $mod+w layout tabbed
+bindsym $mod+e layout toggle split
 
 # Toggle tiling/floating
-bindsym $mod+space        floating toggle
-bindsym $mod+Shift+space  sticky toggle
+bindsym $mod+space       floating toggle
+bindsym $mod+Shift+space sticky toggle
 
 # Focus the parent/child container.
-bindsym $mod+a  focus parent
+bindsym $mod+a focus parent
 
 # Focus between floating and split containers.
-bindsym $mod+Shift+Tab  focus mode_toggle
+bindsym $mod+Shift+Tab focus mode_toggle
 
 # Focus urgent window.
-bindsym $mod+u  [urgent=latest] focus
+bindsym $mod+u [urgent=latest] focus
 
 # Resize floating windows with modifider + mouse.
 floating_modifier $mod
 
 # Toggle between last used workspaces
-bindsym $mod+Tab  workspace back_and_forth
+bindsym $mod+Tab workspace back_and_forth
 
 # Switch to workspace
-bindsym $mod+1  workspace $www
-bindsym $mod+2  workspace $code
-bindsym $mod+3  workspace $cmd
-bindsym $mod+4  workspace $chat
-bindsym $mod+5  workspace $media
-bindsym $mod+6  workspace $games
-bindsym $mod+7  workspace $misc
+bindsym $mod+1 workspace $www
+bindsym $mod+2 workspace $code
+bindsym $mod+3 workspace $cmd
+bindsym $mod+4 workspace $chat
+bindsym $mod+5 workspace $media
+bindsym $mod+6 workspace $games
+bindsym $mod+7 workspace $misc
 
 # Move focused window to workspace
 bindsym $mod+Shift+1  move container to workspace $www
@@ -122,33 +125,21 @@ bindsym $mod+Shift+6  move container to workspace $games
 bindsym $mod+Shift+7  move container to workspace $misc
 
 # Window manager
-bindsym $mod+p             exec $rofi -show window
-bindsym $mod+q             kill
-bindsym $mod+Shift+c       reload
-bindsym $mod+Shift+r       restart
-bindsym $mod+Shift+Delete  exec --no-startup-id ~/.config/i3/bin/session lock
+bindsym $mod+p            exec $rofi -show window
+bindsym $mod+q            kill
+bindsym $mod+Shift+c      reload
+bindsym $mod+Shift+r      restart
+bindsym $mod+Shift+Delete exec --no-startup-id ~/.config/i3/bin/session lock
 
-# Volume and media keys
-bindsym XF86AudioRaiseVolume  exec --no-startup-id "pactl set-sink-mute @DEFAULT_SINK@ false; pactl set-sink-volume @DEFAULT_SINK@ +5%; touch /tmp/i3statusbar.*/volume"
-bindsym XF86AudioLowerVolume  exec --no-startup-id "pactl set-sink-mute @DEFAULT_SINK@ false; pactl set-sink-volume @DEFAULT_SINK@ -5%; touch /tmp/i3statusbar.*/volume"
-bindsym XF86AudioMute         exec --no-startup-id "pactl set-sink-mute @DEFAULT_SINK@ toggle; touch /tmp/i3statusbar.*/volume"
-
-bindsym XF86AudioStop  exec --no-startup-id playerctl stop
-bindsym $mod+Ctrl+Up   exec --no-startup-id playerctl stop
-
-bindsym XF86AudioPlay   exec --no-startup-id playerctl play
-bindsym XF86AudioPause  exec --no-startup-id playerctl pause
+# Media keys
+bindsym $mod+Ctrl+Up    exec --no-startup-id playerctl stop
 bindsym $mod+Ctrl+Down  exec --no-startup-id playerctl play-pause
-
-bindsym XF86AudioPrev   exec --no-startup-id playerctl previous
 bindsym $mod+Ctrl+Left  exec --no-startup-id playerctl previous
-
-bindsym XF86AudioNext    exec --no-startup-id playerctl next
-bindsym $mod+Ctrl+Right  exec --no-startup-id playerctl next
+bindsym $mod+Ctrl+Right exec --no-startup-id playerctl next
 
 # Modes
-bindsym $mod+r        mode "resize"
-bindsym $mod+Shift+q  mode $session
+bindsym $mod+r       mode "resize"
+bindsym $mod+Shift+q mode $session
 
 # ----------
 # APPEARANCE
@@ -158,8 +149,8 @@ bindsym $mod+Shift+q  mode $session
 font pango:Iosevka Term SS02 12
 
 # Border style for new windows.
-hide_edge_borders both
-new_window pixel 1
+hide_edge_borders       both
+new_window              pixel 1
 for_window [class=".*"] border pixel 1
 
 # Color names.
@@ -170,42 +161,42 @@ set $unfocused   #585858
 set $urgent      #ab4642
 
 # Window manager colors.
-# Class                  Border       Background   Text         Indicator
-client.focused           $background  $background  $foreground  $focused
-client.focused_inactive  $background  $background  $unfocused   $focused
-client.unfocused         $background  $background  $unfocused   $background
-client.urgent            $urgent      $urgent      $background  $urgent
-client.background                     $background
+# Class                 Border      Background  Text        Indicator
+client.focused          $background $background $foreground $focused
+client.focused_inactive $background $background $unfocused  $focused
+client.unfocused        $background $background $unfocused  $background
+client.urgent           $urgent     $urgent     $background $urgent
+client.background                   $background
 
 # ---------------
 # MODES & MODULES
 # ---------------
 
 mode "resize" {
-        # These bindings trigger as soon as you enter the resize mode.
-        bindsym k  resize grow   up   10 px or 10 ppt
-        bindsym j  resize shrink up   10 px or 10 ppt
-        bindsym h  resize grow   left 10 px or 10 ppt
-        bindsym l  resize shrink left 10 px or 10 ppt
+    # These bindings trigger as soon as you enter the resize mode.
+    bindsym k resize grow   up   10 px or 10 ppt
+    bindsym j resize shrink up   10 px or 10 ppt
+    bindsym h resize grow   left 10 px or 10 ppt
+    bindsym l resize shrink left 10 px or 10 ppt
 
-        # Same bindings, but for the arrow keys
-        bindsym Up     resize grow   up   10 px or 10 ppt
-        bindsym Down   resize shrink up   10 px or 10 ppt
-        bindsym Left   resize grow   left 10 px or 10 ppt
-        bindsym Right  resize shrink left 10 px or 10 ppt
+    # Same bindings, but for the arrow keys
+    bindsym Up    resize grow   up   10 px or 10 ppt
+    bindsym Down  resize shrink up   10 px or 10 ppt
+    bindsym Left  resize grow   left 10 px or 10 ppt
+    bindsym Right resize shrink left 10 px or 10 ppt
 
-        # Back to normal mode: Enter or Escape
-        bindsym Return  mode "default"
-        bindsym Escape  mode "default"
+    # Back to normal mode: Enter or Escape
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
 }
 
 set $session "Session: (s) Suspend, (l) Logout, (r) Reboot, (p) Power off"
 
 mode $session {
-    bindsym s  exec --no-startup-id ~/.config/i3/bin/session suspend, mode "default"
-    bindsym l  exec --no-startup-id ~/.config/i3/bin/session logout, mode "default"
-    bindsym r  exec --no-startup-id ~/.config/i3/bin/session reboot, mode "default"
-    bindsym p  exec --no-startup-id ~/.config/i3/bin/session poweroff, mode "default"
+    bindsym s exec --no-startup-id ~/.config/i3/bin/session suspend, mode "default"
+    bindsym l exec --no-startup-id ~/.config/i3/bin/session logout, mode "default"
+    bindsym r exec --no-startup-id ~/.config/i3/bin/session reboot, mode "default"
+    bindsym p exec --no-startup-id ~/.config/i3/bin/session poweroff, mode "default"
 
     # Back to normal mode: Enter or Escape
     bindsym Return mode "default"
@@ -228,14 +219,14 @@ bar {
     status_command "~/.config/i3/bin/statusbar player cpu memory network battery volume keyboard clock"
 
     colors {
-        background  $background
-        statusline  $foreground
-        separator   $unfocused
+        background $background
+        statusline $foreground
+        separator  $unfocused
 
-        # Class             Border       Background   Text
-        focused_workspace   $background  $background  $foreground
-        active_workspace    $background  $background  $foreground
-        inactive_workspace  $background  $background  $unfocused
-        urgent_workspace    $background  $background  $urgent
+        # Class            Border      Background  Text
+        focused_workspace  $background $background $foreground
+        active_workspace   $background $background $foreground
+        inactive_workspace $background $background $unfocused
+        urgent_workspace   $background $background $urgent
     }
 }

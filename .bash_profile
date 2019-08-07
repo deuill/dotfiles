@@ -4,5 +4,6 @@
 
 # Some variables.
 export GOPATH=${HOME}/.go
-export PATH=${PATH}:${GOPATH}/bin
-export QT_QPA_PLATFORMTHEME=gtk2
+export PATH=${PATH}:${HOME}/.local/bin:${GOPATH}/bin
+export QT_QPA_PLATFORMTHEME=qgnomeplatform
+export EDITOR="emacsclient -a emacs"

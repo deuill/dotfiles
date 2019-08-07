@@ -72,7 +72,7 @@ rofi.fuzzy:           true
 rofi.color-enabled:   true
 rofi.matching:        fuzzy
 
-#define bg_external argb:bb282828
+#define bg_external #282828
 #define bg_internal #282828
 #define bg_active   #ab4642
 #define text_normal #d8d8d8

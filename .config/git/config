@@ -1,8 +1,7 @@
 [core]
-	editor = nano
 	excludesfile = ~/.config/git/ignore
 [push]
-	default = simple
+	default = current
 [color]
 	ui = 1
 [help]
@@ -13,3 +12,6 @@
 	ci = commit
 	st = status
 	find = "!git log --color --source -S "
+[user]
+	name = Alex Palaistras
+	email = apalaistras@cloudflare.com
