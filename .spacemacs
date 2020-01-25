@@ -26,7 +26,6 @@ This function should only modify configuration layer settings."
    ;; a layer lazily. (default t)
    dotspacemacs-ask-for-lazy-installation t
 
-   ;; If non-nil layers with lazy install support are lazy installed.
    ;; List of additional paths where to look for configuration layers.
    ;; Paths must have a trailing slash (i.e. `~/.mycontribs/')
    dotspacemacs-configuration-layer-path '()
@@ -53,7 +52,7 @@ This function should only modify configuration layer settings."
      ;; Tagging and completion
      auto-completion
      ;; UI
-     treemacs
+     neotree
      ibuffer
      ;; Tools
      dap
@@ -107,11 +106,11 @@ It should only modify the values of Spacemacs settings."
    ;; to compile Emacs 27 from source following the instructions in file
    ;; EXPERIMENTAL.org at to root of the git repository.
    ;; (default nil)
-   dotspacemacs-enable-emacs-pdumper t
+   dotspacemacs-enable-emacs-pdumper nil
 
-   ;; File path pointing to emacs 27.1 executable compiled with support
-   ;; for the portable dumper (this is currently the branch pdumper).
-   ;; (default "emacs-27.0.50")
+   ;; Name of executable file pointing to emacs 27+. This executable must be
+   ;; in your PATH.
+   ;; (default "emacs")
    dotspacemacs-emacs-pdumper-executable-file "emacs"
 
    ;; Name of the Spacemacs dump file. This is the file will be created by the
@@ -146,8 +145,8 @@ It should only modify the values of Spacemacs settings."
    dotspacemacs-use-spacelpa nil
 
    ;; If non-nil then verify the signature for downloaded Spacelpa archives.
-   ;; (default nil)
-   dotspacemacs-verify-spacelpa-archives nil
+   ;; (default t)
+   dotspacemacs-verify-spacelpa-archives t
 
    ;; If non-nil then spacemacs will check for updates at startup
    ;; when the current branch is not `develop'. Note that checking for
@@ -168,9 +167,6 @@ It should only modify the values of Spacemacs settings."
    ;; (default 'vim)
    dotspacemacs-editing-style 'vim
 
-   ;; If non-nil output loading progress in `*Messages*' buffer. (default nil)
-   dotspacemacs-verbose-loading nil
-
    ;; Specify the startup banner. Default value is `official', it displays
    ;; the official spacemacs logo. An integer value is the index of text
    ;; banner, `random' chooses a random text banner in `core/banners'
@@ -185,7 +181,8 @@ It should only modify the values of Spacemacs settings."
    ;; `recents' `bookmarks' `projects' `agenda' `todos'.
    ;; List sizes may be nil, in which case
    ;; `spacemacs-buffer-startup-lists-length' takes effect.
-   dotspacemacs-startup-lists '((recents . 5) (projects . 7))
+   dotspacemacs-startup-lists '((recents . 5)
+                                (projects . 7))
 
    ;; True if the home buffer should respond to resize events. (default t)
    dotspacemacs-startup-buffer-responsive t
@@ -415,7 +412,7 @@ It should only modify the values of Spacemacs settings."
    dotspacemacs-smartparens-strict-mode nil
 
    ;; If non-nil pressing the closing parenthesis `)' key in insert mode passes
-   ;; over any automatically added closing parenthesis, bracket, quote, etc…
+   ;; over any automatically added closing parenthesis, bracket, quote, etc...
    ;; This can be temporary disabled by pressing `C-q' before `)'. (default nil)
    dotspacemacs-smart-closing-parenthesis nil
 
@@ -561,7 +558,7 @@ you should place your code here."
     ;; Use simple NeoTree theme.
     neo-theme 'icons
     neo-banner-message nil
-    neo-mode-line-type 'none
+    neo-mode-line-type 'default
 
     ;; Set defaults for Org mode.
     org-enable-github-support t
@@ -570,6 +567,7 @@ you should place your code here."
     org-projectile-file "TODO.org"
 
     ;; Set defaults for Markdown mode.
+    markdown-asymmetric-header t
     markdown-fontify-code-blocks-natively t
 
     ;; Set user defaults for Deft.
@@ -587,8 +585,8 @@ you should place your code here."
     projectile-globally-ignored-directories '("vendor")
 
     ;; Use common cache path for docsets.
-    helm-dash-docset-newpath "~/.cache/docsets"
-    helm-dash-browser-func 'eww-split
+    dash-docs-docset-newpath "~/.cache/docsets"
+    dash-docs-browser-func 'eww-split
 
     ;; Defaults for Magit.
     magit-diff-refine-hunk t
@@ -601,7 +599,7 @@ you should place your code here."
 
     ;; Defaults for Go.
     go-backend 'lsp
-    go-linter 'golangci-lint
+    go-use-golangci-lint t
     go-format-before-save t
     godoc-at-point-function 'godoc-gogetdoc
 
@@ -611,7 +609,8 @@ you should place your code here."
     ;; Enable clang support for C/C++ layers.
     c-c++-enable-clang-support t
 
-    ;; Have PHP-CS check against the PSR2 standard.
+    ;; Defaults for PHP.
+    php-backend nil
     flycheck-phpcs-standard "PSR2"
 
     ;; Set highlighter for diff markers in margin.
@@ -629,7 +628,9 @@ you should place your code here."
     lsp-auto-guess-root t
     lsp-ui-sideline-enable nil
     lsp-ui-doc-border "#757575"
-    lsp-ui-doc-max-width 80
+    lsp-ui-doc-position 'top
+    lsp-enable-file-watchers nil
+    lsp-log-max nil
 
     ;; Configuration for Ediff.
     ediff-window-setup-function 'ediff-setup-windows-plain
@@ -645,7 +646,6 @@ you should place your code here."
     ;; Defaults for HTML rendering, don't apply contrasting backgrounds.
     shr-use-fonts nil
     shr-color-visible-luminance-min 75)
-
 
   ;; Global keybindings.
   (global-set-key (kbd "M-<down>") 'previous-buffer)
@@ -704,25 +704,12 @@ you should place your code here."
 
 ;; Documentation file-specific defaults.
 (defun set-doc-mode-defaults ()
-  (flycheck-define-checker proselint
-    "A linter for prose."
-    :command ("proselint" source-inplace)
-    :modes (text-mode markdown-mode org-mode)
-    :error-patterns
-    ((warning line-start (file-name) ":" line ":" column ": "
-              (id (one-or-more (not (any " "))))
-              (message (one-or-more not-newline)
-                       (zero-or-more "\n" (any " ") (one-or-more not-newline)))
-              line-end)))
-
-  (add-to-list 'flycheck-checkers 'proselint)
-
-  ;; Enable `flycheck' with specific linters.
-  (flycheck-mode 1)
-
   (setq
    ;; Disable indentation with tabs.
    indent-tabs-mode nil)
+
+  ;; Enable linting.
+  (flycheck-mode 1)
 
   ;; Enable distraction-free editing mode.
   (writeroom-mode 1)

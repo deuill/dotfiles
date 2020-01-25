@@ -1,6 +1,9 @@
 #!/bin/sh
 # Startup applications for i3.
 
+# Initialize compositor.
+picom -b
+
 # Initialize 'kbdd' for keyboard layout handling.
 kbdd
 

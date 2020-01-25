@@ -2,6 +2,9 @@
 #
 # Notmuch integration with mail-sync.
 
+# The default command for 'notmuch'.
+NOTMUCH="notmuch"
+
 # Echoes a newline-separated list of local folders.
 function local-folders() {
 	local account="$1"
@@ -55,7 +58,7 @@ function fetch-pre-hook() {
 		# Append new folder and tag name to list.
 		folders="${folders}"$'\n'"${folder}"
 		tags="${tags}"$'\n'"${tag}"
-	done <<< $(sort <<< "$(notmuch search --output=tags tag:${account})")
+	done <<< $(sort <<< "$(${NOTMUCH} search --output=tags tag:${account})")
 
 	for i in $(seq 1 $(wc -l <<< "${tags}"))
 	do
@@ -63,10 +66,10 @@ function fetch-pre-hook() {
 		local folder=$(awk "NR==${i}" <<< "${folders}")
 
 		# Copy all messages into the corresponding folder for their tag.
-		local ids=$(notmuch search --output=messages tag:"${account}" AND tag:"${tag}" NOT folder:"${folder}" NOT tag:"new")
+		local ids=$(${NOTMUCH} search --output=messages tag:"${account}" AND tag:"${tag}" NOT folder:"${folder}" NOT tag:"new")
 		for id in ${ids}
 		do
-			local files=$(notmuch search --output=files "${id}")
+			local files=$(${NOTMUCH} search --output=files "${id}")
 			while read -r file
 			do
 				# Copy file to correct folder.
@@ -84,10 +87,10 @@ function fetch-pre-hook() {
 		done
 
 		# Remove all messages with no tags corresponding to their folders.
-		local ids=$(notmuch search --output=messages tag:"${account}" AND folder:"${folder}" NOT tag:"${tag}" NOT tag:"new")
+		local ids=$(${NOTMUCH} search --output=messages tag:"${account}" AND folder:"${folder}" NOT tag:"${tag}" NOT tag:"new")
 		for id in ${ids}
 		do
-			local files=$(notmuch search --output=files "${id}")
+			local files=$(${NOTMUCH} search --output=files "${id}")
 			while read -r file
 			do
 				# Remove file from folder.
@@ -108,14 +111,14 @@ function fetch-post-hook() {
 	local account="$1"
 
 	# Initialize or synchronize Notmuch database.
-	notmuch new
+	${NOTMUCH} new
 
 	# Refresh list of local folders with their corresponding tags.
 	local folders=$(local-folders "${account}")
 	local tags=$(local-folders-tags "${account}")
 
 	# Add account username as tag on all messages for this account.
-	notmuch tag +"${account}" path:"${account}/**" NOT tag:"${account}"
+	${NOTMUCH} tag +"${account}" path:"${account}/**" NOT tag:"${account}"
 
 	for i in $(seq 1 $(wc -l <<< "${tags}"))
 	do
@@ -123,27 +126,27 @@ function fetch-post-hook() {
 		local folder=$(awk "NR==${i}" <<< "${folders}")
 
 		# Tag new messages with specific folder name tag if none is set already.
-		notmuch tag +"${tag}" tag:"${account}" AND folder:"${folder}" NOT tag:"${tag}"
+		${NOTMUCH} tag +"${tag}" tag:"${account}" AND folder:"${folder}" NOT tag:"${tag}"
 
 		# Remove tags from messages that have been moved/deleted/retagged etc.
-		notmuch tag -"${tag}" tag:"${account}" AND tag:"${tag}" NOT folder:"${folder}" NOT folder:"trash"
+		${NOTMUCH} tag -"${tag}" tag:"${account}" AND tag:"${tag}" NOT folder:"${folder}" NOT folder:"trash"
 	done
 
 	# Remove 'new' tag and add 'unread' tag to all new messages.
-	notmuch tag -"new" +"unread" tag:"${account}" AND tag:"new"
+	${NOTMUCH} tag -"new" +"unread" tag:"${account}" AND tag:"new"
 
 	# Remove 'unread' tag from messages in 'Sent' folder.
-	notmuch tag -"unread" tag:"${account}" AND folder:"sent"
+	${NOTMUCH} tag -"unread" tag:"${account}" AND folder:"sent"
 
 	# Show notification for all new messages.
-	local count=$(notmuch count tag:"${account}" AND tag:"inbox" AND tag:"not-notified")
+	local count=$(${NOTMUCH} count tag:"${account}" AND tag:"inbox" AND tag:"not-notified")
 
 	if [[ ${count} -gt 10 ]]
 	then
 		notify-send "Inbox" "$(printf '%d new messages' ${count})"
 	elif [[ ${count} -gt 0 ]]
 	then
-		local summary=$(notmuch search --limit=1 --format="json" tag:"${account}" AND tag:"inbox" AND tag:"not-notified")
+		local summary=$(${NOTMUCH} search --limit=1 --format="json" tag:"${account}" AND tag:"inbox" AND tag:"not-notified")
 		local title=$(jq -r '.[0].authors' <<< "${summary}")
 
 		if [[ ${count} -gt 1 ]]
@@ -155,17 +158,15 @@ function fetch-post-hook() {
 
 		notify-send "${title}" "${text}"
 	fi
-}
 
-function account-setup-pre-hook() {
-	true
+	# Remove 'notified' tag for all messages in the inbox.
+	${NOTMUCH} tag -"notified" tag:"${account}" AND tag:"inbox" AND tag:"not-notified"
 }
 
 function account-setup-post-hook() {
 	if [[ ! -e "${NOTMUCH_CONFDIR}/config" ]]
 	then
 		envsubst < "${NOTMUCH_CONFDIR}/config.template" > "${NOTMUCH_CONFDIR}/config"
-		notmuch new &> /dev/null
 	elif grep -qw "${account}" "${NOTMUCH_CONFDIR}/config"
 	then
 		local cmd="/^other_email/ {printf \"%s%s;\n\", \$0, \"${account}\"; next} {print}"
@@ -173,4 +174,5 @@ function account-setup-post-hook() {
 		echo "${tmp}" > "${NOTMUCH_CONFDIR}/config"
 	fi
 
+	${NOTMUCH} new &> /dev/null
 }

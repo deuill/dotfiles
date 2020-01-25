@@ -1,7 +1,7 @@
 {
     "astroid": {
         "config": {
-            "version": "6"
+            "version": "11"
         },
         "notmuch_config": "${NOTMUCH_CONFDIR}/config",
         "debug": {
@@ -9,12 +9,45 @@
         },
         "hints": {
             "level": "0"
+        },
+        "log": {
+            "syslog": "false",
+            "stdout": "true",
+            "level": "info"
         }
+    },
+    "accounts": {
+        "${ACCOUNT_NAME}": {
+            "name": "${FULLNAME}",
+            "email": "${USERNAME}",
+            "gpgkey": "",
+            "always_gpg_sign": "false",
+            "sendmail": "${HOME}/.local/bin/mail-sync send ${USERNAME}",
+            "default": "true",
+            "save_sent": "false",
+            "save_sent_to": "${MAIL_DATADIR}/${USERNAME}/Sent/cur",
+            "additional_sent_tags": "",
+            "save_drafts_to": "${MAIL_DATADIR}/${USERNAME}/Drafts/cur",
+            "signature_separate": "false",
+            "signature_file": "",
+            "signature_file_markdown": "",
+            "signature_default_on": "true",
+            "signature_attach": "false",
+            "select_query": ""
+        }
+    },
+    "startup": {
+        "queries": {
+            "inbox": "tag:inbox"
+        }
+    },
+    "terminal": {
+        "height": "10",
+        "font_description": "default"
     },
     "thread_index": {
         "page_jump_rows": "6",
         "sort_order": "newest",
-        "thread_load_step": "250",
         "cell": {
             "font_description": "default",
             "line_spacing": "2",
@@ -24,6 +57,8 @@
             "subject_color": "#807d74",
             "subject_color_selected": "#000000",
             "background_color_selected": "",
+            "background_color_marked": "#fff584",
+            "background_color_marked_selected": "#bcb559",
             "tags_length": "80",
             "tags_upper_color": "#e5e5e5",
             "tags_lower_color": "#333333",
@@ -36,16 +71,24 @@
             "clock_format": "local",
             "same_year": "%b %-e",
             "diff_year": "%x"
-        }
+        },
+        "tagbar_move": "tag"
     },
     "editor": {
         "cmd": "emacs -xrm 'Emacs.menuBar:0' -bg 'white' -fs --parent-id %3 -q -l ${ASTROID_CONFDIR}/editor/init.el %1",
+        "external_editor": "false",
         "charset": "utf-8",
-        "save_draft_on_force_quit": "true"
+        "save_draft_on_force_quit": "true",
+        "attachment_words": "attach",
+        "attachment_directory": "~",
+        "markdown_processor": "cmark",
+        "markdown_on": "false"
     },
     "mail": {
         "reply": {
-            "quote_line": "Excerpts from %1's message of %2:"
+            "quote_processor": "w3m -dump -T text\/html",
+            "quote_line": "Excerpts from %1's message of %2:",
+            "mailinglist_reply_to_sender": "true"
         },
         "forward": {
             "quote_line": "Forwarding %1's message of %2:",
@@ -54,38 +97,37 @@
         "sent_tags": "sent",
         "message_id_fqdn": "",
         "message_id_user": "",
-        "user_agent": "default"
+        "user_agent": "default",
+        "send_delay": "2",
+        "close_on_success": "false",
+        "format_flowed": "false"
     },
     "poll": {
-        "interval": "60"
+        "interval": "60",
+        "always_full_refresh": "false"
     },
     "attachment": {
         "external_open_cmd": "xdg-open"
     },
     "thread_view": {
         "open_html_part_external": "false",
+        "preferred_type": "plain",
+        "preferred_html_only": "true",
+        "allow_remote_when_encrypted": "false",
         "open_external_link": "xdg-open",
+        "default_save_directory": "~",
         "indent_messages": "false",
-        "mathjax": {
-            "enable": "true",
-            "uri_prefix": "https://cdn.mathjax.org/mathjax/2.6-latest/",
-            "for_tags": ""
-        },
-        "code_prettify": {
-            "enable": "true",
-            "for_tags": "",
-            "code_tag": "```",
-            "enable_for_patches": "true"
-        },
         "gravatar": {
             "enable": "true"
         },
-        "mark_unread_delay": "0.5"
+        "mark_unread_delay": "0.5",
+        "expand_flagged": "true"
     },
     "crypto": {
         "gpg": {
             "path": "gpg2",
-            "always_trust": "true"
+            "always_trust": "true",
+            "enabled": "true"
         }
     },
     "saved_searches": {
@@ -93,26 +135,5 @@
         "save_history": "true",
         "history_lines_to_show": "15",
         "history_lines": "1000"
-    },
-    "accounts": {
-        "${ACCOUNT_NAME}": {
-            "name": "${FULLNAME}",
-            "email": "${USERNAME}",
-            "gpgkey": "",
-            "sendmail": "${HOME}/.local/bin/mail-sync send ${USERNAME}",
-            "default": "true",
-            "save_sent": "true",
-            "save_sent_to": "${MAIL_DATADIR}/${USERNAME}/Sent/cur",
-            "additional_sent_tags": "",
-            "save_drafts_to": "${MAIL_DATADIR}/${USERNAME}/Drafts/cur",
-            "signature_file": "",
-            "signature_default_on": "true",
-            "signature_attach": "false"
-        }
-    },
-    "startup": {
-        "queries": {
-            "inbox": "tag:inbox"
-        }
     }
 }

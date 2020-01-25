@@ -57,15 +57,6 @@ function send() {
 function account-setup() {
 	local account="$1"
 
-	# Do not allow duplicate accounts to be set up.
-	if [[ -e "${MAIL_DATADIR}/${account}" ]]
-	then
-		echo "Data directory already exists in '${MAIL_DATADIR}/${account}', aborting..."
-		return 1
-	fi
-
-	account-setup-pre-hook "${account}"
-
 	# Create or load user configuration.
 	if [[ ! -e "${MAIL_CONFDIR}/account.d/${account}.conf" ]]
 	then
@@ -83,6 +74,19 @@ function account-setup() {
 
 	load-account-config "${account}" || return 1
 	account-setup-post-hook "${account}"
+
+	# Work around a bug in Astroid JSON handling, where object keys containing
+	# periods are incorrectly broken into sub-objects.
+	export ACCOUNT_NAME=$(tr '.@' '-' <<< "${USERNAME}")
+
+	if [[ -e "${ASTROID_CONFDIR}/config" ]]
+	then
+		local cmd=".[0].accounts = (.[0].accounts + .[1]) | .[0]"
+		local tmp=$(jq -s "${cmd}" "${ASTROID_CONFDIR}/config" <(jq -r ".accounts" "${ASTROID_CONFDIR}/config.template" | envsubst))
+		echo "${tmp}" > "${ASTROID_CONFDIR}/config"
+	else
+		envsubst < "${ASTROID_CONFDIR}/config.template" > "${ASTROID_CONFDIR}/config"
+	fi
 
 	echo "Setup complete."
 }

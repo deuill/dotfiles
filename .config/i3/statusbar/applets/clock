@@ -12,5 +12,5 @@ onclick() {
 
 clock() {
 	output "$(icon "${ICON_CLOCK}") $(date +"${CLOCK_FORMAT}")"
-	sleep $((60 - $(date +"%S")))
+	sleep $((60 - 10#$(date +"%S")))
 }

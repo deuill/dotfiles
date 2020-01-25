@@ -52,6 +52,12 @@ player() {
 	artist="$(echo "${artist}" | tr \" ” | awk '{if(length($0)>20) print substr($0,1,20) "…"; else print}')"
 	track="$(echo "${track}" | tr \" ” | awk '{if(length($0)>20) print substr($0,1,20) "…"; else print}')"
 
-	output "$(icon "${status_icon}") ${artist} - ${track}"
+	if [[ -z "${artist}" ]]
+	then
+		output "$(icon "${status_icon}") ${track}"
+	else
+		output "$(icon "${status_icon}") ${artist} - ${track}"
+	fi
+
 	waitforsignal
 }

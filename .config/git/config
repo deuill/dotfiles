@@ -12,6 +12,3 @@
 	ci = commit
 	st = status
 	find = "!git log --color --source -S "
-[user]
-	name = Alex Palaistras
-	email = apalaistras@cloudflare.com
