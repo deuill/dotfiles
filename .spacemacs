@@ -565,7 +565,11 @@ you should place your code here."
 
     ;; Set defaults for Markdown mode.
     markdown-asymmetric-header t
+    markdown-enable-wiki-links t
     markdown-fontify-code-blocks-natively t
+
+    ;; Don't resize windows when enabling Writeroom.
+    writeroom-maximize-window nil
 
     ;; Set user defaults for Deft.
     deft-recursive t
