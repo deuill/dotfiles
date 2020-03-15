@@ -47,6 +47,7 @@ bindsym $mod+d       exec $rofi -show drun -show-icons
 bindsym button8      exec $rofi -show drun -show-icons
 bindsym $mod+Shift+d exec $rofi -show run
 bindsym $mod+Shift+f exec $rofi -show files -modi files:~/.local/share/rofi/file-browser
+bindsym $mod+t       exec bash ~/.local/bin/spacemacs ~/Documents/Notes/Notes.md
 bindsym $mod+equal   exec bash ~/.config/i3/bin/fortune-notify
 
 # Change focus
@@ -70,6 +71,10 @@ bindsym $mod+Shift+Up    move up
 bindsym $mod+Shift+Right move right
 
 # Move workspace to output.
+bindsym $mod+Ctrl+Shift+h     move workspace to output left
+bindsym $mod+Ctrl+Shift+j     move workspace to output down
+bindsym $mod+Ctrl+Shift+k     move workspace to output up
+bindsym $mod+Ctrl+Shift+l     move workspace to output right
 bindsym $mod+Ctrl+Shift+Left  move workspace to output left
 bindsym $mod+Ctrl+Shift+Down  move workspace to output down
 bindsym $mod+Ctrl+Shift+Up    move workspace to output up

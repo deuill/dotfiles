@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # Startup applications for i3.
 
 # Initialize compositor.

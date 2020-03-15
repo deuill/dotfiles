@@ -219,7 +219,7 @@ It should only modify the values of Spacemacs settings."
 
    ;; Default font, or prioritized list of fonts. `powerline-scale' allows to
    ;; quickly tweak the mode-line size to make separators look not too crappy.
-   dotspacemacs-default-font '("Iosevka Term SS02" :size 10.75 :weight light :width normal)
+   dotspacemacs-default-font '("Iosevka Term SS02" :size 10.50 :weight light)
 
    ;; The leader key (default "SPC")
    dotspacemacs-leader-key "SPC"
@@ -498,12 +498,13 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
    ;; Use custom file for additional settings.
    custom-file "~/.emacs.d/.cache/custom-settings.el"
 
-   ;; Do not use variable-width fonts for headers.
-   monokai-use-variable-pitch nil
-
    ;; Set colors consistent with Base16-Eighties theme.
    monokai-background     "#2d2d2d"
    monokai-highlight-line "#323232")
+
+  ;; Set variable-pitch (i.e. not monospace) fonts.
+  (set-face-attribute 'variable-pitch nil :family "Roboto")
+  (set-face-attribute 'fixed-pitch nil :family "Iosevka Term SS02")
 
   ;; Load additional settings.
   (load "~/.emacs.d/.cache/custom-settings.el"))
@@ -523,15 +524,11 @@ This is the place where most of your configurations should be done. Unless it is
 explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
   (setq-default
-    ;; Set indentation to tabs.
-    indent-tabs-mode t
-    standard-indent 4
-    c-basic-offset 4
-    go-tab-width 4
-    tab-width 4
-
     ;; Have fill commands break at 100 column widths.
     fill-column 100
+
+    ;; Stretch cursor to fill width of character underneath.
+    x-stretch-cursor t
 
     ;; Reduce performance impact of long lines.
     bidi-display-reordering nil
@@ -542,8 +539,8 @@ you should place your code here."
     ;; Autocompleted docstrings appear in tooltips.
     auto-completion-enable-help-tooltip t
 
-    ;; Stretch cursor to fill width of character underneath.
-    x-stretch-cursor t
+    ;; Don't split windows vertically.
+    split-width-threshold 20
 
     ;; Use dumb-jump as default jump handler.
     spacemacs-default-jump-handlers '(dumb-jump-go evil-goto-definition)
@@ -696,6 +693,14 @@ you should place your code here."
 
 ;; Generic sane defaults for programming language modes.
 (defun set-prog-mode-defaults ()
+  (setq
+   ;; Set indentation to tabs.
+   indent-tabs-mode t
+   standard-indent 4
+   c-basic-offset 4
+   go-tab-width 4
+   tab-width 4)
+
   ;; Enable column marker.
   (fci-mode 1)
 
@@ -721,6 +726,12 @@ you should place your code here."
 (defun set-markdown-mode-defaults ()
   ;; Hard-wrap lines at pre-defined fill length.
   (auto-fill-mode)
+
+  ;; Keep cursor in the center of the screen if possible.
+  (centered-cursor-mode)
+
+  ;; Use variable-pitch font by default.
+  (variable-pitch-mode)
 
   ;; Inherit doc-mode defaults.
   (set-doc-mode-defaults))
