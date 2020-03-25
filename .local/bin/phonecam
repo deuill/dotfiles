@@ -1,0 +1,141 @@
+#!/bin/bash
+
+set -o pipefail
+set -o nounset
+
+# Configuration
+
+WIDTH="1280"
+HEIGHT="720"
+
+ADB="adb"
+ADB_PACKAGE="com.dev47apps.droidcamx"
+ADB_INTENT="com.dev47apps.droidcamx.DroidCamX"
+
+HOST="127.0.0.1"
+PORT="4747"
+
+SERVER_CMD="droidcam-cli"
+SERVER_ARGS="$HOST $PORT"
+
+MODULE="v4l2loopback_dc"
+
+# Other variables
+
+ACTION="${1:-}"
+
+function module-check() {
+	# Check if module is loaded. Echo is needed here to avoid SIGPIPE.
+	echo "$(lsmod)" | grep -q "$MODULE" && return 0
+
+	# Check if module is available.
+	modinfo -F=null "$MODULE" || return 2
+
+	# Module is available but not loaded.
+	return 1
+}
+
+function module-load() {
+	# Check for module availability.
+	module-check && return 0 || [[ $? -eq 2 ]] && return 2
+
+	# Module is not loaded but is available, try to load.
+	sudo modprobe "$MODULE" width="$WIDTH" height="$HEIGHT" || return $?
+
+	return 0
+}
+
+function adb-device-check() {
+	echo "$($ADB get-state)" | grep -q "device"
+	return $?
+}
+
+function adb-connection-check() {
+	echo "$($ADB forward --list)" | grep -q "tcp:${PORT} tcp:${PORT}"
+	return $?
+}
+
+function server-check() {
+	local ps="$(ps -u)"
+	echo "$ps" | grep -q "$SERVER_CMD"
+	return $?
+}
+
+function phonecam-start() {
+	module-check || {
+		echo "Loading module '$MODULE' with 'modprobe'..."
+		module-load || return $?
+	}
+
+	adb-device-check || {
+		echo "Device not set up for 'adb' connection."
+		return 1
+	}
+
+	adb-connection-check || {
+		echo "Forwarding port '$PORT' to local..."
+		$ADB forward tcp:$PORT tcp:$PORT || return $?
+	}
+
+	server-check || {
+		echo "Starting '${ADB_INTENT}'..."
+		$ADB shell am start -n ${ADB_PACKAGE}/${ADB_INTENT} || return $?
+
+		# Wait for a moment until activity is started.
+		sleep 2
+
+		echo "Starting '$SERVER_CMD'..."
+		($SERVER_CMD $SERVER_ARGS) &
+	}
+
+	return 0
+}
+
+function phonecam-stop() {
+	server-check && {
+		echo "Stopping '$SERVER_CMD'..."
+		killall $SERVER_CMD
+
+		echo "Stopping '$ADB_PACKAGE'..."
+		$ADB shell am force-stop $ADB_PACKAGE
+	}
+
+	adb-connection-check && {
+		echo "Removing port forward for '$PORT'..."
+		$ADB forward --remove tcp:$PORT
+	}
+
+	return 0
+}
+
+function phonecam-status() {
+	local module=$(module-check && echo 'loaded' || { [[ $? -eq 2 ]] && echo 'not-found'; } || echo 'not-loaded')
+	local device=$(adb-device-check && echo 'connected' || echo 'not-connected')
+	local connection=$(adb-connection-check && echo 'forwarded' || echo 'not-forwarded')
+	local server=$(server-check && echo 'started' || echo 'not-started')
+
+	echo "Module:     $module"
+	echo "Device:     $device"
+	echo "Connection: $connection"
+	echo "Server:     $server"
+
+	return 0
+}
+
+function usage() {
+	echo "Usage: phonecam [COMMAND]"
+	echo "Commands:"
+	echo "  start  Start and connect to phone server."
+	echo "  stop   Stop and disconnect from any running phone server."
+	echo "  status Show status of phone server and connection."
+	return 1
+}
+
+case "${ACTION}" in
+	start)  phonecam-start  ;;
+	stop)   phonecam-stop   ;;
+	status) phonecam-status ;;
+	*)      usage           ;;
+esac
+
+exit $?
