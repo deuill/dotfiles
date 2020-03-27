@@ -3,33 +3,197 @@
 set -o pipefail
 set -o nounset
 
-# Configuration
+# Function definitions
 
-WIDTH="1280"
-HEIGHT="720"
+function defaults-set() {
+	WIDTH="1280"
+	HEIGHT="720"
+}
 
-ADB="adb"
-ADB_PACKAGE="com.dev47apps.droidcamx"
-ADB_INTENT="com.dev47apps.droidcamx.DroidCamX"
+function defaults-set-droidcamx() {
+	MODULE_NAME="v4l2loopback"
+	MODULE_ARGS="card_name=Phonecam"
+	# MODULE_NAME="v4l2loopback_dc"
+	# MODULE_ARGS="width=${WIDTH} height=${HEIGHT}"
 
-HOST="127.0.0.1"
-PORT="4747"
+	HOST="127.0.0.1"
+	PORT="4747"
 
-SERVER_CMD="droidcam-cli"
-SERVER_ARGS="$HOST $PORT"
+	STREAM_BACKEND="gstreamer"
+	# STREAM_BACKEND="droidcam-cli"
 
-MODULE="v4l2loopback_dc"
+	VIDEO_URL="http://$HOST:$PORT/mjpegfeed?${WIDTH}x${HEIGHT}"
+	VIDEO_SYNC="false"
 
-# Other variables
+	GSTREAMER_VIDEO_PARAMS="video/x-raw,width=$WIDTH,height=$HEIGHT"
 
-ACTION="${1:-}"
+	PACKAGE="com.dev47apps.droidcamx"
+	INTENT="com.dev47apps.droidcamx.DroidCamX"
+}
+
+function defaults-set-ipwebcam() {
+	MODULE_NAME="v4l2loopback"
+	MODULE_ARGS="card_name=Phonecam"
+
+	HOST="127.0.0.1"
+	PORT="8080"
+
+	VIDEO_URL="http://$HOST:$PORT/video"
+	VIDEO_SYNC="false"
+
+	AUDIO_URL="http://$HOST:$PORT/audio.wav"
+	AUDIO_SYNC="false"
+
+	GSTREAMER_VIDEO_PARAMS="video/x-raw,width=$WIDTH,height=$HEIGHT"
+	GSTREAMER_AUDIO_PARAMS="audio/x-raw,format=S16LE,layout=interleaved,rate=44100,channels=1"
+
+	PULSEAUDIO_AUDIO_PARAMS="format=S16LE channels=1"
+}
+
+function backend-check-droidcamx() {
+	case "$STREAM_BACKEND" in
+		gstreamer)
+			gstreamer-check
+		    ;;
+		droidcam-cli)
+			ps -C droidcam-cli &> /dev/null
+		    ;;
+		*)
+			echo "Unknown stream backend '$STREAM_BACKEND' selected"
+			return 1
+			;;
+	esac
+	return $?
+}
+
+function backend-start-droidcamx() {
+	echo "Starting '${INTENT}'..."
+	$ADB shell am start -n $PACKAGE/$INTENT || return $?
+	sleep 2
+
+	case "$STREAM_BACKEND" in
+		gstreamer)
+			echo "Starting GStreamer..."
+			gstreamer-video-start &
+			sleep 2 && backend-check-droidcamx
+		    ;;
+		droidcam-cli)
+			echo "Starting 'droidcam-cli'..."
+			droidcam-cli $HOST $PORT &
+		    ;;
+		*)
+			echo "Unknown stream backend '$STREAM_BACKEND' selected"
+			return 1
+			;;
+	esac
+	return $?
+}
+
+function backend-stop-droidcamx() {
+	case "$STREAM_BACKEND" in
+		gstreamer)
+			gstreamer-stop
+		    ;;
+		droidcam-cli)
+			echo "Stopping 'droidcam-cli'..."
+			killall droidcam-cli
+		    ;;
+		*)
+			echo "Unknown stream backend '$STREAM_BACKEND' selected"
+			return 1
+			;;
+	esac
+
+	echo "Stopping '$PACKAGE'..."
+	$ADB shell am force-stop $PACKAGE
+}
+
+function backend-check-ipwebcam() {
+	gstreamer-check
+	return $?
+}
+
+function backend-start-ipwebcam() {
+	# Start Pulseaudio pipeline.
+	pulseaudio-start || return $?
+
+	# Start audio and video pipeline.
+	gstreamer-video-start &
+	gstreamer-audio-start &
+
+	sleep 2 && backend-check-ipwebcam
+	return $?
+}
+
+function backend-stop-ipwebcam() {
+	echo "Stopping Gstreamer..."
+	gstreamer-stop
+
+	echo "Unloading Pulseaudio modules..."
+	pulseaudio-stop
+
+	return 0
+}
+
+function gstreamer-video-start() {
+	local device="$(gstreamer-get-device)" || return $?
+	gst-launch-1.0 souphttpsrc location="$VIDEO_URL" do-timestamp=true is-live=true ! multipartdemux ! decodebin ! videoconvert ! videoscale ! "$GSTREAMER_VIDEO_PARAMS" ! v4l2sink device=$device sync="$VIDEO_SYNC"
+	return 0
+}
+
+function gstreamer-audio-start() {
+	local device="$(gstreamer-get-device)" || return $?
+	gst-launch-1.0 souphttpsrc location="$AUDIO_URL" do-timestamp=true is-live=true ! "$GSTREAMER_AUDIO_PARAMS" ! queue ! pulsesink device="phonecam" sync="$AUDIO_SYNC"
+	return 0
+}
+
+function gstreamer-check() {
+	echo "$(ps -C gst-launch-1.0 -o command )" | grep -q -e "souphttpsrc" -e "$VIDEO_URL"
+	return $?
+}
+
+function gstreamer-stop() {
+	kill $(echo "$(ps -C gst-launch-1.0 -o pid,command)" | awk '/souphttpsrc|$HOST:$PORT/ {print $1}')
+}
+
+function gstreamer-get-device() {
+	for d in /dev/video*; do
+		echo "$(v4l2-ctl -d $d -D)" | grep -q 'v4l2 loopback' && {
+			echo "$d"
+			return 0
+		}
+	done
+
+	echo "No 'v4l2loopback' device found"
+	return 1
+}
+
+function pulseaudio-start() {
+	local default=$(pacmd dump | awk '/set-default-sink/ {print $2}')
+
+	pactl load-module module-null-sink sink_name="phonecam" sink_properties="device.description='Phonecam'" $PULSEAUDIO_AUDIO_PARAMS
+	pactl load-module module-echo-cancel sink_name="phonecam_echo_cancel" source_master="phonecam.monitor" sink_master="$default" $PULSEAUDIO_AUDIO_PARAMS aec_method="webrtc" save_aec=true use_volume_sharing=true
+	pactl set-default-source phonecam.monitor
+
+	return 0
+}
+
+function pulseaudio-stop() {
+	pactl unload-module $(pulseaudio-sink-by-name "phonecam_echo_cancel")
+	pactl unload-module $(pulseaudio-sink-by-name "phonecam")
+	return 0
+}
+
+function pulseaudio-sink-by-name() {
+	pacmd list-sinks | awk "/name: <$1>/ {f=1; next} f && /module:/ {print \$2; exit}"
+}
 
 function module-check() {
 	# Check if module is loaded. Echo is needed here to avoid SIGPIPE.
-	echo "$(lsmod)" | grep -q "$MODULE" && return 0
+	echo "$(lsmod)" | grep -q "$MODULE_NAME" && return 0
 
 	# Check if module is available.
-	modinfo -F=null "$MODULE" || return 2
+	modinfo -F=null "$MODULE_NAME" || return 2
 
 	# Module is available but not loaded.
 	return 1
@@ -40,9 +204,17 @@ function module-load() {
 	module-check && return 0 || [[ $? -eq 2 ]] && return 2
 
 	# Module is not loaded but is available, try to load.
-	sudo modprobe "$MODULE" width="$WIDTH" height="$HEIGHT" || return $?
+	sudo modprobe "$MODULE_NAME" "$MODULE_ARGS"
+	return $?
+}
 
-	return 0
+function module-unload() {
+	# Check for module availability.
+	module-check || return 1
+
+	# Unload module.
+	sudo rmmod $MODULE_NAME
+	return $?
 }
 
 function adb-device-check() {
@@ -55,15 +227,9 @@ function adb-connection-check() {
 	return $?
 }
 
-function server-check() {
-	local ps="$(ps -u)"
-	echo "$ps" | grep -q "$SERVER_CMD"
-	return $?
-}
-
 function phonecam-start() {
 	module-check || {
-		echo "Loading module '$MODULE' with 'modprobe'..."
+		echo "Loading module '$MODULE_NAME' with 'modprobe'..."
 		module-load || return $?
 	}
 
@@ -77,32 +243,21 @@ function phonecam-start() {
 		$ADB forward tcp:$PORT tcp:$PORT || return $?
 	}
 
-	server-check || {
-		echo "Starting '${ADB_INTENT}'..."
-		$ADB shell am start -n ${ADB_PACKAGE}/${ADB_INTENT} || return $?
-
-		# Wait for a moment until activity is started.
-		sleep 2
-
-		echo "Starting '$SERVER_CMD'..."
-		($SERVER_CMD $SERVER_ARGS) &
-	}
-
+	backend-check-${BACKEND} || backend-start-${BACKEND} || return $?
 	return 0
 }
 
 function phonecam-stop() {
-	server-check && {
-		echo "Stopping '$SERVER_CMD'..."
-		killall $SERVER_CMD
-
-		echo "Stopping '$ADB_PACKAGE'..."
-		$ADB shell am force-stop $ADB_PACKAGE
-	}
+	backend-check-${BACKEND} && backend-stop-${BACKEND}
 
 	adb-connection-check && {
 		echo "Removing port forward for '$PORT'..."
 		$ADB forward --remove tcp:$PORT
+	}
+
+	module-check && {
+		echo "Unloading module '$MODULE_NAME'..."
+		module-unload
 	}
 
 	return 0
@@ -112,7 +267,7 @@ function phonecam-status() {
 	local module=$(module-check && echo 'loaded' || { [[ $? -eq 2 ]] && echo 'not-found'; } || echo 'not-loaded')
 	local device=$(adb-device-check && echo 'connected' || echo 'not-connected')
 	local connection=$(adb-connection-check && echo 'forwarded' || echo 'not-forwarded')
-	local server=$(server-check && echo 'started' || echo 'not-started')
+	local server=$(backend-check-${BACKEND} && echo 'started' || echo 'not-started')
 
 	echo "Module:     $module"
 	echo "Device:     $device"
@@ -131,11 +286,41 @@ function usage() {
 	return 1
 }
 
-case "${ACTION}" in
-	start)  phonecam-start  ;;
-	stop)   phonecam-stop   ;;
-	status) phonecam-status ;;
-	*)      usage           ;;
+# Global configuration
+
+BACKEND="droidcamx"
+ADB="adb"
+
+# Set configuration defaults.
+defaults-set
+
+# Set defaults for selected backend.
+case "${BACKEND}" in
+	droidcamx)
+		defaults-set-droidcamx
+		;;
+	ipwebcam)
+		defaults-set-ipwebcam
+		;;
+	*)
+		echo "Invalid backend selected: '${BACKEND}'"
+		exit 1
+esac
+
+# Execute action given.
+case "${1:-}" in
+	start)
+		phonecam-start
+		;;
+	stop)
+		phonecam-stop
+		;;
+	status)
+		phonecam-status
+		;;
+	*)
+		usage
+		;;
 esac
 
 exit $?
