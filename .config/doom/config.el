@@ -4,14 +4,22 @@
 ;;; UI configuration.
 ;;;
 
+;; Disable blinking cursor.
+(blink-cursor-mode -1)
+
+;; Set default values for UI parameters.
 (setq-default
   ;; Default theme.
   doom-theme 'doom-monokai-pro
 
   ;; Font definitions.
-  doom-font     (font-spec :family "Iosevka Term SS02" :size 11.50 :weight 'light)
-  doom-big-font (font-spec :family "Iosevka Term SS02" :size 12.50 :weight 'light)
-  doom-variable-pitch-font (font-spec :family "Roboto" :size 11.50 :weight 'light)
+  doom-font                (font-spec :family "Iosevka Term SS02" :size 11.50 :weight 'light)
+  doom-big-font            (font-spec :family "Iosevka Term SS02" :size 12.50 :weight 'light)
+  doom-variable-pitch-font (font-spec :family "IBM Plex Sans" :weight 'light)
+  doom-serif-font          (font-spec :family "IBM Plex Serif" :weight 'light)
+
+  ;; Column used as limit for various modes.
+  fill-column 100
 
   ;; Show which-key popup faster.
   which-key-idle-delay 0.2
@@ -90,7 +98,9 @@
   (setq writeroom-width 100
         writeroom-fullscreen-effect 'maximized
         writeroom-bottom-divider-width 0
-        writeroom-maximize-window nil))
+        writeroom-maximize-window nil)
+  (when (featurep! :ui zen)
+    (setq +zen-text-scale 0)))
 
 ;;;
 ;;; Mode-specific configuration.
@@ -122,11 +132,6 @@
 ;;;
 ;;; Custom functions.
 ;;;
-
-(defun +custom/alternate-buffer-in-persp (&optional window)
-  "Switch back and forth between current and last buffer in the current window."
-  (interactive)
-  (with-persp-buffer-list () (switch-to-buffer nil)))
 
 (defun +custom/alternate-buffer-in-persp (&optional window)
   "Switch back and forth between current and last buffer in the current window."
@@ -205,8 +210,12 @@ to the `killed-buffer-list' when killing the buffer."
 ;;;
 
 (map! :leader
-      :desc "Eval expression"       ";"    #'pp-eval-expression
-      :desc "M-x"                   ":"    #'execute-extended-command
+      :desc "M-x"             ":"     #'execute-extended-command
+      :desc "Open shell here" ";"
+      (cond ((featurep! :term eshell) #'+eshell/toggle)
+            ((featurep! :term shell)  #'+shell/toggle)
+            ((featurep! :term term)   #'+term/toggle)
+            (else                     nil))
 
       (:when (featurep! :ui popup)
         :desc "Toggle last popup" "~" #'+popup/toggle)
@@ -217,7 +226,8 @@ to the `killed-buffer-list' when killing the buffer."
 
       :desc "Resume last search" "SPC"
       (cond ((featurep! :completion ivy)  #'ivy-resume)
-            ((featurep! :completion helm) #'helm-resume))
+            ((featurep! :completion helm) #'helm-resume)
+            (else                         nil))
 
       :desc "Search in project"            "/" #'+default/search-project
       :desc "Search for symbol in project" "*" #'+default/search-project-for-symbol-at-point
@@ -252,10 +262,10 @@ to the `killed-buffer-list' when killing the buffer."
         :desc "Previous buffer"             "["   #'previous-buffer
         :desc "Next buffer"                 "]"   #'next-buffer
         (:when (featurep! :ui workspaces)
-          :desc "Switch workspace buffer" "b" #'persp-switch-to-buffer
-          :desc "Switch buffer"           "B" #'switch-to-buffer)
+          :desc "Switch workspace buffer"   "b" #'persp-switch-to-buffer
+          :desc "Switch buffer"             "B" #'switch-to-buffer)
         (:unless (featurep! :ui workspaces)
-          :desc "Switch buffer"           "b" #'switch-to-buffer)
+          :desc "Switch buffer"             "b" #'switch-to-buffer)
         :desc "Kill buffer"                 "d"   #'kill-current-buffer
         :desc "Kill all buffers"            "D"   #'doom/kill-all-buffers
         :desc "List buffers"                "i"   #'ibuffer
@@ -325,7 +335,8 @@ to the `killed-buffer-list' when killing the buffer."
                                             "D"   nil
           :desc "Git blame"                 "B"   #'magit-blame-addition
           :desc "Git clone"                 "C"   #'magit-clone
-          :desc "Git fetch"                 "F"   #'magit-fetch
+          :desc "Git fetch"                 "f"   #'magit-fetch
+          :desc "Git pull"                  "F"   #'magit-pull
           :desc "Git buffer log"            "L"   #'magit-log
           :desc "Git stage file"            "S"   #'magit-stage-file
           :desc "Git unstage file"          "U"   #'magit-unstage-file
@@ -377,7 +388,7 @@ to the `killed-buffer-list' when killing the buffer."
                                              "." nil
                                              ">" nil
                                              "!" nil
-        :desc "Run cmd in project root"      ";" #'projectile-run-shell-command-in-root
+                                             ";" nil
         :desc "Add new project"              "a" #'projectile-add-known-project
                                              "b" nil
                                              "c" nil
@@ -398,7 +409,10 @@ to the `killed-buffer-list' when killing the buffer."
         :desc "Rename project workspace"     "R" #'+workspace/rename
                                              "s" nil
         :desc "Save project files"           "S" #'projectile-save-project-buffers
-                                             "t" nil
+        :desc "Toggle file tree"             "t"
+        (cond ((featurep! :ui neotree)           #'+neotree/open)
+              ((featurep! :ui treemacs)          #'+treemacs/toggle)
+              (else                              nil))
                                              "T" nil
         :desc "Switch project workspace"     "w" #'+workspace/switch-to
         :desc "Remove project"               "x" #'projectile-remove-known-project

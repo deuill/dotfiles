@@ -5,8 +5,8 @@
        (ivy +prescient +fuzzy +icons)
 
        :checkers
-       syntax
-       grammar
+       (syntax +childframe)
+       spell
 
        :ui
        doom
@@ -21,6 +21,7 @@
        vc-gutter
        (window-select +numbers +switch-window)
        workspaces
+       zen
 
        :editor
        (evil +everywhere)
@@ -34,6 +35,7 @@
        :emacs
        electric
        ibuffer
+       undo
        vc
 
        :term
