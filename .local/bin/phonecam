@@ -6,23 +6,30 @@ set -o nounset
 # Function definitions
 
 function defaults-set() {
+	ADB="adb"
+	BACKEND="droidcamx"
+	STREAM_BACKEND="gstreamer" # or "droidcam-cli"
+
 	WIDTH="1280"
 	HEIGHT="720"
 }
 
 function defaults-set-droidcamx() {
-	MODULE_NAME="v4l2loopback"
-	MODULE_ARGS="card_name=Phonecam"
-	# MODULE_NAME="v4l2loopback_dc"
-	# MODULE_ARGS="width=${WIDTH} height=${HEIGHT}"
+	case "$STREAM_BACKEND" in
+		gstreamer)
+			MODULE_NAME="v4l2loopback"
+			MODULE_ARGS="card_label=Phonecam"
+			;;
+		droidcam-cli)
+			MODULE_NAME="v4l2loopback_dc"
+			MODULE_ARGS="width=${WIDTH} height=${HEIGHT}"
+			;;
+	esac
 
 	HOST="127.0.0.1"
 	PORT="4747"
 
-	STREAM_BACKEND="gstreamer"
-	# STREAM_BACKEND="droidcam-cli"
-
-	VIDEO_URL="http://$HOST:$PORT/mjpegfeed?${WIDTH}x${HEIGHT}"
+	VIDEO_URL="http://$HOST:$PORT/video?${WIDTH}x${HEIGHT}"
 	VIDEO_SYNC="false"
 
 	GSTREAMER_VIDEO_PARAMS="video/x-raw,width=$WIDTH,height=$HEIGHT"
@@ -33,7 +40,7 @@ function defaults-set-droidcamx() {
 
 function defaults-set-ipwebcam() {
 	MODULE_NAME="v4l2loopback"
-	MODULE_ARGS="card_name=Phonecam"
+	MODULE_ARGS="card_label=Phonecam"
 
 	HOST="127.0.0.1"
 	PORT="8080"
@@ -51,18 +58,21 @@ function defaults-set-ipwebcam() {
 }
 
 function backend-check-droidcamx() {
+	$ADB shell pidof $PACKAGE &> /dev/null || return $?
+
 	case "$STREAM_BACKEND" in
 		gstreamer)
 			gstreamer-check
-		    ;;
+			;;
 		droidcam-cli)
 			ps -C droidcam-cli &> /dev/null
-		    ;;
+			;;
 		*)
 			echo "Unknown stream backend '$STREAM_BACKEND' selected"
 			return 1
 			;;
 	esac
+
 	return $?
 }
 
@@ -76,11 +86,11 @@ function backend-start-droidcamx() {
 			echo "Starting GStreamer..."
 			gstreamer-video-start &
 			sleep 2 && backend-check-droidcamx
-		    ;;
+			;;
 		droidcam-cli)
 			echo "Starting 'droidcam-cli'..."
 			droidcam-cli $HOST $PORT &
-		    ;;
+			;;
 		*)
 			echo "Unknown stream backend '$STREAM_BACKEND' selected"
 			return 1
@@ -93,11 +103,11 @@ function backend-stop-droidcamx() {
 	case "$STREAM_BACKEND" in
 		gstreamer)
 			gstreamer-stop
-		    ;;
+			;;
 		droidcam-cli)
 			echo "Stopping 'droidcam-cli'..."
 			killall droidcam-cli
-		    ;;
+			;;
 		*)
 			echo "Unknown stream backend '$STREAM_BACKEND' selected"
 			return 1
@@ -204,7 +214,7 @@ function module-load() {
 	module-check && return 0 || [[ $? -eq 2 ]] && return 2
 
 	# Module is not loaded but is available, try to load.
-	sudo modprobe "$MODULE_NAME" "$MODULE_ARGS"
+	sudo modprobe $MODULE_NAME $MODULE_ARGS
 	return $?
 }
 
@@ -286,13 +296,26 @@ function usage() {
 	return 1
 }
 
-# Global configuration
-
-BACKEND="droidcamx"
-ADB="adb"
-
 # Set configuration defaults.
 defaults-set
+
+# Parse any additional command-line arguments.
+for i in "$@"; do
+	case $i in
+		-w=*|--width=*)
+			WIDTH="${i#*=}"
+			;;
+		-h=*|--height=*)
+			HEIGHT="${i#*=}"
+			;;
+		-b=*|--backend=*)
+			BACKEND="${i#*=}"
+			;;
+		-s=*|--stream-backend=*)
+			STREAM_BACKEND="${i#*=}"
+			;;
+	esac
+done
 
 # Set defaults for selected backend.
 case "${BACKEND}" in
@@ -308,7 +331,7 @@ case "${BACKEND}" in
 esac
 
 # Execute action given.
-case "${1:-}" in
+case "${!#:-}" in
 	start)
 		phonecam-start
 		;;
