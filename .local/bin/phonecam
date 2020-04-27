@@ -12,6 +12,8 @@ function defaults-set() {
 
 	WIDTH="1280"
 	HEIGHT="720"
+
+	AUDIO_ENABLED="true"
 }
 
 function defaults-set-droidcamx() {
@@ -124,12 +126,14 @@ function backend-check-ipwebcam() {
 }
 
 function backend-start-ipwebcam() {
-	# Start Pulseaudio pipeline.
-	pulseaudio-start || return $?
+	# Start audio pipeline, if enabled.
+	[[ "$AUDIO_ENABLED" = "true" ]] && {
+		pulseaudio-start || return $?
+		gstreamer-audio-start &
+	}
 
-	# Start audio and video pipeline.
+	# Start video pipeline.
 	gstreamer-video-start &
-	gstreamer-audio-start &
 
 	sleep 2 && backend-check-ipwebcam
 	return $?
@@ -139,8 +143,10 @@ function backend-stop-ipwebcam() {
 	echo "Stopping Gstreamer..."
 	gstreamer-stop
 
-	echo "Unloading Pulseaudio modules..."
-	pulseaudio-stop
+	[[ "$AUDIO_ENABLED" = "true" ]] && {
+		echo "Unloading Pulseaudio modules..."
+		pulseaudio-stop
+	}
 
 	return 0
 }
@@ -313,6 +319,9 @@ for i in "$@"; do
 			;;
 		-s=*|--stream-backend=*)
 			STREAM_BACKEND="${i#*=}"
+			;;
+		--disable-audio)
+			AUDIO_ENABLED="false"
 			;;
 	esac
 done
