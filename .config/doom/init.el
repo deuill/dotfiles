@@ -45,7 +45,7 @@
        debugger
        editorconfig
        (eval +overlay)
-       (lookup +docsets)
+       (lookup +dictionary +offline)
        (lsp +peek)
        magit
        rgb
@@ -63,6 +63,7 @@
        rest
        sh
        web
+       yaml
 
        :config
        (default +bindings +smartparens))

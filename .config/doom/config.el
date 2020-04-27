@@ -15,7 +15,7 @@
   ;; Font definitions.
   doom-font                (font-spec :family "Iosevka Term SS02" :size 11.50 :weight 'light)
   doom-big-font            (font-spec :family "Iosevka Term SS02" :size 12.50 :weight 'light)
-  doom-variable-pitch-font (font-spec :family "IBM Plex Sans" :weight 'light)
+  doom-variable-pitch-font (font-spec :family "IBM Plex Sans"  :weight 'light)
   doom-serif-font          (font-spec :family "IBM Plex Serif" :weight 'light)
 
   ;; Column used as limit for various modes.
@@ -55,8 +55,17 @@
   (define-key evil-visual-state-map "J" (concat ":m '>+1" (kbd "RET") "gv=gv"))
   (define-key evil-visual-state-map "K" (concat ":m '<-2" (kbd "RET") "gv=gv")))
 
+(after! helm
+  (setq helm-ff-lynx-style-map t
+        helm-imenu-lynx-style-map t
+        helm-semantic-lynx-style-map t
+        helm-occur-use-ioccur-style-keys t)
+  (define-key helm-map (kbd "<left>") 'helm-previous-source)
+  (define-key helm-map (kbd "<right>") 'helm-next-source))
+
 (after! magit
    (setq magit-diff-refine-hunk t
+         ;; magit-display-buffer-function #'magit-display-buffer-traditional)
          magit-revision-show-gravatars nil))
 
 (after! markdown
@@ -72,8 +81,6 @@
 (after! lsp-ui
   (setq lsp-ui-doc-enable t
         lsp-ui-doc-border "#757575"
-        lsp-ui-doc-max-width 300
-        lsp-ui-doc-max-height 50
         lsp-ui-doc-position 'top)
   (set-face-attribute
    'lsp-ui-doc-background nil :background "#2d2d2d"))
@@ -85,8 +92,20 @@
 (after! projectile
   (setq projectile-globally-ignored-directories (append (default-value 'projectile-globally-ignored-directories) '("vendor"))))
 
-(after! sql-mode
-  (setq sql-postgres-login-params (append (default-value 'sql-postgres-login-params) '(port :default 5432))))
+(after! sql
+  (setq sql-postgres-login-params (append (default-value 'sql-postgres-login-params) '(port :default 5432)))
+  (map! :localleader
+        :map sql-mode-map
+        :desc "Set SQL product"   "p" #'+sql/set-product
+        :desc "Start SQL session" ";" #'+sql/start
+        (:prefix ("s" . "send")
+          :desc "Send buffer"     "b" #'sql-send-buffer
+          :desc "Send region"     "r" #'sql-send-region
+          :desc "Send string"     "s" #'sql-send-string
+          :desc "Send paragraph"  "p" #'sql-send-paragraph))
+  (advice-add 'sql-add-product :after #'+sql--populate-product-list)
+  (advice-add 'sql-del-product :after #'+sql--populate-product-list)
+  (+sql--populate-product-list))
 
 (after! transient
   ;; Close transient windows with 'Escape' key.
@@ -106,8 +125,9 @@
 ;;; Mode-specific configuration.
 ;;;
 
-(add-hook! (doc-mode markdown-mode)
+(add-hook! (doc-mode org-mode markdown-mode)
   (setq indent-tabs-mode nil)
+  (hl-fill-column-mode nil)
   (flycheck-mode t)
   (writeroom-mode t)
   (visual-line-mode t))
@@ -120,7 +140,8 @@
   (add-hook 'before-save-hook 'gofmt-before-save))
 
 (add-hook! php-mode
-  (php-enable-psr2-coding-style))
+  (php-enable-psr2-coding-style)
+  (setq fill-column 100))
 
 (add-hook! prog-mode
   (setq fill-column 100
@@ -179,6 +200,41 @@ to the `killed-buffer-list' when killing the buffer."
   "Prompt before reverting the file."
   (interactive)
   (revert-buffer nil nil))
+
+(defvar +sql--startable-product-list nil
+  "List of start-able SQL products.")
+
+(defvar +sql--highlightable-product-list nil
+  "List of highlight-able SQL products.")
+
+(defun +sql--populate-product-list ()
+  "Update list of SQL products."
+  (setq +sql--highlightable-product-list sql-product-alist
+        +sql--startable-product-list
+          (remove-if-not (lambda (product) (sql-get-product-feature (car product) :sqli-program)) sql-product-alist)))
+
+(defun +sql--get-product-names (products)
+  "Get alist of SQL product names and symbols."
+  (mapcar
+   (lambda (product)
+     (cons (sql-get-product-feature (car product) :name) (car product)))
+   products))
+
+(defun +sql/set-product ()
+  "Set dialect-specific highlighting for buffer"
+  (interactive)
+  (cond ((featurep! :completion ivy)
+         (ivy-read "SQL products: "
+                   (+sql--get-product-names +sql--startable-product-list)
+                   :require-match t
+                   :action #'(lambda (product) (sql-set-product (cdr product)))
+                   :caller '+sql/open-repl))))
+
+(defun +sql/start ()
+  "Set SQL dialect-specific highlighting and start inferior SQLi process."
+  (interactive)
+  (+sql/set-product)
+  (sql-product-interactive))
 
 ;;;
 ;;; Hooks
@@ -275,7 +331,7 @@ to the `killed-buffer-list' when killing the buffer."
         :desc "Set bookmark"                "m"   #'bookmark-set
         :desc "Delete bookmark"             "M"   #'bookmark-delete
         :desc "Next buffer"                 "n"   #'next-buffer
-                                            "N"   nil
+        :desc "New empty buffer"            "N"   #'evil-buffer-new
         :desc "Kill other buffers"          "O"   #'doom/kill-other-buffers
         :desc "Previous buffer"             "p"   #'previous-buffer
         :desc "Paste and replace buffer"    "P"   #'+custom/paste-buffer
@@ -344,28 +400,31 @@ to the `killed-buffer-list' when killing the buffer."
           (:prefix ("o" . "open in browser")
             :desc "Browse file or region"     "o"   #'browse-at-remote
             :desc "Browse homepage"           "h"   #'+vc/browse-at-remote-homepage
-            :desc "Browse remote"             "r"   #'forge-browse-remote
-            :desc "Browse commit"             "c"   #'forge-browse-commit
-            :desc "Browse an issue"           "i"   #'forge-browse-issue
-            :desc "Browse a pull request"     "p"   #'forge-browse-pullreq
-            :desc "Browse issues"             "I"   #'forge-browse-issues
-            :desc "Browse pull requests"      "P"   #'forge-browse-pullreqs)
+            (:when (featurep! :tools magit +forge)
+              :desc "Browse remote"           "r"   #'forge-browse-remote
+              :desc "Browse commit"           "c"   #'forge-browse-commit
+              :desc "Browse an issue"         "i"   #'forge-browse-issue
+              :desc "Browse a pull request"   "p"   #'forge-browse-pullreq
+              :desc "Browse issues"           "I"   #'forge-browse-issues
+              :desc "Browse pull requests"    "P"   #'forge-browse-pullreqs))
           (:prefix ("l" . "list")
             (:when (featurep! :tools gist)
               :desc "List gists"              "g"   #'+gist:list)
             :desc "List repositories"         "r"   #'magit-list-repositories
             :desc "List submodules"           "s"   #'magit-list-submodules
-            :desc "List issues"               "i"   #'forge-list-issues
-            :desc "List pull requests"        "p"   #'forge-list-pullreqs
-            :desc "List notifications"        "n"   #'forge-list-notifications)
+            (:when (featurep! :tools magit +forge)
+              :desc "List issues"             "i"   #'forge-list-issues
+              :desc "List pull requests"      "p"   #'forge-list-pullreqs
+              :desc "List notifications"      "n"   #'forge-list-notifications))
           (:prefix ("c" . "create")
             :desc "Initialize repo"           "r"   #'magit-init
                                               "R"   nil
             :desc "Commit"                    "c"   #'magit-commit-create
             :desc "Fixup"                     "f"   #'magit-commit-fixup
             :desc "Branch"                    "b"   #'magit-branch-and-checkout
-            :desc "Issue"                     "i"   #'forge-create-issue
-            :desc "Pull request"              "p"   #'forge-create-pullreq)))
+            (:when (featurep! :tools magit +forge)
+              :desc "Issue"                   "i"   #'forge-create-issue
+              :desc "Pull request"            "p"   #'forge-create-pullreq))))
 
       "i" nil
       "n" nil
