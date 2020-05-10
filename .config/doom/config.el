@@ -65,8 +65,10 @@
 
 (after! magit
    (setq magit-diff-refine-hunk t
-         ;; magit-display-buffer-function #'magit-display-buffer-traditional)
-         magit-revision-show-gravatars nil))
+         magit-revision-show-gravatars nil
+         magit-display-buffer-function #'magit-display-buffer-traditional)
+   (when (package! evil)
+     (evil-define-key* 'normal magit-status-mode-map [escape] #'magit-mode-bury-buffer)))
 
 (after! markdown
   (setq markdown-asymmetric-header t
@@ -340,7 +342,8 @@ to the `killed-buffer-list' when killing the buffer."
         :desc "Save buffer"                 "s"   #'basic-save-buffer
         :desc "Save all buffers"            "S"   #'evil-write-all
         :desc "Reopen killed buffer"        "u"   #'+custom/reopen-killed-buffer
-                                            "U"   nil
+        (:when (featurep! :emacs undo +tree)
+          :desc "Open undo tree"            "U"   #'undo-tree-visualize)
         :desc "Pop up scratch buffer"       "x"   #'doom/open-scratch-buffer
         :desc "Switch to scratch buffer"    "X"   #'doom/switch-to-scratch-buffer
         :desc "Yank buffer"                 "Y"   #'+custom/yank-buffer

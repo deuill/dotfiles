@@ -15,9 +15,9 @@
        hydra
        modeline
        nav-flash
-       neotree
        ophints
        (popup +all +defaults)
+       neotree
        vc-gutter
        (window-select +numbers +switch-window)
        workspaces
@@ -35,7 +35,7 @@
        :emacs
        electric
        ibuffer
-       undo
+       (undo +tree)
        vc
 
        :term
