@@ -49,8 +49,8 @@ player() {
 	esac
 
 	# Keep full title under 40 characters, adding an ellipsis if needed.
-	artist="$(echo "${artist}" | tr \" ” | awk '{if(length($0)>20) print substr($0,1,20) "…"; else print}')"
-	track="$(echo "${track}" | tr \" ” | awk '{if(length($0)>20) print substr($0,1,20) "…"; else print}')"
+	artist="$(echo "${artist}" | tr \" \' | awk '{if(length($0)>20) print substr($0,1,20) "…"; else print}')"
+	track="$(echo "${track}" | tr \" \' | awk '{if(length($0)>20) print substr($0,1,20) "…"; else print}')"
 
 	if [[ -z "${artist}" ]]
 	then

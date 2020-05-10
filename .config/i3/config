@@ -47,7 +47,7 @@ bindsym $mod+d       exec $rofi -show drun -show-icons
 bindsym button8      exec $rofi -show drun -show-icons
 bindsym $mod+Shift+d exec $rofi -show run
 bindsym $mod+Shift+f exec $rofi -show files -modi files:~/.local/share/rofi/file-browser
-bindsym $mod+t       exec bash ~/.local/bin/spacemacs ~/Documents/Notes/Notes.md
+bindsym $mod+t       exec xpad --toggle
 bindsym $mod+equal   exec bash ~/.config/i3/bin/fortune-notify
 
 # Change focus
