@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+if [[ ! "$(ykman info)" ]]
+then
+    echo "Yubikey not detected."
+    exit 1
+fi
+
+ROFI="rofi -dmenu -i -p TOTP"
+OPTION="$(ykman oath list | $ROFI)"
+
+CODE=$(ykman oath code -s "$OPTION")
+printf "$CODE" | xclip -selection clipboard
