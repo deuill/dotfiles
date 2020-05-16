@@ -1,0 +1,24 @@
+# Include global defaults.
+.include /etc/pulse/default.pa
+
+# Disable DisplayLink Dock source/sink, if possible.
+.nofail
+set-card-profile alsa_card.usb-DisplayLink_Dell_USB3.0_Dock_1501300055-02 off
+.fail
+
+.nofail
+# Set internal source and sink as defaults.
+set-default-sink alsa_output.pci-0000_00_1f.3.analog-stereo
+set-default-source alsa_input.pci-0000_00_1f.3.analog-stereo
+
+# Override to external source and sink, if possible.
+set-default-sink alsa_output.pci-0000_00_1f.3.hdmi-stereo-extra1
+set-default-source alsa_input.usb-046d_Logitech_Webcam_C925e_0F21DB5F-02.analog-stereo
+.fail
+
+# Enable noise cancellation, if possible.
+.nofail
+load-module module-echo-cancel use_master_format=1 aec_method=webrtc aec_args="analog_gain_control=0 digital_gain_control=1" source_name=echo-cancel-source sink_name=echo-cancel-sink
+set-default-sink echo-cancel-sink
+set-default-source echo-cancel-source
+.fail
