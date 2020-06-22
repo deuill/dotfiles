@@ -13,5 +13,4 @@
 
 ;; Install Kubernetes client support.
 ;; (package! kubernetes :pin "cc33d8")
-;; (when (package! kubernetes)
-;;   (package! kubernetes-evil :pin "cc33d8"))
+;; (package! kubernetes-evil :pin "cc33d8")

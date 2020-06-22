@@ -66,9 +66,10 @@
 (after! magit
    (setq magit-diff-refine-hunk t
          magit-revision-show-gravatars nil
-         magit-display-buffer-function #'magit-display-buffer-traditional)
-   (when (package! evil)
-     (evil-define-key* 'normal magit-status-mode-map [escape] #'magit-mode-bury-buffer)))
+         magit-display-buffer-function #'magit-display-buffer-traditional))
+
+(after! (magit evil)
+  (evil-define-key* 'normal magit-status-mode-map (kbd "<escape>") #'magit-mode-bury-buffer))
 
 (after! markdown
   (setq markdown-asymmetric-header t
@@ -123,6 +124,9 @@
   (when (featurep! :ui zen)
     (setq +zen-text-scale 0)))
 
+(after! (yaml-mode evil)
+  (evil-define-key 'normal yaml-mode-map (kbd "<tab>") '+custom/outline-toggle-subtree))
+
 ;;;
 ;;; Mode-specific configuration.
 ;;;
@@ -151,6 +155,11 @@
 
 (add-hook! markdown-mode
   (auto-fill-mode t))
+
+(add-hook! yaml-mode
+  (setq outline-level '+yaml--get-outline-level
+        outline-regexp "^\\([ ]\\{2\\}\\)*\\(- \\)?\\(\"[^\"]*\"\\|[ a-zA-Z0-9_-]*\\):")
+  (outline-minor-mode))
 
 ;;;
 ;;; Custom functions.
@@ -203,6 +212,24 @@ to the `killed-buffer-list' when killing the buffer."
   (interactive)
   (revert-buffer nil nil))
 
+(defun +custom/query-replace-buffer ()
+  "Search and replace literal string in buffer."
+  (interactive)
+  (let ((orig-point (point)))
+    (save-excursion
+      (goto-char (point-min))
+      (call-interactively 'query-replace))
+    (goto-char orig-point)))
+
+(defun +custom/outline-toggle-subtree ()
+  "Show or hide the current subtree depending on its current state."
+  (interactive)
+  (save-excursion
+    (outline-back-to-heading)
+    (if (not (outline-invisible-p (line-end-position)))
+        (outline-hide-subtree)
+      (outline-show-subtree))))
+
 (defvar +sql--startable-product-list nil
   "List of start-able SQL products.")
 
@@ -237,6 +264,10 @@ to the `killed-buffer-list' when killing the buffer."
   (interactive)
   (+sql/set-product)
   (sql-product-interactive))
+
+(defun +yaml--get-outline-level ()
+  "Return the outline level based on the indentation, hardcoded at 2 spaces."
+  (s-count-matches "[ ]\\{2\\}" (match-string 0)))
 
 ;;;
 ;;; Hooks
@@ -306,7 +337,11 @@ to the `killed-buffer-list' when killing the buffer."
       :desc "Switch to 7th window"   "7"  #'winum-select-window-7
       :desc "Switch to 8th window"   "8"  #'winum-select-window-8
       :desc "Switch to 9th window"   "9"  #'winum-select-window-9
-      :desc "Switch to 10th window"  "0"  #'winum-select-window-0
+      :desc "Switch to side window"  "0"
+      (cond ((featurep! :ui neotree)      #'+neotree/expand-or-open)
+            ((featurep! :ui treemacs)     #'treemacs-select-window)
+            (else                         nil))
+
 
       "x" nil
       "X" nil
@@ -351,6 +386,8 @@ to the `killed-buffer-list' when killing the buffer."
         :desc "Kill buried buffers"         "Z"   #'doom/kill-buried-buffers)
 
       "c" nil
+      (:after lsp-mode
+        "c" nil)
 
       (:prefix-map ("f" . "file")
                                             "c"   nil
@@ -510,7 +547,8 @@ to the `killed-buffer-list' when killing the buffer."
                                                  "K" nil
                                                  "p" nil
                                                  "P" nil
-                                                 "r" nil
+        :desc "Replace in buffer"                "r" #'+custom/query-replace-buffer
+        :desc "Replace in project"               "R" #'projectile-replace
         :desc "Search buffer"                    "s" #'swiper-isearch
         :desc "Search buffer for thing at point" "S" #'swiper-isearch-thing-at-point
         :desc "Dictionary"                       "t" #'+lookup/dictionary-definition

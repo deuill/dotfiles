@@ -17,7 +17,7 @@
        nav-flash
        ophints
        (popup +all +defaults)
-       neotree
+       treemacs
        vc-gutter
        (window-select +numbers +switch-window)
        workspaces
@@ -58,7 +58,7 @@
        javascript
        markdown
        (org +dragndrop +present)
-       php
+       (php +lsp)
        python
        rest
        sh
