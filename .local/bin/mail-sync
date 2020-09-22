@@ -75,19 +75,6 @@ function account-setup() {
 	load-account-config "${account}" || return 1
 	account-setup-post-hook "${account}"
 
-	# Work around a bug in Astroid JSON handling, where object keys containing
-	# periods are incorrectly broken into sub-objects.
-	export ACCOUNT_NAME=$(tr '.@' '-' <<< "${USERNAME}")
-
-	if [[ -e "${ASTROID_CONFDIR}/config" ]]
-	then
-		local cmd=".[0].accounts = (.[0].accounts + .[1]) | .[0]"
-		local tmp=$(jq -s "${cmd}" "${ASTROID_CONFDIR}/config" <(jq -r ".accounts" "${ASTROID_CONFDIR}/config.template" | envsubst))
-		echo "${tmp}" > "${ASTROID_CONFDIR}/config"
-	else
-		envsubst < "${ASTROID_CONFDIR}/config.template" > "${ASTROID_CONFDIR}/config"
-	fi
-
 	echo "Setup complete."
 }
 
@@ -198,4 +185,4 @@ function main() {
 }
 
 # Process command-line options and execute correct sub-command.
-main $@
+main "$@"
