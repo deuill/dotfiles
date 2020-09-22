@@ -39,13 +39,14 @@
        vc
 
        :term
-       eshell
+       vterm
 
        :tools
        debugger
+       docker
        editorconfig
        (eval +overlay)
-       (lookup +dictionary +offline)
+       (lookup +dictionary +docsets +offline)
        (lsp +peek)
        magit
        rgb

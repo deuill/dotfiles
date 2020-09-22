@@ -43,12 +43,20 @@
    '(default              ((t (:background "#2d2d2d"))))
    '(hl-line              ((t (:background "#323232"))))
    '(mode-line            ((t (:background "#282828"))))
+   '(vertical-border      ((t (:background "#282828" :foreground "#282828"))))
    '(solaire-default-face ((t (:background "#2d2d2d"))))
    '(solaire-hl-line-face ((t (:background "#323232"))))))
 
 ;;;
 ;;; Package-specific configuration.
 ;;;
+
+(after! counsel
+  (setq counsel-rg-base-command "rg -M 240 --with-filename --no-heading --line-number --color never %s || true"))
+
+(after! dash-docs
+  (setq-default +lookup-open-url-fn #'eww)
+  (setq dash-docs-docsets-path "~/.local/share/docsets"))
 
 (after! evil
   ;; Transpose lines with J/K when in visual mode.
@@ -63,6 +71,18 @@
   (define-key helm-map (kbd "<left>") 'helm-previous-source)
   (define-key helm-map (kbd "<right>") 'helm-next-source))
 
+(after! lsp
+  (setq lsp-auto-guess-root t
+        lsp-enable-file-watchers nil
+        lsp-log-max nil))
+
+(after! lsp-ui
+  (setq lsp-ui-doc-enable nil
+        lsp-ui-doc-border "#757575"
+        lsp-ui-doc-position 'top)
+  (set-face-attribute
+   'lsp-ui-doc-background nil :background "#2d2d2d"))
+
 (after! magit
    (setq magit-diff-refine-hunk t
          magit-revision-show-gravatars nil
@@ -76,17 +96,15 @@
         markdown-enable-wiki-links t
         markdown-fontify-code-blocks-natively t))
 
-(after! lsp
-  (setq lsp-auto-guess-root t
-        lsp-enable-file-watchers nil
-        lsp-log-max nil))
+(after! org
+  (setq org-fontify-quote-and-verse-blocks nil
+        org-fontify-whole-heading-line nil
+        org-hide-leading-stars nil
+        org-startup-indented nil)
+  (remove-hook! org-mode #'org-superstar-mode))
 
-(after! lsp-ui
-  (setq lsp-ui-doc-enable t
-        lsp-ui-doc-border "#757575"
-        lsp-ui-doc-position 'top)
-  (set-face-attribute
-   'lsp-ui-doc-background nil :background "#2d2d2d"))
+(after! org-roam
+  (setq org-roam-directory "~/Documents/Notes"))
 
 (after! persp-mode
   (setq persp-autokill-buffer-on-remove t
@@ -240,7 +258,7 @@ to the `killed-buffer-list' when killing the buffer."
   "Update list of SQL products."
   (setq +sql--highlightable-product-list sql-product-alist
         +sql--startable-product-list
-          (remove-if-not (lambda (product) (sql-get-product-feature (car product) :sqli-program)) sql-product-alist)))
+          (cl-remove-if-not (lambda (product) (sql-get-product-feature (car product) :sqli-program)) sql-product-alist)))
 
 (defun +sql--get-product-names (products)
   "Get alist of SQL product names and symbols."
@@ -304,19 +322,20 @@ to the `killed-buffer-list' when killing the buffer."
       (cond ((featurep! :term eshell) #'+eshell/toggle)
             ((featurep! :term shell)  #'+shell/toggle)
             ((featurep! :term term)   #'+term/toggle)
-            (else                     nil))
+            ((featurep! :term vterm)  #'+vterm/toggle)
+            (t                        nil))
 
       (:when (featurep! :ui popup)
         :desc "Toggle last popup" "~" #'+popup/toggle)
 
       :desc "Switch to last buffer" "TAB"
       (cond ((featurep! :ui workspaces) #'+custom/alternate-buffer-in-persp)
-            (else                       #'evil-switch-to-windows-last-buffer))
+            (t                          #'evil-switch-to-windows-last-buffer))
 
       :desc "Resume last search" "SPC"
       (cond ((featurep! :completion ivy)  #'ivy-resume)
             ((featurep! :completion helm) #'helm-resume)
-            (else                         nil))
+            (t                            nil))
 
       :desc "Search in project"            "/" #'+default/search-project
       :desc "Search for symbol in project" "*" #'+default/search-project-for-symbol-at-point
@@ -340,7 +359,7 @@ to the `killed-buffer-list' when killing the buffer."
       :desc "Switch to side window"  "0"
       (cond ((featurep! :ui neotree)      #'+neotree/expand-or-open)
             ((featurep! :ui treemacs)     #'treemacs-select-window)
-            (else                         nil))
+            (t                            nil))
 
 
       "x" nil
@@ -487,7 +506,9 @@ to the `killed-buffer-list' when killing the buffer."
                                              "." nil
                                              ">" nil
                                              "!" nil
-                                             ";" nil
+          :desc "Open shell in project root" ";"
+          (cond ((featurep! :term vterm)         #'+vterm/here)
+                (t                               nil))
         :desc "Add new project"              "a" #'projectile-add-known-project
                                              "b" nil
                                              "c" nil
@@ -511,7 +532,7 @@ to the `killed-buffer-list' when killing the buffer."
         :desc "Toggle file tree"             "t"
         (cond ((featurep! :ui neotree)           #'+neotree/open)
               ((featurep! :ui treemacs)          #'+treemacs/toggle)
-              (else                              nil))
+              (t                                 nil))
                                              "T" nil
         :desc "Switch project workspace"     "w" #'+workspace/switch-to
         :desc "Remove project"               "x" #'projectile-remove-known-project
@@ -549,8 +570,7 @@ to the `killed-buffer-list' when killing the buffer."
                                                  "P" nil
         :desc "Replace in buffer"                "r" #'+custom/query-replace-buffer
         :desc "Replace in project"               "R" #'projectile-replace
-        :desc "Search buffer"                    "s" #'swiper-isearch
-        :desc "Search buffer for thing at point" "S" #'swiper-isearch-thing-at-point
+        :desc "Search buffer"                    "s" #'+default/search-buffer
         :desc "Dictionary"                       "t" #'+lookup/dictionary-definition
         :desc "Thesaurus"                        "T" #'+lookup/synonyms)
 
