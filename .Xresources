@@ -47,39 +47,3 @@ Xft.rgba:      none
 ! white
 *.color7:      #707880
 *.color15:     #c5c8c6
-
-/*********************************************************************
- *                               rofi                                *
- *********************************************************************/
-
-rofi.font:            Iosevka Term SS02 12
-rofi.terminal:        i3-sensible-terminal
-rofi.lines:           10
-rofi.columns:         1
-rofi.eh:              1
-rofi.width:           -120
-rofi.padding:         0
-rofi.location:        0
-rofi.line-margin:     0
-rofi.line-padding:    10
-rofi.fullscreen:      false
-rofi.opacity:         100
-rofi.bw:              0
-rofi.sidebar-mode:    false
-rofi.separator-style: none
-rofi.hide-scrollbar:  true
-rofi.fuzzy:           true
-rofi.color-enabled:   true
-rofi.matching:        fuzzy
-
-#define bg_external #282828
-#define bg_internal #282828
-#define bg_active   #ab4642
-#define text_normal #d8d8d8
-#define text_active #282828
-
-/* Class           BG           FG           Alt BG       Active BG  Active FG */
-rofi.color-normal: bg_internal, text_normal, bg_internal, bg_active, text_active
-rofi.color-urgent: bg_internal, text_normal, bg_internal, bg_active, text_active
-rofi.color-active: bg_internal, text_normal, bg_internal, bg_active, text_active
-rofi.color-window: bg_external, bg_internal
