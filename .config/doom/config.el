@@ -71,10 +71,16 @@
   (define-key helm-map (kbd "<left>") 'helm-previous-source)
   (define-key helm-map (kbd "<right>") 'helm-next-source))
 
+(after! (json-mode evil)
+  (evil-define-key 'normal json-mode-map (kbd "<tab>") 'evil-toggle-fold))
+
 (after! lsp
   (setq lsp-auto-guess-root t
         lsp-enable-file-watchers nil
         lsp-log-max nil))
+
+(after! lsp-php
+  (setq lsp-serenata-server-path "/usr/bin/serenata"))
 
 (after! lsp-ui
   (setq lsp-ui-doc-enable nil
@@ -143,7 +149,7 @@
     (setq +zen-text-scale 0)))
 
 (after! (yaml-mode evil)
-  (evil-define-key 'normal yaml-mode-map (kbd "<tab>") '+custom/outline-toggle-subtree))
+  (evil-define-key 'normal yaml-mode-map (kbd "<tab>") 'evil-toggle-fold))
 
 ;;;
 ;;; Mode-specific configuration.
@@ -151,10 +157,10 @@
 
 (add-hook! (doc-mode org-mode markdown-mode)
   (setq indent-tabs-mode nil)
-  (hl-fill-column-mode nil)
   (flycheck-mode t)
   (writeroom-mode t)
-  (visual-line-mode t))
+  (visual-line-mode t)
+  (display-fill-column-indicator-mode 0))
 
 (add-hook! git-commit-mode
   (setq indent-tabs-mode nil))
@@ -163,6 +169,12 @@
   (after! flycheck-golangci-lint (flycheck-select-checker 'golangci-lint))
   (add-hook 'before-save-hook 'gofmt-before-save))
 
+(add-hook! json-mode
+  (hs-minor-mode))
+
+(add-hook! markdown-mode
+  (auto-fill-mode t))
+
 (add-hook! php-mode
   (php-enable-psr2-coding-style)
   (setq fill-column 100))
@@ -170,14 +182,6 @@
 (add-hook! prog-mode
   (setq fill-column 100
         show-trailing-whitespace t))
-
-(add-hook! markdown-mode
-  (auto-fill-mode t))
-
-(add-hook! yaml-mode
-  (setq outline-level '+yaml--get-outline-level
-        outline-regexp "^\\([ ]\\{2\\}\\)*\\(- \\)?\\(\"[^\"]*\"\\|[ a-zA-Z0-9_-]*\\):")
-  (outline-minor-mode))
 
 ;;;
 ;;; Custom functions.
@@ -239,15 +243,6 @@ to the `killed-buffer-list' when killing the buffer."
       (call-interactively 'query-replace))
     (goto-char orig-point)))
 
-(defun +custom/outline-toggle-subtree ()
-  "Show or hide the current subtree depending on its current state."
-  (interactive)
-  (save-excursion
-    (outline-back-to-heading)
-    (if (not (outline-invisible-p (line-end-position)))
-        (outline-hide-subtree)
-      (outline-show-subtree))))
-
 (defvar +sql--startable-product-list nil
   "List of start-able SQL products.")
 
@@ -282,10 +277,6 @@ to the `killed-buffer-list' when killing the buffer."
   (interactive)
   (+sql/set-product)
   (sql-product-interactive))
-
-(defun +yaml--get-outline-level ()
-  "Return the outline level based on the indentation, hardcoded at 2 spaces."
-  (s-count-matches "[ ]\\{2\\}" (match-string 0)))
 
 ;;;
 ;;; Hooks
@@ -337,8 +328,8 @@ to the `killed-buffer-list' when killing the buffer."
             ((featurep! :completion helm) #'helm-resume)
             (t                            nil))
 
-      :desc "Search in project"            "/" #'+default/search-project
-      :desc "Search for symbol in project" "*" #'+default/search-project-for-symbol-at-point
+      :desc "Search in project"            "/" (cmd!! #'+default/search-project nil)
+      :desc "Search for symbol in project" "*" (cmd!! #'+default/search-project-for-symbol-at-point nil)
 
       "."   nil
       ","   nil
