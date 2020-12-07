@@ -1,9 +1,6 @@
 # Disable greeting text.
 set fish_greeting
 
-# Set default theme.
-set theme shellder
-
 # Include local configuration.
 if [ -e $HOME/.config/fish/config.local ]
 	source $HOME/.config/fish/config.local

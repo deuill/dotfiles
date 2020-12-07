@@ -63,7 +63,7 @@ ignore_newline = no
 # the top and down respectevly.
 # The width can be negative.  In this case the actual width is the
 # screen width minus the width defined in within the geometry option.
-geometry = "400x50-20-20"
+geometry = "600x50-20-20"
 
 # Shrink window if it's smaller than the width.  Will be ignored if
 # width is 0.
@@ -119,7 +119,7 @@ separator_height = 2
 padding = 8
 
 # Horizontal padding.
-horizontal_padding = 10
+horizontal_padding = 15
 
 # Define a color for the separator.
 # possible values are:
@@ -169,7 +169,7 @@ close_all = mod4+shift+x
 history = mod4+grave
 
 # Context menu.
-context = mod4+shift+period
+context = mod4+shift+grave
 
 [urgency_low]
 # IMPORTANT: colors have to be defined in quotation marks.

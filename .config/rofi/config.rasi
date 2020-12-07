@@ -15,7 +15,6 @@ configuration {
 	separator-style: "none";
 	hide-scrollbar: true;
 	fullscreen: false;
-	dpi: 112;
 	theme: "default";
 	color-normal: "#282828, #d8d8d8, #282828, #ab4642, #282828";
 	color-urgent: "#282828, #d8d8d8, #282828, #ab4642, #282828";
