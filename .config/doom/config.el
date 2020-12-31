@@ -74,7 +74,7 @@
 (after! (json-mode evil)
   (evil-define-key 'normal json-mode-map (kbd "<tab>") 'evil-toggle-fold))
 
-(after! lsp
+(after! lsp-mode
   (setq lsp-auto-guess-root t
         lsp-enable-file-watchers nil
         lsp-log-max nil))
@@ -166,11 +166,16 @@
   (setq indent-tabs-mode nil))
 
 (add-hook! go-mode
-  (after! flycheck-golangci-lint (flycheck-select-checker 'golangci-lint))
   (add-hook 'before-save-hook 'gofmt-before-save))
+
+(add-hook! 'go-mode-lsp-hook
+  (flycheck-add-next-checker 'lsp 'golangci-lint))
 
 (add-hook! json-mode
   (hs-minor-mode))
+
+(add-hook! 'lsp-after-initialize-hook
+  (run-hooks (intern (format "%s-lsp-hook" major-mode))))
 
 (add-hook! markdown-mode
   (auto-fill-mode t))

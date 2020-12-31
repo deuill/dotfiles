@@ -42,7 +42,7 @@
        vterm
 
        :tools
-       debugger
+       (debugger +lsp)
        docker
        editorconfig
        (eval +overlay)
