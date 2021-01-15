@@ -63,6 +63,9 @@
   (define-key evil-visual-state-map "J" (concat ":m '>+1" (kbd "RET") "gv=gv"))
   (define-key evil-visual-state-map "K" (concat ":m '<-2" (kbd "RET") "gv=gv")))
 
+(after! eww
+  (set-popup-rule! "^\\*eww\\*" :side 'right :width 0.5))
+
 (after! helm
   (setq helm-ff-lynx-style-map t
         helm-imenu-lynx-style-map t
@@ -160,6 +163,10 @@
   (flycheck-mode t)
   (writeroom-mode t)
   (visual-line-mode t)
+  (display-fill-column-indicator-mode 0))
+
+(add-hook! eww-mode
+  (writeroom-mode t)
   (display-fill-column-indicator-mode 0))
 
 (add-hook! git-commit-mode
@@ -560,8 +567,8 @@ to the `killed-buffer-list' when killing the buffer."
         :desc "Jump to mark"                     "m" #'evil-show-marks
         :desc "Look up online"                   "o" #'+lookup/online
         :desc "Look up online (w/ prompt)"       "O" #'+lookup/online-select
-                                                 "k" nil
-                                                 "K" nil
+        :desc "Look up in local docsets"         "k" #'+lookup/in-docsets
+        :desc "Look up in all docsets"           "K" #'+lookup/in-all-docsets
                                                  "p" nil
                                                  "P" nil
         :desc "Replace in buffer"                "r" #'+custom/query-replace-buffer
