@@ -58,13 +58,16 @@
   (setq-default +lookup-open-url-fn #'eww)
   (setq dash-docs-docsets-path "~/.local/share/docsets"))
 
+(after! docker
+  (setq docker-tramp-use-names t))
+
 (after! evil
   ;; Transpose lines with J/K when in visual mode.
   (define-key evil-visual-state-map "J" (concat ":m '>+1" (kbd "RET") "gv=gv"))
   (define-key evil-visual-state-map "K" (concat ":m '<-2" (kbd "RET") "gv=gv")))
 
 (after! eww
-  (set-popup-rule! "^\\*eww\\*" :side 'right :width 0.5))
+  (set-popup-rule! "^\\*eww\\*" :side 'right :select t :quit 'current :slot 0 :width 0.5))
 
 (after! helm
   (setq helm-ff-lynx-style-map t
@@ -77,13 +80,18 @@
 (after! (json-mode evil)
   (evil-define-key 'normal json-mode-map (kbd "<tab>") 'evil-toggle-fold))
 
+(after! kubel
+  (load-library "kubel-evil")
+  (set-popup-rule! "^\\*kubel" :side 'right :select t :quit 'current :slot 0 :width 0.5))
+
 (after! lsp-mode
   (setq lsp-auto-guess-root t
         lsp-enable-file-watchers nil
         lsp-log-max nil))
 
 (after! lsp-php
-  (setq lsp-serenata-server-path "/usr/bin/serenata"))
+  (setq lsp-serenata-server-path "/usr/bin/serenata")
+  (lsp-register-custom-settings '(("intelephense.environment.includePaths" ["._lsp-include"]))))
 
 (after! lsp-ui
   (setq lsp-ui-doc-enable nil
@@ -142,6 +150,9 @@
   (define-key transient-map        (kbd "<escape>") 'transient-quit-one)
   (define-key transient-edit-map   (kbd "<escape>") 'transient-quit-one)
   (define-key transient-sticky-map (kbd "<escape>") 'transient-quit-seq))
+
+(after! (man woman)
+  (set-popup-rule! "^\\*\\(?:Wo\\)?Man " :side 'right :select t :quit 'current :slot 0 :width 0.5))
 
 (after! writeroom-mode
   (setq writeroom-width 100
@@ -254,6 +265,14 @@ to the `killed-buffer-list' when killing the buffer."
       (goto-char (point-min))
       (call-interactively 'query-replace))
     (goto-char orig-point)))
+
+(defun +custom/copy-this-file (new-path &optional force-p)
+  "Copy current buffer's file to NEW-PATH, switching to the file immediately."
+  (interactive
+   (list (read-file-name "Copy file to: ")
+         current-prefix-arg))
+  (doom/copy-this-file new-path force-p)
+  (find-file new-path))
 
 (defvar +sql--startable-product-list nil
   "List of start-able SQL products.")
@@ -413,7 +432,7 @@ to the `killed-buffer-list' when killing the buffer."
 
       (:prefix-map ("f" . "file")
                                             "c"   nil
-        :desc "Copy this file"              "C"   #'doom/copy-this-file
+        :desc "Copy this file"              "C"   #'+custom/copy-this-file
         :desc "Delete this file"            "D"   #'doom/delete-this-file
         :desc "Find file as root"           "e"   #'doom/sudo-find-file
         :desc "Open current file as root"   "E"   #'doom/sudo-this-file
@@ -428,7 +447,8 @@ to the `killed-buffer-list' when killing the buffer."
         :desc "Save file as..."             "S"   #'write-file
                                             "u"   nil
                                             "U"   nil
-        :desc "Yank filename"               "y"   #'+default/yank-buffer-filename)
+       :desc "Yank file path"               "y"   #'+default/yank-buffer-path
+       :desc "Yank file path from project"  "Y"   #'+default/yank-buffer-path-relative-to-project)
 
       (:prefix-map ("g" . "git")
         :desc "Revert file"                 "R"   #'vc-revert

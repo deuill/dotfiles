@@ -1,6 +1,12 @@
 # Include global defaults.
 .include /etc/pulse/default.pa
 
+# Unload unwanted modules.
+.nofail
+unload-module module-switch-on-port-available
+unload-module module-switch-on-connect
+.fail
+
 # Set internal source and sink as defaults.
 .nofail
 set-card-profile alsa_card.pci-0000_00_1f.3 output:analog-stereo+input:analog-stereo

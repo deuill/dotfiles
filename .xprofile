@@ -2,7 +2,7 @@
 
 # Determine scale from screen size.
 if [[ $(xdpyinfo | awk '/dimensions/ {print $2}' | awk -F 'x' '{print $2}') -lt 1200 ]]
-then SCALE=1.28
+then SCALE=1.17
 else SCALE=1.67
 fi
 
