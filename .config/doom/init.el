@@ -57,6 +57,7 @@
        emacs-lisp
        (go +lsp)
        javascript
+       lua
        markdown
        (org +dragndrop +present)
        (php +lsp)
