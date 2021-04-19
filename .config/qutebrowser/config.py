@@ -2,27 +2,53 @@
 config.load_autoconfig(False)
 c.auto_save.session = True
 c.completion.open_categories = ["quickmarks", "bookmarks", "history"]
+c.content.blocking.method = "adblock"
+c.content.blocking.adblock.lists = [
+    "https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/filters.txt",
+    "https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/badware.txt",
+    "https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/privacy.txt",
+    "https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/resource-abuse.txt",
+    "https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/unbreak.txt",
+    "https://easylist.to/easylist/easylist.txt",
+    "https://easylist.to/easylist/easyprivacy.txt",
+    "https://curben.gitlab.io/malware-filter/urlhaus-filter-online.txt",
+    "https://pgl.yoyo.org/adservers/serverlist.php?hostformat=hosts&showintro=1&mimetype=plaintext",
+]
+c.confirm_quit = ["multiple-tabs", "downloads"]
 c.content.autoplay = False
 c.content.blocking.enabled = True
 c.content.geolocation = False
 c.editor.command = ["emacsclient", "-c", "-a", "''", "{}"]
-c.input.insert_mode.auto_load = True
 c.qt.highdpi = True
 c.scrolling.smooth = True
 c.statusbar.widgets = ["url", "progress", "scroll"]
 c.tabs.background = True
 c.tabs.new_position.related = "last"
-c.url.default_page = 'https://html.duckduckgo.com/html/'
+c.url.default_page = 'https://duckduckgo.com'
+c.input.insert_mode.auto_leave = False
+c.input.insert_mode.auto_load = True
 c.zoom.default = "150%"
 
 # Searches.
-c.url.searchengines['DEFAULT'] = 'https://html.duckduckgo.com/html/?q={}'
+c.url.searchengines['DEFAULT'] = 'https://duckduckgo.com/?q={}'
 c.url.searchengines['a'] = 'https://wiki.archlinux.org/?search={}'
 c.url.searchengines['ap'] = 'https://www.archlinux.org/packages/?sort=&q={}'
 c.url.searchengines['g'] = 'http://www.google.com/search?hl=en&source=hp&ie=ISO-8859-l&q={}'
 c.url.searchengines['y'] = 'https://www.youtube.com/results?search_query={}'
 c.url.searchengines['w'] = 'https://secure.wikimedia.org/wikipedia/en/w/index.php?title=Special%%3ASearch&search={}'
 c.url.searchengines['gh'] = 'https://github.com/search?q={}&type=Code'
+
+# Key bindings.
+config.bind('gH', 'tab-move -', mode='normal')
+config.bind('gL', 'tab-move +', mode='normal')
+config.bind('tj', 'back -t', mode='normal')
+config.bind('wj', 'back -w', mode='normal')
+config.bind('tk', 'forward -t', mode='normal')
+config.bind('wk', 'forward -w', mode='normal')
+config.bind('H', 'tab-prev', mode='normal')
+config.bind('J', 'back', mode='normal')
+config.bind('K', 'forward', mode='normal')
+config.bind('L', 'tab-next', mode='normal')
 
 # UI controls.
 c.completion.height = "30%"
@@ -37,6 +63,7 @@ c.window.title_format = "qutebrowser"
 # Fonts.
 c.fonts.default_family = ["Iosevka Term SS02"]
 c.fonts.default_size = "11.5pt"
+c.fonts.prompts = "11.5pt Iosevka Term SS02"
 
 # Colors.
 base00 = "#181818"
