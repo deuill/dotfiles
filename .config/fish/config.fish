@@ -6,19 +6,15 @@ if [ -e $HOME/.config/fish/config.local ]
 	source $HOME/.config/fish/config.local
 end
 
-# Custom theme.
-if [ -n $theme ]
-	source $HOME/.config/fish/themes/$theme.fish
-end
+# Set default theme.
+source $HOME/.config/fish/themes/boxfish.fish
 
 # Custom aliases.
-alias sc    'ag --pager "less -R"'
-alias trash 'gvfs-trash'
-alias dot   'git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
+alias dot 'git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
 
-# Custom functions.
-function diff-color
-	diff -u $argv | colordiff | less -R
+# Set TERM='xterm' for SSH connections.
+function ssh -w ssh
+	env TERM=xterm ssh $argv
 end
 
 # Defaults for GPG.
