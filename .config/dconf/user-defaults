@@ -1,0 +1,5 @@
+[org/gnome/desktop/interface]
+document-font-name='IBM Plex Sans 11'
+font-name='IBM Plex Sans 11'
+monospace-font-name='IBM Plex Mono 11'
+text-scaling-factor=1.6

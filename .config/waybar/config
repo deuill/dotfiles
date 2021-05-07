@@ -1,0 +1,105 @@
+{
+    "layer": "top",
+    "height": 32,
+    "modules-left": ["sway/window", "mpd", "sway/mode"],
+    "modules-center": ["sway/workspaces"],
+    "modules-right": ["pulseaudio", "network", "battery", "cpu", "memory", "temperature", "sway/language", "clock", "tray"],
+    "battery": {
+        "interval": 60,
+        "states": {
+            "warning": 30,
+            "critical": 15
+        },
+        "format": "<span color='#585858'>bat</span> {capacity}%",
+        "format-icons": ["", "", "", "", ""],
+        "max-length": 25
+    },
+    "clock": {
+        "format": "<span color='#585858'>time</span> {:%H:%M}",
+        "format-alt": "<span color='#585858'>date</span> {:%A, %d %B %H:%M}"
+    },
+    "cpu": {
+        "interval": 10,
+        "format": "<span color='#585858'>cpu</span> {usage}%",
+        "max-length": 10,
+        "on-click": "alacritty -e htop"
+    },
+    "memory": {
+        "interval": 30,
+        "format": "<span color='#585858'>mem</span> {}%",
+        "on-click": "alacritty -e htop"
+    },
+    "mpd": {
+        "format": "{stateIcon} {artist} - {title}<small>{consumeIcon}{randomIcon}{repeatIcon}{singleIcon}</small>",
+        "format-stopped": "",
+        "format-disconnected": "",
+        "interval": 5,
+        "max-length": 60,
+        "artist-len": 40,
+        "title-len": 40,
+        "random-icons": {
+            "off": "",
+            "on": " "
+        },
+        "repeat-icons": {
+            "on": " "
+        },
+        "single-icons": {
+            "on": " ¹"
+        },
+        "state-icons": {
+            "paused": "",
+            "playing": ""
+        },
+        "tooltip-format": "{artist} - {album} - {title} ({elapsedTime:%M:%S}/{totalTime:%M:%S})",
+        "tooltip-format-disconnected": "MPD (disconnected)",
+        "smooth-scrolling-threshold": 20,
+        "on-click": "mpc toggle",
+        "on-click-right": "cantata",
+        "on-scroll-up": "mpc prev",
+        "on-scroll-down": "mpc next"
+    },
+    "network": {
+        "format-wifi": "<span color='#585858'>wifi</span> {essid}",
+        "format-ethernet": "<span color='#585858'>net</span> {ifname}",
+        "format-disconnected": "",
+        "tooltip-format-wifi": "{essid} ({signalStrength}%)",
+        "tooltip-format-ethernet": "{ifname}",
+        "tooltip-format-disconnected": "Disconnected",
+        "max-length": 50
+    },
+    "pulseaudio": {
+        "format": "<span color='#585858'>vol</span> {volume}%",
+        "format-bluetooth": "<span color='#585858'>vol </span> {volume}%",
+        "format-muted": "<span color='#585858'>vol</span> <span color='#ab4642'>{volume}%</span>",
+        "tooltip-format": "{desc}",
+        "format-icons": {
+            "default": ["", "", "", ""],
+            "headphone": ""
+        },
+        "scroll-step": 1,
+        "on-click": "alacritty -e pulsemixer"
+    },
+    "sway/workspaces": {
+        "format": "{name}",
+        "smooth-scrolling-threshold": 5
+    },
+    "sway/window": {
+        "format": "",
+        "on-click": "wofi --conf ~/.config/wofi/config.drun",
+        "align": 0,
+        "max-length": 50
+    },
+    "sway/language": {
+        "format": "<span color='#585858'>key</span> {}",
+        "max-length": 50
+    },
+    "temperature": {
+        "thermal-zone": 1,
+        "format": "<span color='#585858'>temp</span> {temperatureC}°C"
+    },
+    "tray": {
+        "icon-size": 32,
+        "spacing": 15
+    }
+}

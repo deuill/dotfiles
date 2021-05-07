@@ -23,20 +23,20 @@ c.qt.highdpi = True
 c.scrolling.smooth = True
 c.statusbar.widgets = ["url", "progress", "scroll"]
 c.tabs.background = True
-c.tabs.new_position.related = "last"
+c.tabs.new_position.related = "next"
 c.url.default_page = 'https://duckduckgo.com'
 c.input.insert_mode.auto_leave = False
 c.input.insert_mode.auto_load = True
-c.zoom.default = "150%"
+c.zoom.default = "100%"
 
 # Searches.
 c.url.searchengines['DEFAULT'] = 'https://duckduckgo.com/?q={}'
-c.url.searchengines['a'] = 'https://wiki.archlinux.org/?search={}'
-c.url.searchengines['ap'] = 'https://www.archlinux.org/packages/?sort=&q={}'
-c.url.searchengines['g'] = 'http://www.google.com/search?hl=en&source=hp&ie=ISO-8859-l&q={}'
-c.url.searchengines['y'] = 'https://www.youtube.com/results?search_query={}'
-c.url.searchengines['w'] = 'https://secure.wikimedia.org/wikipedia/en/w/index.php?title=Special%%3ASearch&search={}'
-c.url.searchengines['gh'] = 'https://github.com/search?q={}&type=Code'
+c.url.searchengines['!aw'] = 'https://wiki.archlinux.org/?search={}'
+c.url.searchengines['!ap'] = 'https://www.archlinux.org/packages/?sort=&q={}'
+c.url.searchengines['!g'] = 'http://www.google.com/search?hl=en&source=hp&ie=ISO-8859-l&q={}'
+c.url.searchengines['!yt'] = 'https://www.youtube.com/results?search_query={}'
+c.url.searchengines['!w'] = 'https://secure.wikimedia.org/wikipedia/en/w/index.php?title=Special%%3ASearch&search={}'
+c.url.searchengines['!gh'] = 'https://github.com/search?q={}&type=Code'
 
 # Key bindings.
 config.bind('gH', 'tab-move -', mode='normal')
@@ -52,6 +52,7 @@ config.bind('L', 'tab-next', mode='normal')
 
 # UI controls.
 c.completion.height = "30%"
+c.downloads.position = "bottom"
 c.hints.padding = {"bottom": 2, "left": 5, "right": 5, "top": 2}
 c.statusbar.padding = {"bottom": 5, "left": 5, "right": 5, "top": 5}
 c.tabs.favicons.show = "pinned"
@@ -61,9 +62,9 @@ c.tabs.title.format = "{current_title}"
 c.window.title_format = "qutebrowser"
 
 # Fonts.
-c.fonts.default_family = ["Iosevka Term SS02"]
-c.fonts.default_size = "11.5pt"
-c.fonts.prompts = "11.5pt Iosevka Term SS02"
+c.fonts.default_family = ["Iosevka"]
+c.fonts.default_size = "12pt"
+c.fonts.prompts = "12pt Iosevka"
 
 # Colors.
 base00 = "#181818"

@@ -1,0 +1,84 @@
+* {
+    font-family: Iosevka, Ionicons;
+    font-size: 1.1rem;
+}
+
+#waybar {
+    background-color: transparent;
+    color: #d8d8d8;
+    transition: background-color 0.1s ease;
+}
+
+#waybar.solo {
+    background-color: #282828;
+}
+
+.modules-left {
+    padding-left: 0.2rem;
+}
+
+.modules-right {
+    padding-right: 0.2rem;
+}
+
+.modules-left label, .modules-right label {
+    border: 0.2rem solid transparent;
+    padding: 0.2rem 0.5rem;
+}
+
+#workspaces button {
+    border: 0.2rem solid transparent;
+    border-radius: 0;
+    box-shadow: none;
+    color: #585858;
+    text-shadow: none;
+    padding: 0.2rem 0.5rem;
+}
+
+#workspaces button:hover {
+    background: none;
+    border-top-color: #d8d8d8;
+}
+
+#workspaces button.focused {
+    color: #d8d8d8;
+}
+
+#workspaces button.urgent {
+    color: #ab4642;
+}
+
+#mode {
+    background-color: #ab4642;
+    border-radius: 0.5rem;
+    color: #e8e8e8;
+}
+
+#mpd.disconnected, #mpd.stopped {
+    margin: 0;
+    padding: 0;
+}
+
+#mpd.paused, #mpd.playing {
+    border-radius: 0.5rem;
+    margin: 0 0.75rem 0 0.25rem;
+    transition: background-color, color 0.1s ease;
+}
+
+#mpd.paused {
+    background-color: #585858;
+    color: #e8e8e8;
+}
+
+#mpd.playing {
+    background-color: #ba8baf;
+    color: #282828;
+}
+
+#tray {
+    margin-right: 0.25rem;
+}
+
+#battery.critical {
+    color: #ab4642;
+}

@@ -13,8 +13,8 @@
   doom-theme 'doom-monokai-pro
 
   ;; Font definitions.
-  doom-font                (font-spec :family "Iosevka Term SS02" :size 11.50 :weight 'light)
-  doom-big-font            (font-spec :family "Iosevka Term SS02" :size 12.50 :weight 'light)
+  doom-font                (font-spec :family "Iosevka" :size 18.00 :weight 'light)
+  doom-big-font            (font-spec :family "Iosevka" :size 20.00 :weight 'light)
   doom-variable-pitch-font (font-spec :family "IBM Plex Sans"  :weight 'light)
   doom-serif-font          (font-spec :family "IBM Plex Serif" :weight 'light)
 

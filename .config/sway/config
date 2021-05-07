@@ -1,0 +1,273 @@
+# ---------
+# BEHAVIOUR
+# ---------
+
+# Start graphical session dependencies.
+exec_always "systemctl --user import-environment; systemctl --user start sway-session.target"
+exec_always "cat ~/.config/dconf/user-defaults | dconf load /"
+
+# Window manipulation.
+focus_follows_mouse no
+
+# Workspace names.
+set $www   1:www
+set $code  2:code
+set $cmd   3:cmd
+set $chat  4:chat
+set $media 5:media
+set $games 6:games
+set $misc  7:misc
+
+# Workspace assignments for applications
+# Example: assign [class="firefox"] $www
+assign [app_id="org.qutebrowser.qutebrowser"] $www
+assign [app_id="org.gajim.Gajim"] $chat
+assign [app_id="cantata"] $media
+assign [class="Emacs"] $code
+assign [class="Steam"] $games
+assign [class="itch"] $games
+
+# Mode aliases.
+set $resize  "resize"
+set $session "Session: Ⓢ Suspend, Ⓛ Logout, Ⓡ Reboot, Ⓟ Power off"
+
+# Display output configuration.
+output * scale 1
+bindswitch --reload --locked lid:on output eDP-1 disable
+bindswitch --reload --locked lid:off output eDP-1 enable
+
+# Input configuration.
+input "type:keyboard" {
+    xkb_layout   us,gr
+    xkb_options  grp:caps_toggle,grp_led:caps
+    repeat_delay 400
+    repeat_rate  80
+}
+
+input "type:touchpad" {
+    tap            enabled
+    natural_scroll enabled
+}
+
+# Hide cursor after 30 seconds of inactivity.
+seat * hide_cursor 30000
+
+# Idle state management.
+exec swayidle -w \
+     timeout 300 '$locker' \
+     timeout 420 'swaymsg "output * dpms off"' \
+          resume 'swaymsg "output * dpms on"' \
+    before-sleep '$locker' \
+            lock '$player pause' \
+            lock '$notify set-paused true' \
+          unlock '$player pause' \
+          unlock '$notify set-paused false'
+
+# Inhibit idle tracking for specific applications.
+for_window [class="^.*"]  inhibit_idle fullscreen
+for_window [app_id="^.*"] inhibit_idle fullscreen
+for_window [class="zoom"] inhibit_idle open
+
+# -----------
+# KEYBINDINGS
+# -----------
+
+# Default modifier key is the 'Super' key.
+set $mod Mod4
+
+# Application aliases.
+set $terminal  alacritty
+set $applaunch wofi --conf ~/.config/wofi/config.drun --term $terminal
+set $cmdlaunch wofi --term $terminal
+set $locker    swaylock -f
+set $player    mpc
+set $notify    dunstctl
+set $mixer     pulsemixer --max-volume 100
+
+# Application launching
+bindsym $mod+Return  exec $terminal
+bindsym $mod+d       exec $applaunch
+bindsym $mod+Shift+d exec $cmdlaunch
+
+# Change focus
+bindsym $mod+h     focus left
+bindsym $mod+j     focus down
+bindsym $mod+k     focus up
+bindsym $mod+l     focus right
+bindsym $mod+Left  focus left
+bindsym $mod+Down  focus down
+bindsym $mod+Up    focus up
+bindsym $mod+Right focus right
+
+# Move focused window
+bindsym $mod+Shift+h     move left
+bindsym $mod+Shift+j     move down
+bindsym $mod+Shift+k     move up
+bindsym $mod+Shift+l     move right
+bindsym $mod+Shift+Left  move left
+bindsym $mod+Shift+Down  move down
+bindsym $mod+Shift+Up    move up
+bindsym $mod+Shift+Right move right
+
+# Move workspace to output.
+bindsym $mod+Ctrl+Shift+h     move workspace to output left
+bindsym $mod+Ctrl+Shift+j     move workspace to output down
+bindsym $mod+Ctrl+Shift+k     move workspace to output up
+bindsym $mod+Ctrl+Shift+l     move workspace to output right
+bindsym $mod+Ctrl+Shift+Left  move workspace to output left
+bindsym $mod+Ctrl+Shift+Down  move workspace to output down
+bindsym $mod+Ctrl+Shift+Up    move workspace to output up
+bindsym $mod+Ctrl+Shift+Right move workspace to output right
+
+# Window size
+bindsym $mod+f fullscreen toggle
+
+# Horizontal/vertical orientation switching
+bindsym $mod+bracketleft  split h
+bindsym $mod+bracketright split v
+
+# Change container layout (stacked, tabbed, toggle split)
+bindsym $mod+s layout stacking
+bindsym $mod+w layout tabbed
+bindsym $mod+e layout toggle split
+
+# Toggle tiling/floating
+bindsym $mod+o       floating toggle
+bindsym $mod+Shift+o sticky toggle
+
+# Focus the parent/child container.
+bindsym $mod+a focus parent
+
+# Focus between floating and split containers.
+bindsym $mod+Shift+Tab focus mode_toggle
+
+# Focus urgent window.
+bindsym $mod+u [urgent=latest] focus
+
+# Resize floating windows with modifider + mouse.
+floating_modifier $mod
+
+# Toggle between last used workspaces.
+bindsym $mod+Tab workspace back_and_forth
+
+# Switch to workspace.
+bindsym $mod+1 workspace $www
+bindsym $mod+2 workspace $code
+bindsym $mod+3 workspace $cmd
+bindsym $mod+4 workspace $chat
+bindsym $mod+5 workspace $media
+bindsym $mod+6 workspace $games
+bindsym $mod+7 workspace $misc
+
+# Move focused window to workspace.
+bindsym $mod+Shift+1 move container to workspace $www
+bindsym $mod+Shift+2 move container to workspace $code
+bindsym $mod+Shift+3 move container to workspace $cmd
+bindsym $mod+Shift+4 move container to workspace $chat
+bindsym $mod+Shift+5 move container to workspace $media
+bindsym $mod+Shift+6 move container to workspace $games
+bindsym $mod+Shift+7 move container to workspace $misc
+
+# Window manager.
+bindsym $mod+q            kill
+bindsym $mod+Shift+c      reload
+bindsym $mod+Shift+r      restart
+bindsym $mod+Shift+Delete exec $locker
+
+# Volume keys.
+bindsym XF86AudioRaiseVolume exec $mixer --change-volume +5
+bindsym XF86AudioLowerVolume exec $mixer --change-volume -5
+bindsym XF86AudioMute        exec $mixer --toggle-mute
+
+# Media keys.
+bindsym $mod+Ctrl+Up    exec $player stop
+bindsym $mod+Ctrl+Down  exec $player toggle
+bindsym $mod+Ctrl+Left  exec $player prev
+bindsym $mod+Ctrl+Right exec $player next
+
+bindsym XF86AudioStop exec $player stop
+bindsym XF86AudioPlay exec $player toggle
+bindsym XF86AudioPrev exec $player prev
+bindsym XF86AudioNext exec $player next
+
+bindsym XF86MonBrightnessDown exec brightnessctl set 10%-
+bindsym XF86MonBrightnessUp exec brightnessctl set +10%
+
+# Notification handling.
+bindsym $mod+x           exec $notify close
+bindsym $mod+Shift+x     exec $notify close-all
+bindsym $mod+grave       exec $notify history-pop
+bindsym $mod+Shift+grave exec $notify context
+
+# Modes.
+bindsym $mod+r       mode $resize
+bindsym $mod+Shift+q mode $session
+
+# ----------
+# APPEARANCE
+# ----------
+
+# Default font.
+font pango:Iosevka 18
+
+# Wallpaper.
+output * bg ~/.config/sway/default-bg fill
+
+# Gaps.
+default_border pixel 3
+default_floating_border pixel 3
+hide_edge_borders --i3 smart
+gaps inner 10
+smart_gaps on
+
+# Color names.
+set $background  #282828
+set $foreground  #d8d8d8
+set $focused     #2d2d2d
+set $unfocused   #585858
+set $urgent      #ab4642
+
+# Window manager colors.
+# Class                 Border      Background  Text        Indicator
+client.focused          $background $background $foreground $focused
+client.focused_inactive $background $background $unfocused  $focused
+client.unfocused        $background $background $unfocused  $background
+client.urgent           $urgent     $urgent     $background $urgent
+client.background                   $background
+
+# ---------------
+# MODES & MODULES
+# ---------------
+
+mode $resize {
+    # These bindings trigger as soon as you enter the resize mode.
+    bindsym k resize grow   up   10 px or 10 ppt
+    bindsym j resize shrink up   10 px or 10 ppt
+    bindsym h resize grow   left 10 px or 10 ppt
+    bindsym l resize shrink left 10 px or 10 ppt
+
+    # Same bindings, but for the arrow keys
+    bindsym Up    resize grow   up   10 px or 10 ppt
+    bindsym Down  resize shrink up   10 px or 10 ppt
+    bindsym Left  resize grow   left 10 px or 10 ppt
+    bindsym Right resize shrink left 10 px or 10 ppt
+
+    # Back to normal mode: Enter or Escape
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+
+mode $session {
+    bindsym s exec systemctl suspend, mode "default"
+    bindsym l exec swaymsg exit, mode "default"
+    bindsym r exec systemctl reboot, mode "default"
+    bindsym p exec systemctl poweroff -i, mode "default"
+
+    # Back to normal mode: Enter or Escape
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+
+bar {
+    swaybar_command waybar
+}

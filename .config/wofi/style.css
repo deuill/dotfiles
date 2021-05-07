@@ -1,0 +1,53 @@
+window {
+    background-color: #2d2d2d;
+    border: 0.2rem solid #282828;
+    border-radius: 0.5rem;
+    font-family: "Iosevka";
+    font-size: 1rem;
+    opacity: 0;
+    transition: opacity 0.15s ease;
+}
+
+window:focus {
+    opacity: 1;
+}
+
+.search {
+    background-color: #d8d8d8;
+    border: 0.1rem solid #282828;
+    box-shadow: none;
+    color: #282828;
+    margin: 0 0 1.5rem 0;
+    padding: 0.75rem 0;
+}
+
+.search .left, .search .right {
+    color: transparent;
+}
+
+#outer-box {
+    margin: 1.5rem;
+}
+
+#inner-box {
+    margin: 0;
+}
+
+#entry {
+    border: 0.1rem solid transparent;
+    color: #b8b8b8;
+    margin: 0;
+    padding: 0.5rem 0.75rem;
+    transition: 0.1s ease;
+}
+
+#entry:selected {
+    background-color: #ab4642;
+    border-color: 0.1rem solid #b8b8b8;
+    color: #e8e8e8;
+}
+
+#entry .drun-icon {
+    padding: 0.5rem;
+    margin-right: 0.5rem;
+}

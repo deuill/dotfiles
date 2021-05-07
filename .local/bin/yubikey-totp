@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+if [[ ! "$(ykman info)" ]]
+then
+    echo "Yubikey not detected."
+    exit 1
+fi
+
+DMENU="dmenu -i -p TOTP"
+OPTION="$(ykman oath accounts list | $DMENU)"
+
+CODE=$(ykman oath accounts code -s "$OPTION")
+printf "$CODE" | wl-copy --paste-once
+printf "$CODE" | xclip -selection primary
