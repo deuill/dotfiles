@@ -1,0 +1,4 @@
+/* Set default appearance for GTK applications. */
+.termite {
+    padding: 0.5rem;
+}

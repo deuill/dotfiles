@@ -1,0 +1,12 @@
+# General settings.
+mode=drun
+insensitive=true
+no_actions=true
+
+# Appearance.
+prompt=Launch application…
+allow_images=true
+columns=3
+image_size=48
+height=30%
+width=30%

@@ -23,11 +23,11 @@ c.qt.highdpi = True
 c.scrolling.smooth = True
 c.statusbar.widgets = ["url", "progress", "scroll"]
 c.tabs.background = True
-c.tabs.new_position.related = "last"
+c.tabs.new_position.related = "next"
 c.url.default_page = 'https://duckduckgo.com'
 c.input.insert_mode.auto_leave = False
 c.input.insert_mode.auto_load = True
-c.zoom.default = "150%"
+c.zoom.default = "125%"
 
 # Searches.
 c.url.searchengines['DEFAULT'] = 'https://duckduckgo.com/?q={}'
@@ -62,8 +62,8 @@ c.window.title_format = "qutebrowser"
 
 # Fonts.
 c.fonts.default_family = ["Iosevka Term SS02"]
-c.fonts.default_size = "11.5pt"
-c.fonts.prompts = "11.5pt Iosevka Term SS02"
+c.fonts.default_size = "18pt"
+c.fonts.prompts = "18pt Iosevka Term SS02"
 
 # Colors.
 base00 = "#181818"

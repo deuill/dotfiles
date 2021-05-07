@@ -1,5 +1,5 @@
 [options]
-font = Iosevka Term SS02 12
+font = Iosevka Term SS02 20
 urgent_on_bell = true
 clickable_url = true
 scrollback_lines = 10000

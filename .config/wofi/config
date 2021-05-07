@@ -1,0 +1,8 @@
+# General settings.
+mode=run
+insensitive=true
+
+# Appearance.
+prompt=Run command…
+height=30%
+width=30%

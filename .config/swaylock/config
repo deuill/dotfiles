@@ -1,0 +1,8 @@
+# Fonts.
+font=Iosevka Term SS02
+font-size=20
+
+# Colors and wallpaper.
+image=~/Pictures/Wallpapers/.default
+scaling=fill
+color=282828
