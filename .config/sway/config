@@ -2,10 +2,6 @@
 # BEHAVIOUR
 # ---------
 
-# Start graphical session dependencies.
-exec_always "systemctl --user import-environment; systemctl --user start sway-session.target"
-exec_always "cat ~/.config/dconf/user-defaults | dconf load /"
-
 # Window manipulation.
 focus_follows_mouse no
 
@@ -32,7 +28,11 @@ set $resize  "resize"
 set $session "Session: Ⓢ Suspend, Ⓛ Logout, Ⓡ Reboot, Ⓟ Power off"
 
 # Display output configuration.
-output * scale 1
+output * {
+    scale    1
+    subpixel none
+}
+
 bindswitch --reload --locked lid:on output eDP-1 disable
 bindswitch --reload --locked lid:off output eDP-1 enable
 
@@ -271,3 +271,9 @@ mode $session {
 bar {
     swaybar_command waybar
 }
+
+# ---------------
+# MISC & INCLUDES
+# ---------------
+
+include ~/.config/sway/config.d/*

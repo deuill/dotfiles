@@ -1,19 +1,17 @@
-# Shared environment variables.
-export GOPATH="$HOME/.go"
-export RIPGREP_CONFIG_PATH="$HOME/.config/ripgrep/ripgreprc"
-
-export GTK_THEME=Adwaita:dark
-export QT_QPA_PLATFORMTHEME="qt5ct"
-export QT_SCALE_FACTOR=1.5
-
-export PATH="$PATH:$HOME/.local/bin:$GOPATH/bin"
-export EDITOR="emacsclient -a emacs"
+# Load additional profile components.
+for src in "$HOME"/.config/profile.d/*; do . "$src"; done
 
 # Import specific environment variables for user units.
 systemctl --user import-environment PATH
 
+# Set system-wide environment from systemd environment.
+set -a
+for conf in "$HOME"/.config/environment.d/*.conf; do . "$conf"; done
+set +a
+
 # Start Sway if no existing session has started.
-if [ -z "$DISPLAY" ] && [ "$XDG_VTNR" -eq 1 ]
+if test -z "$DISPLAY" && test "$XDG_VTNR" -eq 1
 then
-    exec sway
+    mkdir -p "$HOME/.cache/sway"
+    exec sway > "$HOME/.cache/sway/sway.log" 2>&1
 fi
