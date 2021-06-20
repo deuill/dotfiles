@@ -80,6 +80,12 @@
 (after! (json-mode evil)
   (evil-define-key 'normal json-mode-map (kbd "<tab>") 'evil-toggle-fold))
 
+(after! kubernetes-overview
+  (setq kubernetes-kubectl-executable "kubectl-socks")
+  (load-library "kubernetes-evil")
+  (set-popup-rule! "^\\*kubernetes"            :side 'right :select t :slot 0 :width 0.5 :quit nil)
+  (set-popup-rule! "^\\*kubernetes.+popup\\*$" :side 'right :select t :slot 1 :quit 'current))
+
 (after! kubel
   (load-library "kubel-evil")
   (set-popup-rule! "^\\*kubel" :side 'right :select t :quit 'current :slot 0 :width 0.5))
@@ -151,7 +157,7 @@
   (define-key transient-edit-map   (kbd "<escape>") 'transient-quit-one)
   (define-key transient-sticky-map (kbd "<escape>") 'transient-quit-seq))
 
-(after! (man woman)
+(after! (:or man woman)
   (set-popup-rule! "^\\*\\(?:Wo\\)?Man " :side 'right :select t :quit 'current :slot 0 :width 0.5))
 
 (after! writeroom-mode
@@ -452,7 +458,7 @@ to the `killed-buffer-list' when killing the buffer."
 
       (:prefix-map ("g" . "git")
         :desc "Revert file"                 "R"   #'vc-revert
-        :desc "Copy link to remote"         "y"   #'browse-at-remote-kill
+        :desc "Copy link to remote"         "y"   #'+vc/browse-at-remote-kill
         :desc "Copy link to homepage"       "Y"   #'+vc/browse-at-remote-kill-homepage
         (:when (featurep! :ui hydra)
           :desc "Merge"                     "m"   #'+vc/smerge-hydra/body)
