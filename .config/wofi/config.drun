@@ -8,7 +8,4 @@ y=100
 # Appearance.
 prompt=Launch application…
 allow_images=true
-columns=3
 image_size=48
-height=50%
-width=50%
