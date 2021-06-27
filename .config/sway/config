@@ -80,7 +80,7 @@ set $terminal  alacritty
 set $applaunch wofi --conf ~/.config/wofi/config.drun --term $terminal
 set $cmdlaunch wofi --term $terminal
 set $locker    swaylock -f
-set $player    mpc
+set $player    playerctl
 set $notify    dunstctl
 set $mixer     pulsemixer --max-volume 100
 
@@ -175,20 +175,22 @@ bindsym $mod+Shift+r      restart
 bindsym $mod+Shift+Delete exec $locker
 
 # Volume keys.
-bindsym XF86AudioRaiseVolume exec $mixer --change-volume +5
-bindsym XF86AudioLowerVolume exec $mixer --change-volume -5
-bindsym XF86AudioMute        exec $mixer --toggle-mute
+bindsym             XF86AudioRaiseVolume exec $mixer --change-volume +5
+bindsym             XF86AudioLowerVolume exec $mixer --change-volume -5
+bindsym --no-repeat XF86AudioMute        exec $mixer --toggle-mute
 
 # Media keys.
-bindsym $mod+Ctrl+Up    exec $player stop
-bindsym $mod+Ctrl+Down  exec $player toggle
-bindsym $mod+Ctrl+Left  exec $player prev
-bindsym $mod+Ctrl+Right exec $player next
+bindsym --no-repeat $mod+Ctrl+Up    exec $player stop
+bindsym --no-repeat $mod+Ctrl+Down  exec $player play-pause
+bindsym --no-repeat $mod+Ctrl+Left  exec $player previous
+bindsym --no-repeat $mod+Ctrl+Right exec $player next
 
-bindsym XF86AudioStop exec $player stop
-bindsym XF86AudioPlay exec $player toggle
-bindsym XF86AudioPrev exec $player prev
-bindsym XF86AudioNext exec $player next
+bindsym --no-repeat XF86AudioStop    exec $player stop
+bindsym --no-repeat XF86AudioPlay    exec $player play-pause
+bindsym --no-repeat XF86AudioPrev    exec $player previous
+bindsym --no-repeat XF86AudioNext    exec $player next
+bindsym --no-repeat XF86AudioRewind  exec $player position 10-
+bindsym --no-repeat XF86AudioForward exec $player position 10+
 
 bindsym XF86MonBrightnessDown exec brightnessctl set 10%-
 bindsym XF86MonBrightnessUp exec brightnessctl set +10%
@@ -214,11 +216,11 @@ font pango:Iosevka 18
 output * bg ~/.config/sway/default-bg fill
 
 # Gaps.
-default_border pixel 3
+default_border          pixel 3
 default_floating_border pixel 3
-hide_edge_borders --i3 smart
-gaps inner 10
-smart_gaps on
+hide_edge_borders --i3  smart
+gaps                    inner 10
+smart_gaps              on
 
 # Color names.
 set $background  #282828

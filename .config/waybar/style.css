@@ -50,7 +50,6 @@
 
 #mode {
     background-color: #ab4642;
-    border-radius: 0.5rem;
     color: #e8e8e8;
 }
 
@@ -59,18 +58,17 @@
     padding: 0;
 }
 
-#mpd.paused, #mpd.playing {
-    border-radius: 0.5rem;
-    margin: 0 0.75rem 0 0.25rem;
+#mpd.paused, #mpd.playing, #custom-mpris.paused, #custom-mpris.playing {
+    margin-left: 0.25rem;
     transition: background-color, color 0.1s ease;
 }
 
-#mpd.paused {
+#mpd.paused, #custom-mpris.paused {
     background-color: #585858;
     color: #e8e8e8;
 }
 
-#mpd.playing {
+#mpd.playing, #custom-mpris.playing {
     background-color: #ba8baf;
     color: #282828;
 }
