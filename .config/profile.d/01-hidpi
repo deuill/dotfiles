@@ -6,8 +6,8 @@ do
     if test -f "$port"/enabled && test "$(cat "$port"/enabled)" = "enabled"
     then
         mode="$(head -n 1 "$port"/modes)"
-        if test "$(echo "$mode" | cut -dx -f1)" -gt 2560 && \
-           test "$(echo "$mode" | cut -dx -f2)" -gt 1200
+        if test "$(echo "$mode" | cut -dx -f1)" -ge 2560 && \
+           test "$(echo "$mode" | cut -dx -f2)" -ge 1200
         then
             export DISPLAY_SCALE_FACTOR=1.5
             break

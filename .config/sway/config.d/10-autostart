@@ -1,0 +1,2 @@
+# This file contains optional, automatically started daemons for use in Sway.
+exec gnome-keyring-daemon --start

@@ -29,9 +29,9 @@
         "format": "{icon} {}",
         "return-type": "json",
         "format-icons": {
-            "playing": "",
-            "paused": "",
-            "stopped": "",
+            "playing": "<span color='#585858'>play</span>",
+            "paused": "<span color='#585858'>paus</span>",
+            "stopped": "<span color='#585858'>stop</span>",
         },
         "max-length": 60,
         "exec": "playerctl --follow metadata --format '{\"text\": \"{{artist}} - {{title}}\", \"tooltip\": \"{{artist}} - {{album}} - {{title}} ({{playerName}})\", \"alt\": \"{{lc(status)}}\", \"class\": \"{{lc(status)}}\"}'",
@@ -45,36 +45,6 @@
         "interval": 30,
         "format": "<span color='#585858'>mem</span> {}%",
         "on-click": "alacritty -e htop"
-    },
-    "mpd": {
-        "format": "{stateIcon} {artist} - {title}<small>{consumeIcon}{randomIcon}{repeatIcon}{singleIcon}</small>",
-        "format-stopped": "",
-        "format-disconnected": "",
-        "interval": 5,
-        "max-length": 60,
-        "artist-len": 40,
-        "title-len": 40,
-        "random-icons": {
-            "off": "",
-            "on": " "
-        },
-        "repeat-icons": {
-            "on": " "
-        },
-        "single-icons": {
-            "on": " ¹"
-        },
-        "state-icons": {
-            "paused": "",
-            "playing": ""
-        },
-        "tooltip-format": "{artist} - {album} - {title} ({elapsedTime:%M:%S}/{totalTime:%M:%S})",
-        "tooltip-format-disconnected": "MPD (disconnected)",
-        "smooth-scrolling-threshold": 20,
-        "on-click": "mpc toggle",
-        "on-click-right": "cantata",
-        "on-scroll-up": "mpc prev",
-        "on-scroll-down": "mpc next"
     },
     "network": {
         "format-wifi": "<span color='#585858'>wifi</span> {essid}",
@@ -97,6 +67,12 @@
         "scroll-step": 1,
         "on-click": "alacritty -e pulsemixer"
     },
+    "sway/language": {
+        "format": "<span color='#585858'>key</span> {}",
+        "max-length": 50,
+        "tooltip": false,
+        "on-click": "swaymsg input 'type:keyboard' xkb_switch_layout next"
+    },
     "sway/workspaces": {
         "format": "{name}",
         "smooth-scrolling-threshold": 5
@@ -106,12 +82,6 @@
         "on-click": "wofi --conf ~/.config/wofi/config.drun",
         "align": 0,
         "max-length": 50
-    },
-    "sway/language": {
-        "format": "<span color='#585858'>key</span> {}",
-        "max-length": 50,
-        "tooltip": false,
-        "on-click": "swaymsg input 'type:keyboard' xkb_switch_layout next"
     },
     "temperature": {
         "thermal-zone": 1,

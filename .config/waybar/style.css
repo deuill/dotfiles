@@ -4,7 +4,7 @@
 }
 
 #waybar {
-    background-color: transparent;
+    background: none;
     color: #d8d8d8;
     transition: background-color 0.1s ease;
 }
@@ -22,22 +22,22 @@
 }
 
 .modules-left label, .modules-right label {
-    border: 0.2rem solid transparent;
-    padding: 0.2rem 0.5rem;
+    border: 0;
+    padding: 0.4rem 0.5rem;
 }
 
 #workspaces button {
-    border: 0.2rem solid transparent;
+    background: none;
+    border: 0;
     border-radius: 0;
     box-shadow: none;
     color: #585858;
     text-shadow: none;
-    padding: 0.2rem 0.5rem;
+    padding: 0.4rem 0.5rem;
 }
 
-#workspaces button:hover {
-    background: none;
-    border-top-color: #d8d8d8;
+#workspaces button:not(.focused):hover {
+    color: #989898;
 }
 
 #workspaces button.focused {
@@ -49,28 +49,7 @@
 }
 
 #mode {
-    background-color: #ab4642;
-    color: #e8e8e8;
-}
-
-#mpd.disconnected, #mpd.stopped {
-    margin: 0;
-    padding: 0;
-}
-
-#mpd.paused, #mpd.playing, #custom-mpris.paused, #custom-mpris.playing {
-    margin-left: 0.25rem;
-    transition: background-color, color 0.1s ease;
-}
-
-#mpd.paused, #custom-mpris.paused {
-    background-color: #585858;
-    color: #e8e8e8;
-}
-
-#mpd.playing, #custom-mpris.playing {
-    background-color: #ba8baf;
-    color: #282828;
+    color: #ab4642;
 }
 
 #tray {

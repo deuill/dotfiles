@@ -204,6 +204,9 @@
 (add-hook! markdown-mode
   (auto-fill-mode t))
 
+(add-hook! pdf-view-mode
+  (setq mode-line-format nil))
+
 (add-hook! php-mode
   (php-enable-psr2-coding-style)
   (setq fill-column 100))
