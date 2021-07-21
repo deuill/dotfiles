@@ -4,13 +4,13 @@
 }
 
 #waybar {
-    background: none;
+    background-color: #282828;
     color: #d8d8d8;
     transition: background-color 0.1s ease;
 }
 
-#waybar.solo {
-    background-color: #282828;
+#waybar.empty {
+    background-color: transparent;
 }
 
 .modules-left {

@@ -12,6 +12,5 @@ set +a
 # Start Sway if no existing session has started.
 if test -z "$DISPLAY" && test "$XDG_VTNR" -eq 1
 then
-    mkdir -p "$HOME/.cache/sway"
-    exec sway > "$HOME/.cache/sway/sway.log" 2>&1
+    exec sway
 fi
