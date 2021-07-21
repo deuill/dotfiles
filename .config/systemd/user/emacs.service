@@ -1,11 +1,12 @@
 [Unit]
-Description=Emacs: the extensible, self-documenting text editor
+Description=Emacs text editor
+Documentation=info:emacs man:emacs(1) https://gnu.org/software/emacs/
 
 [Service]
-Type=forking
-ExecStart=/usr/bin/emacs --daemon=main
-ExecStop=/usr/bin/emacsclient -s main --eval "(kill-emacs)"
-Restart=always
+Type=simple
+ExecStart=/usr/bin/emacs --fg-daemon=main
+ExecStop=/usr/bin/emacsclient --socket-name=main --eval "(kill-emacs)"
+Restart=on-failure
 
 [Install]
 WantedBy=default.target

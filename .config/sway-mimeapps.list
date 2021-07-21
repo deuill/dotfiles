@@ -1,0 +1,3 @@
+[Default Applications]
+application/pdf=emacsclient.desktop;
+image/jpeg=emacsclient.desktop;
