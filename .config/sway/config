@@ -14,15 +14,6 @@ set $media 5:media
 set $games 6:games
 set $misc  7:misc
 
-# Workspace assignments for applications
-# Example: assign [class="firefox"] $www
-assign [app_id="org.qutebrowser.qutebrowser"] $www
-assign [app_id="org.gajim.Gajim"] $chat
-assign [app_id="cantata"] $media
-assign [class="Emacs"] $code
-assign [class="Steam"] $games
-assign [class="itch"] $games
-
 # Mode aliases.
 set $resize  "resize"
 set $session "Session: Ⓢ Suspend, Ⓛ Logout, Ⓡ Reboot, Ⓟ Power off"
@@ -72,6 +63,9 @@ for_window [class="zoom"] inhibit_idle open
 # KEYBINDINGS
 # -----------
 
+# Common aliases for keyboard bindings.
+set $bindcode bindsym --to-code
+
 # Default modifier key is the 'Super' key.
 set $mod Mod4
 
@@ -85,94 +79,94 @@ set $notify    dunstctl
 set $mixer     pulsemixer --max-volume 100
 
 # Application launching
-bindsym $mod+Return  exec $terminal
-bindsym $mod+d       exec $applaunch
-bindsym $mod+Shift+d exec $cmdlaunch
+$bindcode $mod+Return  exec $terminal
+$bindcode $mod+d       exec $applaunch
+$bindcode $mod+Shift+d exec $cmdlaunch
 
 # Change focus
-bindsym $mod+h     focus left
-bindsym $mod+j     focus down
-bindsym $mod+k     focus up
-bindsym $mod+l     focus right
-bindsym $mod+Left  focus left
-bindsym $mod+Down  focus down
-bindsym $mod+Up    focus up
-bindsym $mod+Right focus right
+$bindcode $mod+h     focus left
+$bindcode $mod+j     focus down
+$bindcode $mod+k     focus up
+$bindcode $mod+l     focus right
+$bindcode $mod+Left  focus left
+$bindcode $mod+Down  focus down
+$bindcode $mod+Up    focus up
+$bindcode $mod+Right focus right
 
 # Move focused window
-bindsym $mod+Shift+h     move left
-bindsym $mod+Shift+j     move down
-bindsym $mod+Shift+k     move up
-bindsym $mod+Shift+l     move right
-bindsym $mod+Shift+Left  move left
-bindsym $mod+Shift+Down  move down
-bindsym $mod+Shift+Up    move up
-bindsym $mod+Shift+Right move right
+$bindcode $mod+Shift+h     move left
+$bindcode $mod+Shift+j     move down
+$bindcode $mod+Shift+k     move up
+$bindcode $mod+Shift+l     move right
+$bindcode $mod+Shift+Left  move left
+$bindcode $mod+Shift+Down  move down
+$bindcode $mod+Shift+Up    move up
+$bindcode $mod+Shift+Right move right
 
 # Move workspace to output.
-bindsym $mod+Ctrl+Shift+h     move workspace to output left
-bindsym $mod+Ctrl+Shift+j     move workspace to output down
-bindsym $mod+Ctrl+Shift+k     move workspace to output up
-bindsym $mod+Ctrl+Shift+l     move workspace to output right
-bindsym $mod+Ctrl+Shift+Left  move workspace to output left
-bindsym $mod+Ctrl+Shift+Down  move workspace to output down
-bindsym $mod+Ctrl+Shift+Up    move workspace to output up
-bindsym $mod+Ctrl+Shift+Right move workspace to output right
+$bindcode $mod+Ctrl+Shift+h     move workspace to output left
+$bindcode $mod+Ctrl+Shift+j     move workspace to output down
+$bindcode $mod+Ctrl+Shift+k     move workspace to output up
+$bindcode $mod+Ctrl+Shift+l     move workspace to output right
+$bindcode $mod+Ctrl+Shift+Left  move workspace to output left
+$bindcode $mod+Ctrl+Shift+Down  move workspace to output down
+$bindcode $mod+Ctrl+Shift+Up    move workspace to output up
+$bindcode $mod+Ctrl+Shift+Right move workspace to output right
 
 # Window size
-bindsym $mod+f fullscreen toggle
+$bindcode $mod+f fullscreen toggle
 
 # Horizontal/vertical orientation switching
-bindsym $mod+bracketleft  split h
-bindsym $mod+bracketright split v
+$bindcode $mod+bracketleft  split h
+$bindcode $mod+bracketright split v
 
 # Change container layout (stacked, tabbed, toggle split)
-bindsym $mod+s layout stacking
-bindsym $mod+w layout tabbed
-bindsym $mod+e layout toggle split
+$bindcode $mod+s layout stacking
+$bindcode $mod+w layout tabbed
+$bindcode $mod+e layout toggle split
 
 # Toggle tiling/floating
-bindsym $mod+o       floating toggle
-bindsym $mod+Shift+o sticky toggle
+$bindcode $mod+o       floating toggle
+$bindcode $mod+Shift+o sticky toggle
 
 # Focus the parent/child container.
-bindsym $mod+a focus parent
+$bindcode $mod+a focus parent
 
 # Focus between floating and split containers.
-bindsym $mod+Shift+Tab focus mode_toggle
+$bindcode $mod+Shift+Tab focus mode_toggle
 
 # Focus urgent window.
-bindsym $mod+u [urgent=latest] focus
+$bindcode $mod+u [urgent=latest] focus
 
 # Resize floating windows with modifider + mouse.
 floating_modifier $mod
 
 # Toggle between last used workspaces.
-bindsym $mod+Tab workspace back_and_forth
+$bindcode $mod+Tab workspace back_and_forth
 
 # Switch to workspace.
-bindsym $mod+1 workspace $www
-bindsym $mod+2 workspace $code
-bindsym $mod+3 workspace $cmd
-bindsym $mod+4 workspace $chat
-bindsym $mod+5 workspace $media
-bindsym $mod+6 workspace $games
-bindsym $mod+7 workspace $misc
+$bindcode $mod+1 workspace $www
+$bindcode $mod+2 workspace $code
+$bindcode $mod+3 workspace $cmd
+$bindcode $mod+4 workspace $chat
+$bindcode $mod+5 workspace $media
+$bindcode $mod+6 workspace $games
+$bindcode $mod+7 workspace $misc
 
 # Move focused window to workspace.
-bindsym $mod+Shift+1 move container to workspace $www
-bindsym $mod+Shift+2 move container to workspace $code
-bindsym $mod+Shift+3 move container to workspace $cmd
-bindsym $mod+Shift+4 move container to workspace $chat
-bindsym $mod+Shift+5 move container to workspace $media
-bindsym $mod+Shift+6 move container to workspace $games
-bindsym $mod+Shift+7 move container to workspace $misc
+$bindcode $mod+Shift+1 move container to workspace $www
+$bindcode $mod+Shift+2 move container to workspace $code
+$bindcode $mod+Shift+3 move container to workspace $cmd
+$bindcode $mod+Shift+4 move container to workspace $chat
+$bindcode $mod+Shift+5 move container to workspace $media
+$bindcode $mod+Shift+6 move container to workspace $games
+$bindcode $mod+Shift+7 move container to workspace $misc
 
 # Window manager.
-bindsym $mod+q            kill
-bindsym $mod+Shift+c      reload
-bindsym $mod+Shift+r      restart
-bindsym $mod+Shift+Delete exec $locker
+$bindcode $mod+q            kill
+$bindcode $mod+Shift+c      reload
+$bindcode $mod+Shift+r      restart
+$bindcode $mod+Shift+Delete exec $locker
 
 # Volume keys.
 bindsym             XF86AudioRaiseVolume exec $mixer --change-volume +5
@@ -196,21 +190,22 @@ bindsym XF86MonBrightnessDown exec brightnessctl set 10%-
 bindsym XF86MonBrightnessUp exec brightnessctl set +10%
 
 # Notification handling.
-bindsym $mod+x           exec $notify close
-bindsym $mod+Shift+x     exec $notify close-all
-bindsym $mod+grave       exec $notify history-pop
-bindsym $mod+Shift+grave exec $notify context
+$bindcode $mod+x           exec $notify close
+$bindcode $mod+Shift+x     exec $notify close-all
+$bindcode $mod+grave       exec $notify history-pop
+$bindcode $mod+Shift+grave exec $notify context
 
 # Modes.
-bindsym $mod+r       mode $resize
-bindsym $mod+Shift+q mode $session
+$bindcode $mod+r       mode $resize
+$bindcode $mod+Shift+q mode $session
 
 # ----------
 # APPEARANCE
 # ----------
 
 # Default font.
-font pango:Iosevka 18
+font Iosevka 14
+exec_always swaymsg font Iosevka $(echo "13" | awk '{printf "%.0f", $0 * ENVIRON["GDK_DPI_SCALE"]}')
 
 # Wallpaper.
 output * bg ~/.config/sway/default-bg fill
