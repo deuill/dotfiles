@@ -121,8 +121,8 @@ to the `killed-buffer-list' when killing the buffer."
   doom-theme 'doom-monokai-pro
 
   ;; Font definitions.
-  doom-font                (font-spec :family "Iosevka" :size (+custom/font-scale 16) :weight 'light)
-  doom-big-font            (font-spec :family "Iosevka" :size (+custom/font-scale 20) :weight 'light)
+  doom-font                (font-spec :family "Iosevka" :size (+custom/font-scale 18) :weight 'light)
+  doom-big-font            (font-spec :family "Iosevka" :size (+custom/font-scale 22) :weight 'light)
   doom-variable-pitch-font (font-spec :family "IBM Plex Sans"  :weight 'light)
   doom-serif-font          (font-spec :family "IBM Plex Serif" :weight 'light)
 
@@ -267,6 +267,9 @@ to the `killed-buffer-list' when killing the buffer."
 
 (after! (:or man woman)
   (set-popup-rule! "^\\*\\(?:Wo\\)?Man " :side 'right :select t :quit 'current :slot 0 :width 0.5))
+
+(after! vterm
+  (setq vterm-shell "/usr/bin/fish"))
 
 (after! writeroom-mode
   (setq writeroom-width 100

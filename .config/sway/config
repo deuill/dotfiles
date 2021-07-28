@@ -204,8 +204,8 @@ $bindcode $mod+Shift+q mode $session
 # ----------
 
 # Default font.
-font Iosevka 14
-exec_always swaymsg font Iosevka $(echo "13" | awk '{printf "%.0f", $0 * ENVIRON["GDK_DPI_SCALE"]}')
+font Iosevka 20
+exec_always swaymsg font Iosevka $(echo "14" | awk '{printf "%.0f", $0 * ENVIRON["GDK_DPI_SCALE"]}')
 
 # Wallpaper.
 output * bg ~/.config/sway/default-bg fill

@@ -1,6 +1,7 @@
 # General settings.
 mode=run
 insensitive=true
+exec-search=true
 location=2
 y=100
 
