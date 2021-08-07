@@ -71,8 +71,7 @@ set $mod Mod4
 
 # Application aliases.
 set $terminal  alacritty
-set $applaunch wofi --conf ~/.config/wofi/config.drun --term $terminal
-set $cmdlaunch wofi --term $terminal
+set $launcher  rofi -terminal $terminal -run-command 'bash -ic "{cmd}"'
 set $locker    swaylock -f
 set $player    playerctl
 set $notify    dunstctl
@@ -80,8 +79,9 @@ set $mixer     pulsemixer --max-volume 100
 
 # Application launching
 $bindcode $mod+Return  exec $terminal
-$bindcode $mod+d       exec $applaunch
-$bindcode $mod+Shift+d exec $cmdlaunch
+$bindcode $mod+d       exec $launcher -show drun -show-icons
+$bindcode $mod+Shift+d exec $launcher -show run
+$bindcode $mod+Shift+s exec $launcher -show file-browser
 
 # Change focus
 $bindcode $mod+h     focus left
@@ -126,8 +126,8 @@ $bindcode $mod+w layout tabbed
 $bindcode $mod+e layout toggle split
 
 # Toggle tiling/floating
-$bindcode $mod+o       floating toggle
-$bindcode $mod+Shift+o sticky toggle
+$bindcode $mod+t       floating toggle
+$bindcode $mod+Shift+t sticky toggle
 
 # Focus the parent/child container.
 $bindcode $mod+a focus parent
@@ -210,7 +210,7 @@ exec_always swaymsg font Iosevka $(echo "14" | awk '{printf "%.0f", $0 * ENVIRON
 # Wallpaper.
 output * bg ~/.config/sway/default-bg fill
 
-# Gaps.
+# Borders and gaps.
 default_border          pixel 3
 default_floating_border pixel 3
 hide_edge_borders --i3  smart

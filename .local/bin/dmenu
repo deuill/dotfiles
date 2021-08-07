@@ -1,1 +1,3 @@
-/usr/bin/wofi
+#!/bin/bash
+
+/usr/bin/rofi -dmenu "$@"
