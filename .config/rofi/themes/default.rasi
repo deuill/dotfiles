@@ -155,18 +155,18 @@ button selected {
 
 num-filtered-rows {
     expand:     false;
-    text-color: #383838;
+    text-color: #585858;
 }
 
 num-rows {
     expand:     false;
-    text-color: #383838;
+    text-color: #585858;
 }
 
 textbox-num-sep {
     expand:     false;
     str:        "/";
-    text-color: #383838;
+    text-color: #585858;
 }
 
 inputbar {
@@ -183,7 +183,7 @@ case-indicator {
 
 entry {
     padding: 10px;
-    placeholder-color: #383838;
+    placeholder-color: #585858;
     placeholder: "Type to filter...";
     spacing: 0;
     text-color: var(normal-foreground);

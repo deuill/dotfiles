@@ -1,9 +1,11 @@
 # Workspace assignments for applications
 # Example: assign [class="firefox"] $www
+assign [app_id="firefox"] $www
+assign [app_id="thunderbird"] $www
 assign [app_id="org.qutebrowser.qutebrowser"] $www
 assign [app_id="org.gajim.Gajim"] $chat
+assign [app_id="dino"] $chat
 assign [app_id="cantata"] $media
-assign [class="Emacs"] $code
 assign [class="Steam"] $games
 assign [class="itch"] $games
 
