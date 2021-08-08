@@ -1,14 +1,16 @@
-#
-# ~/.bash_profile
-#
-
-# Some variables.
-export GOPATH="$HOME/.go"
-export PATH="$PATH:$HOME/.local/bin:$GOPATH/bin"
-export QT_QPA_PLATFORMTHEME="qt5ct"
-export QT_AUTO_SCREEN_SCALE_FACTOR=0
-export EDITOR="emacsclient -a nano"
-export RIPGREP_CONFIG_PATH="$HOME/.config/ripgrep/ripgreprc"
+# Load additional profile components.
+for src in "$HOME"/.config/profile.d/*; do . "$src"; done
 
 # Import specific environment variables for user units.
 systemctl --user import-environment PATH
+
+# Set system-wide environment from systemd environment.
+set -a
+for conf in "$HOME"/.config/environment.d/*.conf; do . "$conf"; done
+set +a
+
+# Start Sway if no existing session has started.
+if test -z "$DISPLAY" && test "$XDG_VTNR" -eq 1
+then
+    exec sway
+fi

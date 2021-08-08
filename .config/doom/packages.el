@@ -6,6 +6,6 @@
 ;; (package! another-package :recipe (:host github :repo "username/repo"))
 ;; (package! builtin-package :disable t)
 
-;; Install Kubernetes client support.
-(package! kubel :pin "5d5639cac5d98bca74cad44b5a1e128df77050bd0a4ddb41698bb8aa02b18e07ac509")
-(package! kubel-evil :pin "5d5639cac5d")
+(package! systemd :pin "b6ae63a236605b1c5e1069f7d3afe06ae32a7bae")
+(package! kubernetes :pin "ffdae05d4d0e83be5c6884326b69a8ca83f2ae2b")
+(package! kubernetes-evil :pin "ffdae05d4d0e83be5c6884326b69a8ca83f2ae2b")

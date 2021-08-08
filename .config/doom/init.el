@@ -49,6 +49,7 @@
        (lookup +dictionary +docsets +offline)
        (lsp +peek)
        magit
+       pdf
        rgb
 
        :lang

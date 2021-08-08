@@ -1,0 +1,275 @@
+# ---------
+# BEHAVIOUR
+# ---------
+
+# Window manipulation.
+focus_follows_mouse no
+
+# Workspace names.
+set $www   1:www
+set $code  2:code
+set $cmd   3:cmd
+set $chat  4:chat
+set $media 5:media
+set $games 6:games
+set $misc  7:misc
+
+# Mode aliases.
+set $resize  "resize"
+set $session "Session: Ⓢ Suspend, Ⓛ Logout, Ⓡ Reboot, Ⓟ Power off"
+
+# Display output configuration.
+output * {
+    scale    1
+    subpixel none
+}
+
+bindswitch --reload --locked lid:on output eDP-1 disable
+bindswitch --reload --locked lid:off output eDP-1 enable
+
+# Input configuration.
+input "type:keyboard" {
+    xkb_layout   us,gr
+    xkb_options  grp:caps_toggle,grp_led:caps
+    repeat_delay 400
+    repeat_rate  80
+}
+
+input "type:touchpad" {
+    tap            enabled
+    natural_scroll enabled
+}
+
+# Hide cursor after 30 seconds of inactivity.
+seat * hide_cursor 30000
+
+# Idle state management.
+exec swayidle -w \
+     timeout 300 '$locker' \
+     timeout 420 'swaymsg "output * dpms off"' \
+          resume 'swaymsg "output * dpms on"' \
+    before-sleep '$locker' \
+            lock '$player pause' \
+            lock '$notify set-paused true' \
+          unlock '$player pause' \
+          unlock '$notify set-paused false'
+
+# Inhibit idle tracking for specific applications.
+for_window [class="^.*"]  inhibit_idle fullscreen
+for_window [app_id="^.*"] inhibit_idle fullscreen
+for_window [class="zoom"] inhibit_idle open
+
+# -----------
+# KEYBINDINGS
+# -----------
+
+# Common aliases for keyboard bindings.
+set $bindcode bindsym --to-code
+
+# Default modifier key is the 'Super' key.
+set $mod Mod4
+
+# Application aliases.
+set $terminal  alacritty
+set $launcher  rofi -terminal $terminal -run-command 'bash -ic "{cmd}"'
+set $locker    swaylock -f
+set $player    playerctl
+set $notify    dunstctl
+set $mixer     pulsemixer --max-volume 100
+
+# Application launching
+$bindcode $mod+Return  exec $terminal
+$bindcode $mod+d       exec $launcher -show drun -show-icons
+$bindcode $mod+Shift+d exec $launcher -show run
+$bindcode $mod+s       exec $launcher -show file-browser
+
+# Change focus
+$bindcode $mod+h     focus left
+$bindcode $mod+j     focus down
+$bindcode $mod+k     focus up
+$bindcode $mod+l     focus right
+$bindcode $mod+Left  focus left
+$bindcode $mod+Down  focus down
+$bindcode $mod+Up    focus up
+$bindcode $mod+Right focus right
+
+# Move focused window
+$bindcode $mod+Shift+h     move left
+$bindcode $mod+Shift+j     move down
+$bindcode $mod+Shift+k     move up
+$bindcode $mod+Shift+l     move right
+$bindcode $mod+Shift+Left  move left
+$bindcode $mod+Shift+Down  move down
+$bindcode $mod+Shift+Up    move up
+$bindcode $mod+Shift+Right move right
+
+# Move workspace to output.
+$bindcode $mod+Ctrl+Shift+h     move workspace to output left
+$bindcode $mod+Ctrl+Shift+j     move workspace to output down
+$bindcode $mod+Ctrl+Shift+k     move workspace to output up
+$bindcode $mod+Ctrl+Shift+l     move workspace to output right
+$bindcode $mod+Ctrl+Shift+Left  move workspace to output left
+$bindcode $mod+Ctrl+Shift+Down  move workspace to output down
+$bindcode $mod+Ctrl+Shift+Up    move workspace to output up
+$bindcode $mod+Ctrl+Shift+Right move workspace to output right
+
+# Window size
+$bindcode $mod+f fullscreen toggle
+
+# Horizontal/vertical orientation switching
+$bindcode $mod+bracketleft  split h
+$bindcode $mod+bracketright split v
+
+# Change container layout (stacked, tabbed, toggle split)
+$bindcode $mod+w layout tabbed
+$bindcode $mod+e layout toggle split
+
+# Toggle tiling/floating
+$bindcode $mod+t       floating toggle
+$bindcode $mod+Shift+t sticky toggle
+
+# Focus the parent/child container.
+$bindcode $mod+a focus parent
+
+# Focus between floating and split containers.
+$bindcode $mod+Shift+Tab focus mode_toggle
+
+# Focus urgent window.
+$bindcode $mod+u [urgent=latest] focus
+
+# Resize floating windows with modifider + mouse.
+floating_modifier $mod
+
+# Toggle between last used workspaces.
+$bindcode $mod+Tab workspace back_and_forth
+
+# Switch to workspace.
+$bindcode $mod+1 workspace $www
+$bindcode $mod+2 workspace $code
+$bindcode $mod+3 workspace $cmd
+$bindcode $mod+4 workspace $chat
+$bindcode $mod+5 workspace $media
+$bindcode $mod+6 workspace $games
+$bindcode $mod+7 workspace $misc
+
+# Move focused window to workspace.
+$bindcode $mod+Shift+1 move container to workspace $www
+$bindcode $mod+Shift+2 move container to workspace $code
+$bindcode $mod+Shift+3 move container to workspace $cmd
+$bindcode $mod+Shift+4 move container to workspace $chat
+$bindcode $mod+Shift+5 move container to workspace $media
+$bindcode $mod+Shift+6 move container to workspace $games
+$bindcode $mod+Shift+7 move container to workspace $misc
+
+# Window manager.
+$bindcode $mod+q            kill
+$bindcode $mod+Shift+c      reload
+$bindcode $mod+Shift+r      restart
+$bindcode $mod+Shift+Delete exec $locker
+
+# Volume keys.
+bindsym             XF86AudioRaiseVolume exec $mixer --change-volume +5
+bindsym             XF86AudioLowerVolume exec $mixer --change-volume -5
+bindsym --no-repeat XF86AudioMute        exec $mixer --toggle-mute
+
+# Media keys.
+bindsym --no-repeat $mod+Ctrl+Up    exec $player stop
+bindsym --no-repeat $mod+Ctrl+Down  exec $player play-pause
+bindsym --no-repeat $mod+Ctrl+Left  exec $player previous
+bindsym --no-repeat $mod+Ctrl+Right exec $player next
+
+bindsym --no-repeat XF86AudioStop    exec $player stop
+bindsym --no-repeat XF86AudioPlay    exec $player play-pause
+bindsym --no-repeat XF86AudioPrev    exec $player previous
+bindsym --no-repeat XF86AudioNext    exec $player next
+bindsym --no-repeat XF86AudioRewind  exec $player position 10-
+bindsym --no-repeat XF86AudioForward exec $player position 10+
+
+bindsym XF86MonBrightnessDown exec brightnessctl set 10%-
+bindsym XF86MonBrightnessUp exec brightnessctl set +10%
+
+# Notification handling.
+$bindcode $mod+x           exec $notify close
+$bindcode $mod+Shift+x     exec $notify close-all
+$bindcode $mod+grave       exec $notify history-pop
+$bindcode $mod+Shift+grave exec $notify context
+
+# Modes.
+$bindcode $mod+r       mode $resize
+$bindcode $mod+Shift+q mode $session
+
+# ----------
+# APPEARANCE
+# ----------
+
+# Default font.
+font Iosevka 20
+exec_always swaymsg font Iosevka $(echo "14" | awk '{printf "%.0f", $0 * ENVIRON["GDK_DPI_SCALE"]}')
+
+# Wallpaper.
+output * bg ~/.config/sway/default-bg fill
+
+# Borders and gaps.
+default_border          pixel 3
+default_floating_border pixel 3
+hide_edge_borders --i3  smart
+gaps                    inner 10
+smart_gaps              on
+
+# Color names.
+set $background  #282828
+set $foreground  #d8d8d8
+set $focused     #2d2d2d
+set $unfocused   #585858
+set $urgent      #ab4642
+
+# Window manager colors.
+# Class                 Border      Background  Text        Indicator
+client.focused          $background $background $foreground $focused
+client.focused_inactive $background $background $unfocused  $focused
+client.unfocused        $background $background $unfocused  $background
+client.urgent           $urgent     $urgent     $background $urgent
+client.background                   $background
+
+# ---------------
+# MODES & MODULES
+# ---------------
+
+mode $resize {
+    # These bindings trigger as soon as you enter the resize mode.
+    bindsym k resize grow   up   10 px or 10 ppt
+    bindsym j resize shrink up   10 px or 10 ppt
+    bindsym h resize grow   left 10 px or 10 ppt
+    bindsym l resize shrink left 10 px or 10 ppt
+
+    # Same bindings, but for the arrow keys
+    bindsym Up    resize grow   up   10 px or 10 ppt
+    bindsym Down  resize shrink up   10 px or 10 ppt
+    bindsym Left  resize grow   left 10 px or 10 ppt
+    bindsym Right resize shrink left 10 px or 10 ppt
+
+    # Back to normal mode: Enter or Escape
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+
+mode $session {
+    bindsym s exec systemctl suspend, mode "default"
+    bindsym l exec swaymsg exit, mode "default"
+    bindsym r exec systemctl reboot, mode "default"
+    bindsym p exec systemctl poweroff -i, mode "default"
+
+    # Back to normal mode: Enter or Escape
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+
+bar {
+    swaybar_command waybar
+}
+
+# ---------------
+# MISC & INCLUDES
+# ---------------
+
+include ~/.config/sway/config.d/*

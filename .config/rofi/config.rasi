@@ -1,23 +1,12 @@
 configuration {
-	width: -120;
-	lines: 10;
-	columns: 1;
-	font: "Iosevka Term SS02 12";
-	bw: 0;
-	location: 0;
-	padding: 0;
-	terminal: "i3-sensible-terminal";
-	sidebar-mode: false;
-	eh: 1;
-	matching: "fuzzy";
-	line-margin: 0;
-	line-padding: 10;
-	separator-style: "none";
-	hide-scrollbar: true;
+	dpi: 1;
+	font: "Iosevka 12";
 	fullscreen: false;
+	hide-scrollbar: true;
+	lines: 10;
+	matching: "fuzzy";
+	separator-style: "none";
+	sidebar-mode: false;
+	terminal: "alacritty";
 	theme: "default";
-	color-normal: "#282828, #d8d8d8, #282828, #ab4642, #282828";
-	color-urgent: "#282828, #d8d8d8, #282828, #ab4642, #282828";
-	color-active: "#282828, #d8d8d8, #282828, #ab4642, #282828";
-	color-window: "#282828, #282828";
 }

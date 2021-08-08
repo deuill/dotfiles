@@ -1,0 +1,2 @@
+# Apply defaults for dconf.
+exec cat ~/.config/dconf/user-defaults | dconf load /

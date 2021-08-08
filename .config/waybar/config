@@ -1,0 +1,95 @@
+{
+    "layer": "top",
+    "height": 32,
+    "modules-left": ["sway/window", "custom/mpris", "sway/mode"],
+    "modules-center": ["sway/workspaces"],
+    "modules-right": ["pulseaudio", "network", "battery", "cpu", "memory", "temperature", "sway/language", "clock", "tray"],
+    "battery": {
+        "interval": 60,
+        "states": {
+            "warning": 30,
+            "critical": 15
+        },
+        "format": "<span color='#585858'>bat</span> {capacity}%",
+        "format-icons": ["", "", "", "", ""],
+        "max-length": 25
+    },
+    "clock": {
+        "format": "<span color='#585858'>time</span> {:%H:%M}",
+        "format-alt": "<span color='#585858'>date</span> {:%A, %d %B %H:%M}",
+        "tooltip-format": "    <b>{:%d %B %Y}</b>\n{calendar}"
+    },
+    "cpu": {
+        "interval": 10,
+        "format": "<span color='#585858'>cpu</span> {usage}%",
+        "max-length": 10,
+        "on-click": "alacritty -e htop"
+    },
+    "custom/mpris": {
+        "format": "{icon} {}",
+        "return-type": "json",
+        "format-icons": {
+            "playing": "<span color='#585858'>play</span>",
+            "paused": "<span color='#585858'>paus</span>",
+            "stopped": "<span color='#585858'>stop</span>",
+        },
+        "max-length": 60,
+        "exec": "playerctl --follow metadata --format '{\"text\": \"{{artist}} - {{title}}\", \"tooltip\": \"{{artist}} - {{album}} - {{title}} ({{playerName}})\", \"alt\": \"{{lc(status)}}\", \"class\": \"{{lc(status)}}\"}'",
+        "smooth-scrolling-threshold": 20,
+        "on-click": "playerctl play-pause",
+        "on-click-right": "cantata",
+        "on-scroll-up": "playerctl previous",
+        "on-scroll-down": "playerctl next"
+    },
+    "memory": {
+        "interval": 30,
+        "format": "<span color='#585858'>mem</span> {}%",
+        "on-click": "alacritty -e htop"
+    },
+    "network": {
+        "format-wifi": "<span color='#585858'>wifi</span> {essid}",
+        "format-ethernet": "<span color='#585858'>net</span> {ifname}",
+        "format-disconnected": "",
+        "tooltip-format-wifi": "{essid} ({signalStrength}%)",
+        "tooltip-format-ethernet": "{ifname}",
+        "tooltip-format-disconnected": "Disconnected",
+        "max-length": 50
+    },
+    "pulseaudio": {
+        "format": "<span color='#585858'>vol</span> {volume}%",
+        "format-bluetooth": "<span color='#585858'>vol </span> {volume}%",
+        "format-muted": "<span color='#585858'>vol</span> <span color='#ab4642'>{volume}%</span>",
+        "tooltip-format": "{desc}",
+        "format-icons": {
+            "default": ["", "", "", ""],
+            "headphone": ""
+        },
+        "scroll-step": 1,
+        "on-click": "alacritty -e pulsemixer"
+    },
+    "sway/language": {
+        "format": "<span color='#585858'>key</span> {}",
+        "max-length": 50,
+        "tooltip": false,
+        "on-click": "swaymsg input 'type:keyboard' xkb_switch_layout next"
+    },
+    "sway/workspaces": {
+        "format": "{name}",
+        "smooth-scrolling-threshold": 5
+    },
+    "sway/window": {
+        "format": "",
+        "on-click": "wofi --conf ~/.config/wofi/config.drun",
+        "align": 0,
+        "max-length": 50
+    },
+    "temperature": {
+        "thermal-zone": 1,
+        "format": "<span color='#585858'>temp</span> {temperatureC}°C",
+        "tooltip": false
+    },
+    "tray": {
+        "icon-size": 32,
+        "spacing": 15
+    }
+}
