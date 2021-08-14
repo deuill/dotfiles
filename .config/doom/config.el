@@ -1,112 +1,10 @@
-;;; .doom.d/config.el -*- lexical-binding: t; -*-
+;;; config.el -*- lexical-binding: t; -*-
 
 ;;;
-;;; Custom functions.
+;;; Includes and required libraries.
 ;;;
 
-(defun +custom/alternate-buffer-in-persp (&optional window)
-  "Switch back and forth between current and last buffer in the current window."
-  (interactive)
-  (cl-destructuring-bind (buf start pos)
-    (let ((buffer-list (persp-buffer-list))
-          (my-buffer (window-buffer window)))
-      (seq-find (lambda (it)
-                  (and (not (eq (car it) my-buffer))
-                        (member (car it) buffer-list)))
-                (window-prev-buffers)
-                (list nil nil nil)))
-    (if (not buf)
-        (message "Last buffer not found.")
-      (set-window-buffer-start-and-point window buf start pos))))
-
-(defvar +custom--killed-buffer-list nil
-  "List of recently killed buffers.")
-
-(defun +custom--add-buffer-to-killed-list-h ()
-  "If buffer is associated with a file name, add that file
-to the `killed-buffer-list' when killing the buffer."
-  (when buffer-file-name
-    (push buffer-file-name +custom--killed-buffer-list)))
-
-(defun +custom/font-scale (size)
-  "Scale font of given SIZE by the default font scale in the environment."
-  (let ((scaled (round (* size (string-to-number (getenv "GDK_DPI_SCALE"))))))
-    (if (floatp size) (float scaled) scaled)))
-
-(defun +custom/reopen-killed-buffer ()
-  "Reopen the most recently killed file buffer, if one exists."
-  (interactive)
-  (when +custom--killed-buffer-list
-    (find-file (pop +custom--killed-buffer-list))))
-
-(defun +custom/yank-buffer ()
-  "Copy entire buffer to the kill ring"
-  (interactive)
-  (clipboard-kill-ring-save (point-min) (point-max)))
-
-(defun +custom/paste-buffer ()
-  "Copy clipboard and replace buffer"
-  (interactive)
-  (delete-region (point-min) (point-max))
-  (clipboard-yank)
-  (deactivate-mark))
-
-(defun +custom/safe-revert-buffer ()
-  "Prompt before reverting the file."
-  (interactive)
-  (revert-buffer nil nil))
-
-(defun +custom/query-replace-buffer ()
-  "Search and replace literal string in buffer."
-  (interactive)
-  (let ((orig-point (point)))
-    (save-excursion
-      (goto-char (point-min))
-      (call-interactively 'query-replace))
-    (goto-char orig-point)))
-
-(defun +custom/copy-this-file (new-path &optional force-p)
-  "Copy current buffer's file to NEW-PATH, switching to the file immediately."
-  (interactive
-   (list (read-file-name "Copy file to: ")
-         current-prefix-arg))
-  (doom/copy-this-file new-path force-p)
-  (find-file new-path))
-
-(defvar +sql--startable-product-list nil
-  "List of start-able SQL products.")
-
-(defvar +sql--highlightable-product-list nil
-  "List of highlight-able SQL products.")
-
-(defun +sql--populate-product-list ()
-  "Update list of SQL products."
-  (setq +sql--highlightable-product-list sql-product-alist
-        +sql--startable-product-list
-          (cl-remove-if-not (lambda (product) (sql-get-product-feature (car product) :sqli-program)) sql-product-alist)))
-
-(defun +sql--get-product-names (products)
-  "Get alist of SQL product names and symbols."
-  (mapcar
-   (lambda (product)
-     (cons (sql-get-product-feature (car product) :name) (car product)))
-   products))
-
-(defun +sql/set-product ()
-  "Set dialect-specific highlighting for buffer"
-  (interactive)
-  (cond ((featurep! :completion ivy)
-         (ivy-read "SQL products: "
-                   (+sql--get-product-names +sql--startable-product-list)
-                   :require-match t
-                   :action #'(lambda (product) (sql-set-product (cdr product)))
-                   :caller '+sql/open-repl))))
-
-(defun +sql/start ()
-  "Set SQL dialect-specific highlighting and start inferior SQLi process."
-  (interactive)
-  (+sql/set-product)
-  (sql-product-interactive))
+(load! "functions")
 
 ;;;
 ;;; UI configuration.
@@ -123,8 +21,8 @@ to the `killed-buffer-list' when killing the buffer."
   ;; Font definitions.
   doom-font                (font-spec :family "Iosevka" :size (+custom/font-scale 18) :weight 'light)
   doom-big-font            (font-spec :family "Iosevka" :size (+custom/font-scale 22) :weight 'light)
-  doom-variable-pitch-font (font-spec :family "IBM Plex Sans"  :weight 'light)
-  doom-serif-font          (font-spec :family "IBM Plex Serif" :weight 'light)
+  doom-variable-pitch-font (font-spec :family "IBM Plex Sans" :size (+custom/font-scale 16) :weight 'light)
+  doom-serif-font          (font-spec :family "IBM Plex Serif" :size (+custom/font-scale 16) :weight 'light)
 
   ;; Column used as limit for various modes.
   fill-column 100
@@ -532,24 +430,24 @@ to the `killed-buffer-list' when killing the buffer."
 
       (:prefix-map ("p" . "project")
         (:when (featurep! :ui workspaces)
-          :desc "Switch to last project"     "TAB" #'+workspace/other
-          :desc "Switch to next project"     "]"   #'+workspace/switch-right
-          :desc "Switch to previous project" "["   #'+workspace/switch-left
-          :desc "Switch to 1st project"      "1"   #'+workspace/switch-to-0
-          :desc "Switch to 2nd project"      "2"   #'+workspace/switch-to-1
-          :desc "Switch to 3rd project"      "3"   #'+workspace/switch-to-2
-          :desc "Switch to 4th project"      "4"   #'+workspace/switch-to-3
-          :desc "Switch to 5th project"      "5"   #'+workspace/switch-to-4
-          :desc "Switch to 6th project"      "6"   #'+workspace/switch-to-5
-          :desc "Switch to 7th project"      "7"   #'+workspace/switch-to-6
-          :desc "Switch to 8th project"      "8"   #'+workspace/switch-to-7
-          :desc "Switch to 9th project"      "9"   #'+workspace/switch-to-8)
+          :desc "Switch to last project"       "TAB" #'+workspace/other
+          :desc "Switch to next project"       "]"   #'+workspace/switch-right
+          :desc "Switch to previous project"   "["   #'+workspace/switch-left
+          :desc "Switch to 1st project"        "1"   #'+workspace/switch-to-0
+          :desc "Switch to 2nd project"        "2"   #'+workspace/switch-to-1
+          :desc "Switch to 3rd project"        "3"   #'+workspace/switch-to-2
+          :desc "Switch to 4th project"        "4"   #'+workspace/switch-to-3
+          :desc "Switch to 5th project"        "5"   #'+workspace/switch-to-4
+          :desc "Switch to 6th project"        "6"   #'+workspace/switch-to-5
+          :desc "Switch to 7th project"        "7"   #'+workspace/switch-to-6
+          :desc "Switch to 8th project"        "8"   #'+workspace/switch-to-7
+          :desc "Switch to 9th project"        "9"   #'+workspace/switch-to-8)
                                              "." nil
                                              ">" nil
                                              "!" nil
-          :desc "Open shell in project root" ";"
-          (cond ((featurep! :term vterm)         #'+vterm/here)
-                (t                               nil))
+        :desc "Open shell in project root"   ";" (cond ((featurep! :term vterm) #'+vterm/here) (t nil))
+        :desc "Run cmd in project root"      "!" #'projectile-run-shell-command-in-root
+        :desc "Async cmd in project root"    "&" #'projectile-run-async-shell-command-in-root
         :desc "Add new project"              "a" #'projectile-add-known-project
                                              "b" nil
                                              "c" nil

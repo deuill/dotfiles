@@ -2,7 +2,7 @@
 
 (doom! :completion
        company
-       (ivy +prescient +fuzzy +icons)
+       (vertico +icons)
 
        :checkers
        (syntax +childframe)
