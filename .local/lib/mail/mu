@@ -3,7 +3,7 @@
 # Mu integration with mail-sync.
 
 function fetch-pre-hook() {
-	return true
+	return 0
 }
 
 function fetch-post-hook() {
@@ -12,5 +12,5 @@ function fetch-post-hook() {
 }
 
 function account-setup-post-hook() {
-	return true
+	return 0
 }

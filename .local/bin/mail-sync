@@ -17,6 +17,11 @@ function fetch() {
 	export USERNAME="$2"
 	export HOSTNAME="$3"
 
+	if [[ -z "${PASSWORD:-}" && -n "${PASSWORD_COMMAND}" ]]
+	then
+		export PASSWORD=$(bash -c "${PASSWORD_COMMAND}")
+	fi
+
 	# Synchronize and index mail from IMAP server.
 	fetch-pre-hook "${USERNAME}"
 	mbsync -c <(envsubst < "${MBSYNC_CONFDIR}/${type}.conf") "${USERNAME}"
@@ -31,6 +36,11 @@ function send() {
 	export USERNAME="$2"
 	export HOSTNAME="$3"
 
+	if [[ -z "${PASSWORD:-}" && -n "${PASSWORD_COMMAND}" ]]
+	then
+		export PASSWORD=$(bash -c "${PASSWORD_COMMAND}")
+	fi
+
 	# Add message to the queue.
 	local queuedir="${MAIL_DATADIR}/${USERNAME}/.queue"
 	local basename=$(date +%Y-%m-%d-%H.%M.%S)
@@ -38,39 +48,31 @@ function send() {
 	mkdir -p "${queuedir}"
 	cat > "${queuedir}/${basename}.mail"
 
-	# Abort process if we're not online.
+	# Abort process if we cannot contact mail server.
 	${NETWORK_CONNECTED} || return 0
 
 	# Send all queued email.
 	for mail in "${queuedir}"/*.mail
 	do
 		echo "Sending '${mail}..."
-
-		msmtp -C <(envsubst < "${MSMTP_CONFDIR}/${type}.conf") -t < "${mail}"
-		[[ $? -ne 0 ]] && return 1
-
+		msmtp -C <(envsubst < "${MSMTP_CONFDIR}/${type}.conf") -t < "${mail}" || return 1
 		rm "${mail}"
 	done
 }
 
-# Setup account configuration for `notmuch`, `mbsync`, `msmtp` etc.
+# Setup account configuration for notmuch, mbsync, msmtp etc.
 function account-setup() {
 	local account="$1"
 
-	# Create or load user configuration.
+	# Create or load default user configuration.
 	if [[ ! -e "${MAIL_CONFDIR}/account.d/${account}.conf" ]]
 	then
 		mkdir -p "${MAIL_CONFDIR}/account.d"
 		cp "${MAIL_CONFDIR}/account.conf.template" "${MAIL_CONFDIR}/account.d/${account}.conf"
-
-		read -r -p "Press enter to edit user configuration for '${account}': "
-		${EDITOR:=vi} "${MAIL_CONFDIR}/account.d/${account}.conf"
-
-		echo "Please enter password for '${account}': "
-		secret-tool store --label "mail-sync ${account}" mail.sync.user "${account}"
-	else
-		echo "Using existing configuration file for '${account}'..."
 	fi
+
+	read -r -p "Press enter to edit user configuration for '${account}': "
+	${EDITOR:=vi} "${MAIL_CONFDIR}/account.d/${account}.conf"
 
 	load-account-config "${account}" || return 1
 	account-setup-post-hook "${account}"
@@ -82,10 +84,14 @@ function account-setup() {
 function account-exists() {
 	local account="$1"
 
-	if [[ ! -e "${MAIL_CONFDIR}/account.d/${account}.conf" ]]
+	if [[ -z "${account}" ]]
+	then
+		echo "No account name provided, aborting."
+		return 1
+	elif [[ ! -e "${MAIL_CONFDIR}/account.d/${account}.conf" ]]
 	then
 		echo "Configuration for account '${account}' not found."
-		echo "Did you intend to run 'add' instead?"
+		echo "Did you intend to run 'setup' instead?"
 		return 1
 	fi
 }
@@ -155,16 +161,6 @@ function main() {
 	local action="${1:-}"
 	local account="${2:-}"
 
-	# Check for valid command name.
-	[[ -z "${action}" ]] && usage
-
-	# Check for account name parameter.
-	if [[ -z "${account}" ]]
-	then
-		echo "Error: Please specify an account name to fetch from."
-		exit 1
-	fi
-
 	load-global-config && lock
 
 	case "${action}" in
@@ -177,6 +173,12 @@ function main() {
 			send "${TYPE}" "${USERNAME}" "${SMTP_HOSTNAME}"
 			;;
 		setup)
+			if [[ -z "${account}" ]]
+			then
+				echo "Error: Please specify an account name to setup."
+				exit 1
+			fi
+
 			account-setup "${account}"
 			;;
 		*)

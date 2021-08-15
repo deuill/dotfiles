@@ -8,6 +8,10 @@ BACKEND=""
 FULLNAME=""
 USERNAME=""
 
+# Static password or command-line used for fetching password. Use one.
+# PASSWORD=""
+PASSWORD_COMMAND=""
+
 # IMAP and SMTP server hostnames.
 # Gmail accounts generally do not need to set these.
 IMAP_HOSTNAME=""

@@ -163,6 +163,7 @@ function fetch-post-hook() {
 	${NOTMUCH} tag -"notified" tag:"${account}" AND tag:"inbox" AND tag:"not-notified"
 }
 
+# Set up configuration and initialize database for Notmuch.
 function account-setup-post-hook() {
 	if [[ ! -e "${NOTMUCH_CONFDIR}/config" ]]
 	then
@@ -174,5 +175,5 @@ function account-setup-post-hook() {
 		echo "${tmp}" > "${NOTMUCH_CONFDIR}/config"
 	fi
 
-	${NOTMUCH} new &> /dev/null
+	${NOTMUCH} new
 }
