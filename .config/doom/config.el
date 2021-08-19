@@ -50,7 +50,7 @@
    '(hl-line              ((t (:background "#323232"))))
    '(mode-line            ((t (:background "#282828"))))
    '(vertical-border      ((t (:background "#282828" :foreground "#282828"))))
-   '(solaire-default-face ((t (:background "#2d2d2d"))))
+   '(solaire-default-face ((t (:background "#282828"))))
    '(solaire-hl-line-face ((t (:background "#323232"))))))
 
 ;;;
