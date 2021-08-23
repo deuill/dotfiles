@@ -254,6 +254,9 @@
 ;;; less accessible, e.g. by using capital keys.
 ;;;
 
+(map! :desc "Go to previous buffer" :n "<S-up>"   #'evil-prev-buffer
+      :desc "Go to next buffer"     :n "<S-down>" #'evil-next-buffer)
+
 (map! :leader
       :desc "M-x"             ":"     #'execute-extended-command
       :desc "Open shell here" ";"
