@@ -41,7 +41,11 @@
 
   ;; Set up mode-line.
   doom-modeline-persp-name t
-  doom-modeline-vcs-max-length 30)
+  doom-modeline-vcs-max-length 30
+
+  ;; Add horizontal margin to windows.
+  left-margin-width 1
+  right-margin-width 1)
 
 ;; Set colors consistent with Base16-Eighties theme.
 (add-hook! 'doom-load-theme-hook
