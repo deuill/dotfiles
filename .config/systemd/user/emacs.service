@@ -1,7 +1,7 @@
 [Unit]
 Description=Emacs text editor
 Documentation=info:emacs man:emacs(1) https://gnu.org/software/emacs/
-Wants=graphical-session-pre.target
+Wants=graphical-session.target
 After=graphical-session.target
 
 [Service]
