@@ -1,11 +1,8 @@
 configuration {
 	dpi: 1;
 	font: "Iosevka 12";
-	fullscreen: false;
-	hide-scrollbar: true;
-	lines: 10;
-	matching: "fuzzy";
-	separator-style: "none";
+	matching: "prefix";
+	modi: "run,calc";
 	sidebar-mode: false;
 	terminal: "alacritty";
 	theme: "default";

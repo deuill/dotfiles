@@ -81,7 +81,7 @@ set $mixer     pulsemixer --max-volume 100
 $bindcode $mod+Return  exec $terminal
 $bindcode $mod+d       exec $launcher -show drun -show-icons
 $bindcode $mod+Shift+d exec $launcher -show run
-$bindcode $mod+s       exec $launcher -show file-browser
+$bindcode $mod+s       exec $launcher -show filebrowser -show-icons
 
 # Change focus
 $bindcode $mod+h     focus left

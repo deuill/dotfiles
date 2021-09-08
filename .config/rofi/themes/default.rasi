@@ -125,6 +125,7 @@ listview {
     border-color: var(separatorcolor);
     border:       0px;
     fixed-height: 0;
+    lines:        10;
     padding:      2px 0px 0px;
     scrollbar:    false;
     spacing:      0px;
