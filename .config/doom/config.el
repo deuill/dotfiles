@@ -19,9 +19,9 @@
   doom-theme 'doom-monokai-pro
 
   ;; Font definitions.
-  doom-font                (font-spec :family "Iosevka" :size (+custom/font-scale 18) :weight 'light)
-  doom-big-font            (font-spec :family "Iosevka" :size (+custom/font-scale 22) :weight 'light)
-  doom-variable-pitch-font (font-spec :family "IBM Plex Sans" :size (+custom/font-scale 16) :weight 'light)
+  doom-font                (font-spec :family "Iosevka"        :size (+custom/font-scale 18) :weight 'light)
+  doom-big-font            (font-spec :family "Iosevka"        :size (+custom/font-scale 22) :weight 'light)
+  doom-variable-pitch-font (font-spec :family "IBM Plex Sans"  :size (+custom/font-scale 16) :weight 'light)
   doom-serif-font          (font-spec :family "IBM Plex Serif" :size (+custom/font-scale 16) :weight 'light)
 
   ;; Column used as limit for various modes.
@@ -141,6 +141,9 @@
 
 (after! projectile
   (setq projectile-globally-ignored-directories (append (default-value 'projectile-globally-ignored-directories) '("vendor"))))
+
+(after! sh-script
+  (setq sh-basic-offset 4))
 
 (after! sql
   (setq sql-postgres-login-params (append (default-value 'sql-postgres-login-params) '(port :default 5432)))
