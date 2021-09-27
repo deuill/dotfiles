@@ -188,6 +188,9 @@ bindsym --no-repeat XF86AudioForward exec $player position 10+
 bindsym XF86MonBrightnessDown exec brightnessctl set 10%-
 bindsym XF86MonBrightnessUp exec brightnessctl set +10%
 
+$bindcode $mod+p       exec grim - | wl-copy --type image/png && notify-send "Screenshot Copied"
+$bindcode $mod+Shift+p exec grim -g $(slurp -d) - | wl-copy --type image/png && notify-send "Screenshot Copied"
+
 # Notification handling.
 $bindcode $mod+x           exec $notify close
 $bindcode $mod+Shift+x     exec $notify close-all
@@ -204,7 +207,7 @@ $bindcode $mod+Shift+q mode $session
 
 # Default font.
 font Iosevka 20
-exec_always swaymsg font Iosevka $(echo "14" | awk '{printf "%.0f", $0 * ENVIRON["GDK_DPI_SCALE"]}')
+exec_always swaymsg font Iosevka $(echo 14 | awk '{printf "%.0f", $0 * ENVIRON["GDK_DPI_SCALE"]}')
 
 # Wallpaper.
 output * bg ~/.config/sway/default-bg fill

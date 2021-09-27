@@ -47,8 +47,8 @@
         "on-click": "alacritty -e htop"
     },
     "network": {
+        "format": "<span color='#585858'>net</span> {ifname}",
         "format-wifi": "<span color='#585858'>wifi</span> {essid}",
-        "format-ethernet": "<span color='#585858'>net</span> {ifname}",
         "format-disconnected": "",
         "tooltip-format-wifi": "{essid} ({signalStrength}%)",
         "tooltip-format-ethernet": "{ifname}",
@@ -57,7 +57,7 @@
     },
     "pulseaudio": {
         "format": "<span color='#585858'>vol</span> {volume}%",
-        "format-bluetooth": "<span color='#585858'>vol </span> {volume}%",
+        "format-bluetooth": "<span color='#585858'>btvol</span> {volume}%",
         "format-muted": "<span color='#585858'>vol</span> <span color='#ab4642'>{volume}%</span>",
         "tooltip-format": "{desc}",
         "format-icons": {
@@ -79,7 +79,7 @@
     },
     "sway/window": {
         "format": "",
-        "on-click": "wofi --conf ~/.config/wofi/config.drun",
+        "on-click": "rofi -show drun -show-icons",
         "align": 0,
         "max-length": 50
     },
