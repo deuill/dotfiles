@@ -33,6 +33,7 @@
        word-wrap
 
        :emacs
+       (dired +ranger +icons)
        electric
        ibuffer
        (undo +tree)

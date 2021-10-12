@@ -1,0 +1,5 @@
+#!/bin/sh
+# This script overrides the choice of 'pinentry', and is used by the '/usr/bin/pinentry'
+# program by default.
+
+exec /usr/bin/pinentry-gnome3 "$@"

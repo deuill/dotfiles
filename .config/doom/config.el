@@ -146,6 +146,10 @@
 (after! projectile
   (setq projectile-globally-ignored-directories (append (default-value 'projectile-globally-ignored-directories) '("vendor"))))
 
+(after! ranger
+  (setq ranger-cleanup-eagerly t
+        ranger-hide-cursor t))
+
 (after! sh-script
   (setq sh-basic-offset 4))
 
