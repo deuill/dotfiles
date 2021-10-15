@@ -69,6 +69,22 @@ to the `killed-buffer-list' when killing the buffer."
   (doom/copy-this-file new-path force-p)
   (find-file new-path))
 
+(defun custom--with-standalone-buffer (mode-or-file)
+  "Create and start MODE-OR-FILE in standalone buffer."
+  (setq-default mode-line-format nil
+                left-margin-width 0
+                right-margin-width 0
+                large-file-warning-threshold nil
+                confirm-kill-emacs nil
+                confirm-kill-processes nil)
+  (if (not (file-exists-p mode-or-file))
+      (progn (switch-to-buffer (generate-new-buffer (concat "*standalone-" mode-or-file "*")))
+             (funcall (intern mode-or-file)))
+    (find-file mode-or-file))
+  (persp-mode -1)
+  (solaire-mode -1)
+  (add-hook! 'kill-buffer-hook :append :local #'save-buffers-kill-terminal))
+
 (defvar +sql--startable-product-list nil
   "List of start-able SQL products.")
 

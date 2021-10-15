@@ -5,6 +5,7 @@
 ;;;
 
 (load! "functions")
+(after! doom-cli (load! "cli"))
 
 ;;;
 ;;; UI configuration.
@@ -75,6 +76,9 @@
   ;; Transpose lines with J/K when in visual mode.
   (define-key evil-visual-state-map "J" (concat ":m '>+1" (kbd "RET") "gv=gv"))
   (define-key evil-visual-state-map "K" (concat ":m '<-2" (kbd "RET") "gv=gv")))
+
+(after! eshell
+  (setq eshell-banner-message ""))
 
 (after! eww
   (set-popup-rule! "^\\*eww\\*" :side 'right :select t :quit 'current :slot 0 :width 0.5))
