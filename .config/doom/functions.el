@@ -69,7 +69,7 @@ to the `killed-buffer-list' when killing the buffer."
   (doom/copy-this-file new-path force-p)
   (find-file new-path))
 
-(defun custom--with-standalone-buffer (mode-or-file)
+(defun custom--with-standalone-buffer (mode-or-file &rest args)
   "Create and start MODE-OR-FILE in standalone buffer."
   (setq-default mode-line-format nil
                 left-margin-width 0
@@ -79,7 +79,7 @@ to the `killed-buffer-list' when killing the buffer."
                 confirm-kill-processes nil)
   (if (not (file-exists-p mode-or-file))
       (progn (switch-to-buffer (generate-new-buffer (concat "*standalone-" mode-or-file "*")))
-             (funcall (intern mode-or-file)))
+             (apply (intern mode-or-file) args))
     (find-file mode-or-file))
   (persp-mode -1)
   (solaire-mode -1)

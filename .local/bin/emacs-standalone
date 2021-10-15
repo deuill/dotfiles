@@ -2,4 +2,4 @@
 #
 # A shortcut for running a standalone buffer in the default Emacs server instance.
 
-exec /usr/bin/emacsclient --create-frame --eval "(custom--with-standalone-buffer \"$*\")"
+exec /usr/bin/emacsclient --create-frame --eval "(custom--with-standalone-buffer $(printf ' "%s"' "$@"))"
