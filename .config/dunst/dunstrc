@@ -1,10 +1,11 @@
 [global]
-
 # Display settings.
+monitor = 0              # Which monitor should the notifications be displayed on.
+follow  = mouse          # Display notification on focused monitor.
 
-monitor  = 0              # Which monitor should the notifications be displayed on.
-follow   = mouse          # Display notification on focused monitor.
-geometry = "600x50-20-20" # The geometry of the window: [{width}]x{height}[+/-{x}+/-{y}]
+width  = (300, 600)   # The minimum and maximum width of any notification.
+origin = bottom-right # The screen location from which notifications appear.
+offset = 20x20        # The horizontal and vertical edge offset for notifications.
 
 progress_bar             = true # Turn on the progess bar.
 progress_bar_height      = 20   # Set the progress bar height.
@@ -12,9 +13,10 @@ progress_bar_frame_width = 1    # Set the frame width of the progress bar.
 progress_bar_min_width   = 600  # Set the minimum width for the progress bar.
 progress_bar_max_width   = 600  # Set the maximum width for the progress bar.
 
-indicate_hidden = yes # Show how many messages are currently hidden (because of geometry).
-shrink          = no  # Shrink window if it's smaller than the width.
-transparency    = 15  # The transparency of the window. Range: [0; 100].
+notification_limit = 5   # Show a maximum of 5 notifications on-screen at the same time.
+indicate_hidden    = yes # Show how many messages are currently hidden (because of geometry).
+shrink             = no  # Shrink window if it's smaller than the width.
+transparency       = 15  # The transparency of the window. Range: [0; 100].
 
 notification_height = 0  # The height of the entire notification.
 separator_height    = 2  # Draw a line of "separator_height" pixel height between two notifications.
@@ -31,9 +33,7 @@ sort           = yes # Sort messages by urgency.
 idle_threshold = 120 # Don't remove messages, if the user is idle # for longer than idle_threshold seconds.
 
 # Text settings.
-
 font = Iosevka 18 # The font name and size.
-
 line_height = 1 # The spacing between lines.
 
 markup = full            # Pango markup in notifications. Choice of 'full', 'strip', and 'no'.
@@ -52,31 +52,25 @@ hide_duplicate_count = true # Hide the count of stacked notifications with the s
 show_indicators      = no   # Display indicators for URLs (U) and actions (A).
 
 # Icon settings.
-
 icon_path = /usr/share/icons/Adwaita/scalable/status/:/usr/share/icons/Adwaita/scalable/devices/
-
 icon_position = left # Icon alignment. Choice of 'left', 'right', 'off'.
-min_icon_size = 32    # Scale small icons up to this size, set to 0 to disable.
+min_icon_size = 32   # Scale small icons up to this size, set to 0 to disable.
 max_icon_size = 64   # Scale larger icons down to this size, set to 0 to disable.
 
 # History settings.
-
 sticky_history = yes # Whether notifications from history should be sticky.
 history_length = 20  # Maximum amount of notifications kept in history.
 
 # Misc/Advanced settings.
-
 dmenu   = /usr/bin/wofi --dmenu -p dunst:   # Path to dmenu-compatible launcher.
 browser = /usr/bin/qutebrowser --target tab # Browser for opening URLs in context menu.
 
 # Interaction settings.
-
 mouse_left_click   = close_current
 mouse_middle_click = do_action, close_current
 mouse_right_click  = close_all
 
 # Notification-specific settings.
-
 [urgency_low]
 highlight  = "#d8d8d8"
 foreground = "#d8d8d8"
