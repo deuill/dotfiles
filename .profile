@@ -5,9 +5,7 @@ for src in "$HOME"/.config/profile.d/*; do . "$src"; done
 systemctl --user import-environment PATH
 
 # Set system-wide environment from systemd environment.
-set -a
-for conf in "$HOME"/.config/environment.d/*.conf; do . "$conf"; done
-set +a
+for conf in "$HOME"/.config/environment.d/*.conf; do set -a; . "$conf"; set +a; done
 
 # Start Sway if no existing session has started.
 if test -z "$DISPLAY" && test "$XDG_VTNR" -eq 1
