@@ -3,7 +3,7 @@
 monitor = 0              # Which monitor should the notifications be displayed on.
 follow  = mouse          # Display notification on focused monitor.
 
-width  = (300, 600)   # The minimum and maximum width of any notification.
+width  = (400, 600)   # The minimum and maximum width of any notification.
 origin = bottom-right # The screen location from which notifications appear.
 offset = 20x20        # The horizontal and vertical edge offset for notifications.
 
@@ -34,7 +34,7 @@ idle_threshold = 120 # Don't remove messages, if the user is idle # for longer t
 
 # Text settings.
 font = Iosevka 18 # The font name and size.
-line_height = 1 # The spacing between lines.
+line_height = 1   # The spacing between lines.
 
 markup = full            # Pango markup in notifications. Choice of 'full', 'strip', and 'no'.
 format = "<b>%s</b>\n%b" # Message format.

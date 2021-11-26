@@ -10,18 +10,18 @@
             "warning": 30,
             "critical": 15
         },
-        "format": "<span color='#585858'>bat</span> {capacity}%",
+        "format": "<span color='#585858' size='smaller'>bat</span> {capacity}%",
         "format-icons": ["", "", "", "", ""],
         "max-length": 25
     },
     "clock": {
-        "format": "<span color='#585858'>time</span> {:%H:%M}",
-        "format-alt": "<span color='#585858'>date</span> {:%A, %d %B %H:%M}",
+        "format": "<span color='#585858' size='smaller'>time</span> {:%H:%M}",
+        "format-alt": "<span color='#585858' size='smaller'>date</span> {:%A, %d %B %H:%M}",
         "tooltip-format": "    <b>{:%d %B %Y}</b>\n{calendar}"
     },
     "cpu": {
         "interval": 10,
-        "format": "<span color='#585858'>cpu</span> {usage}%",
+        "format": "<span color='#585858' size='smaller'>cpu</span> {usage}%",
         "max-length": 10,
         "on-click": "alacritty -e htop"
     },
@@ -29,9 +29,9 @@
         "format": "{icon} {}",
         "return-type": "json",
         "format-icons": {
-            "playing": "<span color='#585858'>play</span>",
-            "paused": "<span color='#585858'>paus</span>",
-            "stopped": "<span color='#585858'>stop</span>",
+            "playing": "<span color='#585858' size='smaller'>play</span>",
+            "paused": "<span color='#585858' size='smaller'>paus</span>",
+            "stopped": "<span color='#585858' size='smaller'>stop</span>",
         },
         "max-length": 60,
         "exec": "playerctl --follow metadata --format '{\"text\": \"{{artist}} - {{title}}\", \"tooltip\": \"{{artist}} - {{album}} - {{title}} ({{playerName}})\", \"alt\": \"{{lc(status)}}\", \"class\": \"{{lc(status)}}\"}'",
@@ -43,12 +43,12 @@
     },
     "memory": {
         "interval": 30,
-        "format": "<span color='#585858'>mem</span> {}%",
+        "format": "<span color='#585858' size='smaller'>mem</span> {}%",
         "on-click": "alacritty -e htop"
     },
     "network": {
-        "format": "<span color='#585858'>net</span> {ifname}",
-        "format-wifi": "<span color='#585858'>wifi</span> {essid}",
+        "format": "<span color='#585858' size='smaller'>net</span> {ifname}",
+        "format-wifi": "<span color='#585858' size='smaller'>wifi</span> {essid}",
         "format-disconnected": "",
         "tooltip-format-wifi": "{essid} ({signalStrength}%)",
         "tooltip-format-ethernet": "{ifname}",
@@ -56,9 +56,9 @@
         "max-length": 50
     },
     "pulseaudio": {
-        "format": "<span color='#585858'>vol</span> {volume}%",
-        "format-bluetooth": "<span color='#585858'>btvol</span> {volume}%",
-        "format-muted": "<span color='#585858'>vol</span> <span color='#ab4642'>{volume}%</span>",
+        "format": "<span color='#585858' size='smaller'>vol</span> {volume}%",
+        "format-bluetooth": "<span color='#585858' size='smaller'>btvol</span> {volume}%",
+        "format-muted": "<span color='#585858' size='smaller'>vol</span> <span color='#ab4642'>{volume}%</span>",
         "tooltip-format": "{desc}",
         "format-icons": {
             "default": ["", "", "", ""],
@@ -68,7 +68,7 @@
         "on-click": "alacritty -e pulsemixer"
     },
     "sway/language": {
-        "format": "<span color='#585858'>key</span> {}",
+        "format": "<span color='#585858' size='smaller'>key</span> {}",
         "max-length": 50,
         "tooltip": false,
         "on-click": "swaymsg input 'type:keyboard' xkb_switch_layout next"
@@ -85,7 +85,7 @@
     },
     "temperature": {
         "thermal-zone": 1,
-        "format": "<span color='#585858'>temp</span> {temperatureC}°C",
+        "format": "<span color='#585858' size='smaller'>temp</span> {temperatureC}°C",
         "tooltip": false
     },
     "tray": {

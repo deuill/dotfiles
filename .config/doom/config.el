@@ -97,8 +97,7 @@
 (after! kubernetes-overview
   (setq kubernetes-kubectl-executable "kubectl-socks")
   (load-library "kubernetes-evil")
-  (set-popup-rule! "^\\*kubernetes"            :side 'right :select t :slot 0 :width 0.5 :quit nil)
-  (set-popup-rule! "^\\*kubernetes.+popup\\*$" :side 'right :select t :slot 1 :quit 'current))
+  (set-popup-rule! "^\\*kubernetes" :ignore t))
 
 (after! kubel
   (load-library "kubel-evil")
@@ -196,8 +195,11 @@
   (evil-define-key 'normal yaml-mode-map (kbd "<tab>") 'evil-toggle-fold))
 
 ;;;
-;;; Mode-specific configuration.
+;;; Hooks and mode-specific configuration.
 ;;;
+
+(add-hook! artist-mode
+  (evil-emacs-state +1))
 
 (add-hook! (doc-mode org-mode markdown-mode)
   (setq indent-tabs-mode nil)
@@ -222,6 +224,9 @@
 (add-hook! json-mode
   (hs-minor-mode))
 
+(add-hook! 'kill-buffer-hook
+  '+custom--add-buffer-to-killed-list-h)
+
 (add-hook! 'lsp-after-initialize-hook
   (run-hooks (intern (format "%s-lsp-hook" major-mode))))
 
@@ -241,11 +246,8 @@
   (display-fill-column-indicator-mode))
 
 ;;;
-;;; Hooks
+;;; Keybindings.
 ;;;
-
-;; Store references to killed buffers.
-(add-hook 'kill-buffer-hook #'+custom--add-buffer-to-killed-list-h)
 
 ;;;
 ;;; These keybindings override default keybindings used for Doom. The

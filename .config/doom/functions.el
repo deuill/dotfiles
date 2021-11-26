@@ -83,6 +83,8 @@ to the `killed-buffer-list' when killing the buffer."
     (find-file mode-or-file))
   (persp-mode -1)
   (solaire-mode -1)
+  (evil-emacs-state +1)
+  (set-window-dedicated-p (get-buffer-window) t)
   (add-hook! 'kill-buffer-hook :append :local #'save-buffers-kill-terminal))
 
 (defvar +sql--startable-product-list nil

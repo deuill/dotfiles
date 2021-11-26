@@ -33,7 +33,7 @@
     box-shadow: none;
     color: #585858;
     text-shadow: none;
-    padding: 0.4rem 0.5rem;
+    padding: 0.4rem;
 }
 
 #workspaces button:not(.focused):hover {

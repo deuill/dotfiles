@@ -22,6 +22,8 @@ c.editor.command = ["emacsclient", "-c", "-a", "''", "{}"]
 c.qt.highdpi = True
 c.scrolling.smooth = True
 c.statusbar.widgets = ["url", "progress", "scroll"]
+c.tabs.show = "multiple"
+c.tabs.tabs_are_windows = True
 c.tabs.background = True
 c.tabs.new_position.related = "next"
 c.url.default_page = 'https://duckduckgo.com'
@@ -59,7 +61,7 @@ c.tabs.favicons.show = "pinned"
 c.tabs.indicator.width = 0
 c.tabs.padding = {"bottom": 5, "left": 5, "right": 20, "top": 5}
 c.tabs.title.format = "{current_title}"
-c.window.title_format = "qutebrowser"
+c.window.title_format = "{current_title}"
 
 # Fonts.
 c.fonts.default_family = ["Iosevka"]
