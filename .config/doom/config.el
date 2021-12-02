@@ -171,6 +171,9 @@
   (advice-add 'sql-del-product :after #'+sql--populate-product-list)
   (+sql--populate-product-list))
 
+(after! (sql lsp-sqls)
+  (setq lsp-sqls-workspace-config-path nil))
+
 (after! transient
   ;; Close transient windows with 'Escape' key.
   (define-key transient-map        (kbd "<escape>") 'transient-quit-one)
@@ -244,6 +247,9 @@
   (setq fill-column 100
         show-trailing-whitespace t)
   (display-fill-column-indicator-mode))
+
+(add-hook! sql-mode
+  (after! lsp-sqls (lsp-deferred)))
 
 ;;;
 ;;; Keybindings.
@@ -445,6 +451,27 @@
               :desc "Pull request"            "p"   #'forge-create-pullreq))))
 
       "i" nil
+      (:prefix-map ("m" . "localleader")
+       (:when (and (featurep! :tools lsp) (not (featurep! :tools lsp +eglot)))
+        (:prefix ("l" . "lsp")
+         :desc "Execute code action"                  "a"   #'lsp-execute-code-action
+         :desc "Organize imports"                     "o"   #'lsp-organize-imports
+         (:when (featurep! :completion ivy)
+          :desc "Jump to symbol in current workspace" "j"   #'lsp-ivy-workspace-symbol
+          :desc "Jump to symbol in any workspace"     "J"   #'lsp-ivy-global-workspace-symbol)
+         (:when (featurep! :completion helm)
+          :desc "Jump to symbol in current workspace" "j"   #'helm-lsp-workspace-symbol
+          :desc "Jump to symbol in any workspace"     "J"   #'helm-lsp-global-workspace-symbol)
+         (:when (featurep! :completion vertico)
+          :desc "Jump to symbol in current workspace" "j"   #'consult-lsp-symbols
+          :desc "Jump to symbol in any workspace"     "J"   (cmd!! #'consult-lsp-symbols 'all-workspaces))
+         (:when (featurep! :ui treemacs +lsp)
+          :desc "List errors"                         "X"   #'lsp-treemacs-errors-list
+          :desc "Show incoming call hierarchy"        "y"   #'lsp-treemacs-call-hierarchy
+          :desc "Show outgoing call hierarchy"        "Y"   (cmd!! #'lsp-treemacs-call-hierarchy t)
+          :desc "Show references tree"                "R"   (cmd!! #'lsp-treemacs-references t)
+          :desc "Show symbols"                        "S"   #'lsp-treemacs-symbols)
+          :desc "Rename"                              "r"   #'lsp-rename)))
       "n" nil
       "o" nil
 
