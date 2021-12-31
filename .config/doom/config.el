@@ -1,13 +1,6 @@
 ;;; config.el -*- lexical-binding: t; -*-
 
 ;;;
-;;; Includes and required libraries.
-;;;
-
-(load! "functions")
-(after! doom-cli (load! "cli"))
-
-;;;
 ;;; UI configuration.
 ;;;
 
@@ -276,6 +269,9 @@
 ;;; or session in ways that are difficult to revert, should be made
 ;;; less accessible, e.g. by using capital keys.
 ;;;
+
+(map! :desc "Jump back in position history"    "<mouse-8>" #'better-jumper-jump-backward
+      :desc "Jump forward in position history" "<mouse-9>" #'better-jumper-jump-forward)
 
 (map! :desc "Go to previous buffer" :n "<S-up>"   #'evil-prev-buffer
       :desc "Go to next buffer"     :n "<S-down>" #'evil-next-buffer)

@@ -1,4 +1,4 @@
 # Ensure systemd environment is consistent.
-exec systemctl --user import-environment DISPLAY WAYLAND_DISPLAY SWAYSOCK GDK_DPI_SCALE
-exec hash dbus-update-activation-environment 2>/dev/null && dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY SWAYSOCK GDK_DPI_SCALE
+exec systemctl --user import-environment DISPLAY WAYLAND_DISPLAY SWAYSOCK XDG_CURRENT_DESKTOP XDG_SESSION_TYPE
+exec hash dbus-update-activation-environment 2>/dev/null && dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY SWAYSOCK XDG_CURRENT_DESKTOP XDG_SESSION_TYPE
 exec systemctl --user start sway-session.target

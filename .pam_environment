@@ -1,4 +1,0 @@
-# Emulate SSH agent with GPG.
-# Requires that the `gpg-agent-ssh` socket is enabled.
-SSH_AGENT_PID DEFAULT=
-SSH_AUTH_SOCK DEFAULT="${XDG_RUNTIME_DIR}/gnupg/S.gpg-agent.ssh"

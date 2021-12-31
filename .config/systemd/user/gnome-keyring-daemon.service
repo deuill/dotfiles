@@ -1,0 +1,12 @@
+[Unit]
+Description=GNOME keyring secret store daemon
+Documentation=man:gnome-keyring-daemon(1)
+PartOf=graphical-session.target
+
+[Service]
+Type=simple
+Restart=on-failure
+ExecStart=/usr/bin/gnome-keyring-daemon --start
+
+[Install]
+WantedBy=default.target
