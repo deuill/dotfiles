@@ -1,3 +1,5 @@
 ! Default configuration for Emacs.
 Emacs*Background: #2d2d2d
-Emacs*MenuBar: 0
+Emacs*MenuBar: off
+Emacs*ToolBar: off
+Emacs*ScrollBars: off

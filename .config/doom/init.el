@@ -1,8 +1,5 @@
 ;;; .doom.d/init.el -*- lexical-binding: t; -*-
 
-(load! "custom/functions")
-(after! doom-cli (load! "custom/cli"))
-
 (doom! :completion
        company
        (vertico +icons)

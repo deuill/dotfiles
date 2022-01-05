@@ -18,11 +18,10 @@ indicate_hidden    = yes # Show how many messages are currently hidden (because 
 shrink             = no  # Shrink window if it's smaller than the width.
 transparency       = 15  # The transparency of the window. Range: [0; 100].
 
-notification_height = 0  # The height of the entire notification.
-separator_height    = 2  # Draw a line of "separator_height" pixel height between two notifications.
-padding             = 15 # Padding between text and separator.
-horizontal_padding  = 15 # Horizontal padding.
-text_icon_padding   = 0  # Padding between text and icon.
+separator_height   = 2  # Draw a line of "separator_height" pixel height between two notifications.
+padding            = 15 # Padding between text and separator.
+horizontal_padding = 15 # Horizontal padding.
+text_icon_padding  = 0  # Padding between text and icon.
 
 frame_width     = 2         # Width in pixels of frame around the notification window.
 frame_color     = "#d8d8d8" # Defines color of the frame around the notification window.
