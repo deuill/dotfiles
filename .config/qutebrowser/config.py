@@ -18,12 +18,13 @@ c.confirm_quit = ["multiple-tabs", "downloads"]
 c.content.autoplay = False
 c.content.blocking.enabled = True
 c.content.geolocation = False
-c.editor.command = ["emacsclient", "-c", "-a", "''", "{}"]
+c.colors.webpage.preferred_color_scheme = "dark"
+c.editor.command = ["emacsclient", "-c", "-a", "emacs", "{}"]
 c.qt.highdpi = True
 c.scrolling.smooth = True
 c.statusbar.widgets = ["url", "progress", "scroll"]
 c.tabs.show = "multiple"
-c.tabs.tabs_are_windows = True
+c.tabs.tabs_are_windows = False
 c.tabs.background = True
 c.tabs.new_position.related = "next"
 c.url.default_page = 'https://duckduckgo.com'
@@ -56,6 +57,7 @@ config.bind('L', 'tab-next', mode='normal')
 c.completion.height = "30%"
 c.downloads.position = "bottom"
 c.hints.padding = {"bottom": 2, "left": 5, "right": 5, "top": 2}
+c.hints.border = "none"
 c.statusbar.padding = {"bottom": 5, "left": 5, "right": 5, "top": 5}
 c.tabs.favicons.show = "pinned"
 c.tabs.indicator.width = 0
@@ -65,8 +67,12 @@ c.window.title_format = "{current_title}"
 
 # Fonts.
 c.fonts.default_family = ["Iosevka"]
-c.fonts.default_size = "12pt"
-c.fonts.prompts = "12pt Iosevka"
+c.fonts.default_size = "14pt"
+c.fonts.prompts = "14pt Iosevka"
+c.fonts.web.family.standard = "IBM Plex Sans"
+c.fonts.web.family.sans_serif = c.fonts.web.family.standard
+c.fonts.web.family.serif = "IBM Plex Serif"
+c.fonts.web.family.fixed = "IBM Plex Mono"
 
 # Colors.
 base00 = "#181818"
@@ -169,14 +175,14 @@ c.colors.downloads.stop.bg = base0C
 c.colors.downloads.error.fg = base08
 
 # Font color for hints.
-c.colors.hints.fg = base00
+c.colors.hints.fg = base05
 
 # Background color for hints. Note that you can use a `rgba(...)` value
 # for transparency.
-c.colors.hints.bg = base0A
+c.colors.hints.bg = base02
 
 # Font color for the matched part of hints.
-c.colors.hints.match.fg = base05
+c.colors.hints.match.fg = base0A
 
 # Text color for the keyhint widget.
 c.colors.keyhint.fg = base05
