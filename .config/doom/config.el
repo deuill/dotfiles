@@ -62,6 +62,8 @@
 ;;; Package-specific configuration.
 ;;;
 
+(setq-default shell-file-name "/usr/bin/fish")
+
 (after! counsel
   (setq counsel-rg-base-command "rg -M 240 --with-filename --no-heading --line-number --color never %s || true"))
 
@@ -69,7 +71,7 @@
   (setq-default +lookup-open-url-fn #'eww)
   (setq dash-docs-docsets-path "~/.local/share/docsets"))
 
-(after! docker
+(after! docker-tramp
   (setq docker-tramp-use-names t))
 
 (after! evil
@@ -95,7 +97,9 @@
   (evil-define-key 'normal json-mode-map (kbd "<tab>") 'evil-toggle-fold))
 
 (after! kubernetes-overview
-  (setq kubernetes-kubectl-executable "kubectl-socks")
+  (setq kubernetes-kubectl-executable "kubectl-socks"
+        kubernetes-poll-frequency 15
+        kubernetes-redraw-frequency 15)
   (load-library "kubernetes-evil")
   (set-popup-rule! "^\\*kubernetes" :ignore t))
 
@@ -121,7 +125,6 @@
 
 (after! magit
    (setq magit-diff-refine-hunk t
-         magit-revision-show-gravatars nil
          magit-display-buffer-function #'magit-display-buffer-traditional))
 
 (after! (magit evil)
@@ -184,9 +187,6 @@
 
 (after! (:or man woman)
   (set-popup-rule! "^\\*\\(?:Wo\\)?Man " :side 'right :select t :quit 'current :slot 0 :width 0.5))
-
-(after! vterm
-  (setq vterm-shell "/usr/bin/fish"))
 
 (after! writeroom-mode
   (setq writeroom-width 100

@@ -7,5 +7,5 @@
 ;; (package! builtin-package :disable t)
 
 (package! systemd :pin "b6ae63a236605b1c5e1069f7d3afe06ae32a7bae")
-(package! kubernetes :pin "7a5ec79c51698123098af58dea2d10bf15c5a82f")
-(package! kubernetes-evil :pin "7a5ec79c51698123098af58dea2d10bf15c5a82f")
+(package! kubernetes :pin "de4e176d9cc3b2ed37bc047496594a30295d6420")
+(package! kubernetes-evil :pin "de4e176d9cc3b2ed37bc047496594a30295d6420")

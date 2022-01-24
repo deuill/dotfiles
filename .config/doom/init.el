@@ -71,3 +71,7 @@
 
        :config
        (default +bindings +smartparens))
+
+(when noninteractive
+  ;; Allow SSH-related environment variables to be set in persistent configuration.
+  (add-to-list 'doom-env-whitelist "^SSH_"))
