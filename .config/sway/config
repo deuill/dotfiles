@@ -96,7 +96,7 @@ bindsym --to-code {
     $mod+Return  exec $terminal
     $mod+d       exec $launcher -show drun -show-icons
     $mod+Shift+d exec $launcher -show run
-    $mod+s       exec $launcher -show filebrowser -show-icons
+    $mod+c       exec $launcher -show filebrowser -show-icons
 
     # Change focus
     $mod+h     focus left
@@ -137,6 +137,7 @@ bindsym --to-code {
 
     # Change container layout (stacked, tabbed, toggle split)
     $mod+w layout tabbed
+    $mod+s layout stacking
     $mod+e layout toggle split
 
     # Toggle tiling/floating

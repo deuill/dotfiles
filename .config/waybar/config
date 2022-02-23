@@ -34,7 +34,7 @@
             "stopped": "<span color='#585858' size='smaller'>stop</span>",
         },
         "max-length": 60,
-        "exec": "playerctl --follow metadata --format '{\"text\": \"{{artist}} - {{title}}\", \"tooltip\": \"{{artist}} - {{album}} - {{title}} ({{playerName}})\", \"alt\": \"{{lc(status)}}\", \"class\": \"{{lc(status)}}\"}'",
+        "exec": "playerctl --follow metadata --format '{\"text\": \"{{markup_escape(artist)}} - {{markup_escape(title)}}\", \"tooltip\": \"{{markup_escape(artist)}} - {{markup_escape(album)}} - {{markup_escape(title)}} ({{playerName}})\", \"alt\": \"{{lc(status)}}\", \"class\": \"{{lc(status)}}\"}'",
         "smooth-scrolling-threshold": 20,
         "on-click": "playerctl play-pause",
         "on-click-right": "cantata",
