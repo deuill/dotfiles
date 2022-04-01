@@ -287,14 +287,8 @@
         :desc "Go to next buffer"     :n "<S-down>" #'evil-next-buffer)
 
   (map! :leader
-        :desc "M-x"             ":"     #'execute-extended-command
-        :desc "Open shell here" ";"
-        (cond ((featurep! :term eshell) #'+eshell/toggle)
-              ((featurep! :term shell)  #'+shell/toggle)
-              ((featurep! :term term)   #'+term/toggle)
-              ((featurep! :term vterm)  #'+vterm/toggle)
-              (t                        nil))
-
+        :desc "M-x"             ":" #'execute-extended-command
+        :desc "Open shell here" ";" (cond ((featurep! :term vterm) #'vterm) (t nil))
         (:when (featurep! :ui popup)
           :desc "Toggle last popup" "~" #'+popup/toggle)
 
@@ -498,7 +492,7 @@
                                                "." nil
                                                ">" nil
                                                "!" nil
-          :desc "Open shell in project root"   ";" (cond ((featurep! :term vterm) #'+vterm/here) (t nil))
+          :desc "Open shell in project root"   ";" (cond ((featurep! :term vterm) #'+vterm/toggle) (t nil))
           :desc "Run cmd in project root"      "!" #'projectile-run-shell-command-in-root
           :desc "Async cmd in project root"    "&" #'projectile-run-async-shell-command-in-root
           :desc "Add new project"              "a" #'projectile-add-known-project

@@ -6,7 +6,7 @@ window:
     y: 10
 
 font:
-  size: 18.5
+  size: 19
   normal:
     family: Iosevka
 

@@ -80,6 +80,7 @@
     "sway/window": {
         "format": "",
         "on-click": "rofi -show drun -show-icons",
+        "icon": false,
         "align": 0,
         "max-length": 50
     },
