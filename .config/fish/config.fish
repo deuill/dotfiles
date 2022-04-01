@@ -9,6 +9,9 @@ end
 # Set default theme.
 source $HOME/.config/fish/themes/boxfish.fish
 
+# Custom function definitions.
+source $HOME/.config/fish/functions/*.fish
+
 # Custom aliases.
 alias dot 'git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
 
