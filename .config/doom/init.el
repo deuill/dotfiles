@@ -41,6 +41,7 @@
 
        :term
        vterm
+       eshell
 
        :tools
        (debugger +lsp)
@@ -59,11 +60,11 @@
        emacs-lisp
        (go +lsp)
        javascript
-       lua
+       (lua +lsp)
        markdown
        (org +dragndrop +present)
        (php +lsp)
-       python
+       (python +lsp)
        rest
        sh
        web
