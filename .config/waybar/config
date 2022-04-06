@@ -15,9 +15,12 @@
         "max-length": 25
     },
     "clock": {
-        "format": "<span color='#585858' size='smaller'>time</span> {:%H:%M}",
-        "format-alt": "<span color='#585858' size='smaller'>date</span> {:%A, %d %B %H:%M}",
-        "tooltip-format": "    <b>{:%d %B %Y}</b>\n{calendar}"
+        "format": "<span color='#585858' size='smaller'>time</span> {:%H:%M %Z}",
+        "format-alt": "<span color='#585858' size='smaller'>date</span> {:%A, %d %B %H:%M %Z}",
+        "tooltip-format": "  <big>{:%d %B %Y}</big>\n{calendar}",
+        "today-format": "<span color='#ab4642'>{}</span>",
+        "timezones": ["", "America/New_York", "America/Los_Angeles"],
+        "smooth-scrolling-threshold": 20
     },
     "cpu": {
         "interval": 10,

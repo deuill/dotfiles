@@ -1,6 +1,6 @@
 # Fonts.
 font=Iosevka
-font-size=18
+font-size=20
 
 # Colors and wallpaper.
 image=~/.config/sway/default-bg

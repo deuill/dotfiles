@@ -20,11 +20,11 @@
   doom-theme 'doom-monokai-pro
 
   ;; Font definitions.
-  doom-font                (font-spec :family "Iosevka"        :size (+custom/font-scale 18) :weight 'light)
-  doom-big-font            (font-spec :family "Iosevka"        :size (+custom/font-scale 22) :weight 'light)
-  doom-variable-pitch-font (font-spec :family "IBM Plex Sans"  :size (+custom/font-scale 16) :weight 'light)
-  doom-serif-font          (font-spec :family "IBM Plex Serif" :size (+custom/font-scale 16) :weight 'light)
-  doom-unicode-font        (font-spec :family "Iosevka"        :size (+custom/font-scale 18) :weight 'light)
+  doom-font                (font-spec :family "Iosevka"        :size 24 :weight 'light)
+  doom-big-font            (font-spec :family "Iosevka"        :size 28 :weight 'light)
+  doom-variable-pitch-font (font-spec :family "IBM Plex Sans"  :size 20 :weight 'light)
+  doom-serif-font          (font-spec :family "IBM Plex Serif" :size 20 :weight 'light)
+  doom-unicode-font        (font-spec :family "Iosevka"        :size 24 :weight 'light)
 
   ;; Column used as limit for various modes.
   fill-column 100
@@ -50,14 +50,13 @@
   right-margin-width 1)
 
 ;; Set colors consistent with Base16-Eighties theme.
-(add-hook! 'doom-load-theme-hook
-  (custom-set-faces
-   '(default              ((t (:background "#2d2d2d"))))
-   '(hl-line              ((t (:background "#323232"))))
-   '(mode-line            ((t (:background "#282828"))))
-   '(vertical-border      ((t (:background "#282828" :foreground "#282828"))))
-   '(solaire-default-face ((t (:background "#282828"))))
-   '(solaire-hl-line-face ((t (:background "#323232"))))))
+(custom-set-faces!
+  '(default              :background "#2d2d2d")
+  '(hl-line              :background "#323232")
+  '(mode-line            :background "#282828")
+  '(vertical-border      :background "#282828" :foreground "#282828")
+  '(solaire-default-face :background "#282828")
+  '(solaire-hl-line-face :background "#323232"))
 
 ;;;
 ;;; Package-specific configuration.

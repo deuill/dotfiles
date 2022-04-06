@@ -1,6 +1,3 @@
-# Load additional profile components.
-for src in "$HOME"/.config/profile.d/*; do . "$src"; done
-
 # Import specific environment variables for user units.
 systemctl --user import-environment PATH
 
