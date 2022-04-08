@@ -20,10 +20,11 @@
   doom-theme 'doom-monokai-pro
 
   ;; Font definitions.
-  doom-font                (font-spec :family "Iosevka"        :size (+custom/font-scale 18) :weight 'light)
-  doom-big-font            (font-spec :family "Iosevka"        :size (+custom/font-scale 22) :weight 'light)
-  doom-variable-pitch-font (font-spec :family "IBM Plex Sans"  :size (+custom/font-scale 16) :weight 'light)
-  doom-serif-font          (font-spec :family "IBM Plex Serif" :size (+custom/font-scale 16) :weight 'light)
+  doom-font                (font-spec :family "Iosevka"        :size 24 :weight 'light)
+  doom-big-font            (font-spec :family "Iosevka"        :size 28 :weight 'light)
+  doom-variable-pitch-font (font-spec :family "IBM Plex Sans"  :size 20 :weight 'light)
+  doom-serif-font          (font-spec :family "IBM Plex Serif" :size 20 :weight 'light)
+  doom-unicode-font        (font-spec :family "Iosevka"        :size 24 :weight 'light)
 
   ;; Column used as limit for various modes.
   fill-column 100
@@ -49,14 +50,13 @@
   right-margin-width 1)
 
 ;; Set colors consistent with Base16-Eighties theme.
-(add-hook! 'doom-load-theme-hook
-  (custom-set-faces
-   '(default              ((t (:background "#2d2d2d"))))
-   '(hl-line              ((t (:background "#323232"))))
-   '(mode-line            ((t (:background "#282828"))))
-   '(vertical-border      ((t (:background "#282828" :foreground "#282828"))))
-   '(solaire-default-face ((t (:background "#282828"))))
-   '(solaire-hl-line-face ((t (:background "#323232"))))))
+(custom-set-faces!
+  '(default              :background "#2d2d2d")
+  '(hl-line              :background "#323232")
+  '(mode-line            :background "#282828")
+  '(vertical-border      :background "#282828" :foreground "#282828")
+  '(solaire-default-face :background "#282828")
+  '(solaire-hl-line-face :background "#323232"))
 
 ;;;
 ;;; Package-specific configuration.
@@ -80,7 +80,8 @@
   (define-key evil-visual-state-map "K" (concat ":m '<-2" (kbd "RET") "gv=gv")))
 
 (after! eshell
-  (setq eshell-banner-message ""))
+  (setq eshell-banner-message "")
+  (set-popup-rule! "^\\*eshell\\*" :vslot -5 :size 0.35 :select t :modeline nil :quit nil :ttl nil))
 
 (after! eww
   (set-popup-rule! "^\\*eww\\*" :side 'right :select t :quit 'current :slot 0 :width 0.5))
@@ -122,6 +123,10 @@
         lsp-ui-doc-position 'top)
   (set-face-attribute
    'lsp-ui-doc-background nil :background "#2d2d2d"))
+
+(after! lsp-lua
+  (setq lsp-clients-lua-language-server-bin "/usr/bin/lua-language-server"
+        lsp-clients-lua-language-server-main-location "/usr/lib/lua-language-server/bin/main.lua"))
 
 (after! magit
    (setq magit-diff-refine-hunk t
@@ -184,6 +189,9 @@
   (define-key transient-map        (kbd "<escape>") 'transient-quit-one)
   (define-key transient-edit-map   (kbd "<escape>") 'transient-quit-one)
   (define-key transient-sticky-map (kbd "<escape>") 'transient-quit-seq))
+
+(after! vterm
+  (set-popup-rule! "^\\*vterm\\*" :vslot -5 :size 0.35 :select t :modeline nil :quit nil :ttl nil))
 
 (after! (:or man woman)
   (set-popup-rule! "^\\*\\(?:Wo\\)?Man " :side 'right :select t :quit 'current :slot 0 :width 0.5))
@@ -288,7 +296,9 @@
 
   (map! :leader
         :desc "M-x"             ":" #'execute-extended-command
-        :desc "Open shell here" ";" (cond ((featurep! :term vterm) #'vterm) (t nil))
+        :desc "Open shell here" ";" (cond ((featurep! :term vterm) #'vterm)
+                                          ((featurep! :term eshell) #'eshell)
+                                          (t nil))
         (:when (featurep! :ui popup)
           :desc "Toggle last popup" "~" #'+popup/toggle)
 
@@ -492,7 +502,9 @@
                                                "." nil
                                                ">" nil
                                                "!" nil
-          :desc "Open shell in project root"   ";" (cond ((featurep! :term vterm) #'+vterm/toggle) (t nil))
+          :desc "Open shell in project root"   ";" (cond ((featurep! :term vterm) #'+vterm/toggle)
+                                                         ((featurep! :term eshell) #'+eshell/toggle)
+                                                         (t nil))
           :desc "Run cmd in project root"      "!" #'projectile-run-shell-command-in-root
           :desc "Async cmd in project root"    "&" #'projectile-run-async-shell-command-in-root
           :desc "Add new project"              "a" #'projectile-add-known-project

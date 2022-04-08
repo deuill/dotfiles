@@ -41,6 +41,7 @@
 
        :term
        vterm
+       eshell
 
        :tools
        (debugger +lsp)
@@ -59,11 +60,11 @@
        emacs-lisp
        (go +lsp)
        javascript
-       lua
+       (lua +lsp)
        markdown
        (org +dragndrop +present)
        (php +lsp)
-       python
+       (python +lsp)
        rest
        sh
        web
@@ -74,5 +75,4 @@
 
 (when noninteractive
   ;; Allow SSH-related environment variables to be set in persistent configuration.
-  (add-to-list 'doom-env-whitelist "^SSH_")
-  (add-to-list 'doom-env-blacklist "GDK_DPI_SCALE"))
+  (add-to-list 'doom-env-whitelist "^SSH_"))

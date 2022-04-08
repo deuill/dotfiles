@@ -1,6 +1,11 @@
 * {
     font-family: Iosevka, Ionicons;
-    font-size: 1.15rem;
+    font-size: 1.25rem;
+}
+
+tooltip {
+    background-color: #282828;
+    color: #d8d8d8;
 }
 
 #waybar {
@@ -33,7 +38,7 @@
     box-shadow: none;
     color: #585858;
     text-shadow: none;
-    padding: 0.4rem;
+    padding: 0.4rem 0.6rem;
 }
 
 #workspaces button:not(.focused):hover {
@@ -58,4 +63,8 @@
 
 #battery.critical {
     color: #ab4642;
+}
+
+#clock tooltip * {
+    color: #cc0000;
 }

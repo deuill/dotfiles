@@ -56,11 +56,6 @@ to the `killed-buffer-list' when killing the buffer."
       (call-interactively 'query-replace))
     (goto-char orig-point)))
 
-(defun +custom/font-scale (size)
-  "Scale font of given SIZE by the default font scale in the environment."
-  (let ((scaled (round (* size (string-to-number (getenv "GDK_DPI_SCALE"))))))
-    (if (floatp size) (float scaled) scaled)))
-
 (defun +custom/copy-this-file (new-path &optional force-p)
   "Copy current buffer's file to NEW-PATH, switching to the file immediately."
   (interactive

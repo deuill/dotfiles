@@ -1,4 +1,4 @@
 [org/gnome/desktop/interface]
-document-font-name='IBM Plex Sans 12'
-font-name='IBM Plex Sans 12'
-monospace-font-name='IBM Plex Mono 12'
+document-font-name='IBM Plex Sans 16'
+font-name='IBM Plex Sans 16'
+monospace-font-name='IBM Plex Mono 16'
