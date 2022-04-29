@@ -103,7 +103,10 @@ window {
     background-color: var(background);
     border:           10px;
     border-radius:    5px;
+    location:         north;
     padding:          0;
+    y-offset:         5%;
+    width:            30%;
 }
 
 mainbox {
@@ -124,7 +127,7 @@ textbox {
 listview {
     border-color: var(separatorcolor);
     border:       0px;
-    fixed-height: 0;
+    fixed-height: false;
     lines:        10;
     padding:      2px 0px 0px;
     scrollbar:    false;
