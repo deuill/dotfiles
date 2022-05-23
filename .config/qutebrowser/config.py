@@ -2,7 +2,7 @@
 config.load_autoconfig(False)
 c.auto_save.session = True
 c.completion.open_categories = ["quickmarks", "bookmarks", "history"]
-c.content.blocking.method = "adblock"
+c.content.blocking.method = "both"
 c.content.blocking.adblock.lists = [
     "https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/filters.txt",
     "https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/badware.txt",

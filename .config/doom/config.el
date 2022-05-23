@@ -22,8 +22,8 @@
   ;; Font definitions.
   doom-font                (font-spec :family "Iosevka"        :size 24 :weight 'light)
   doom-big-font            (font-spec :family "Iosevka"        :size 28 :weight 'light)
-  doom-variable-pitch-font (font-spec :family "IBM Plex Sans"  :size 20 :weight 'light)
-  doom-serif-font          (font-spec :family "IBM Plex Serif" :size 20 :weight 'light)
+  doom-variable-pitch-font (font-spec :family "IBM Plex Sans"  :size 24 :weight 'light)
+  doom-serif-font          (font-spec :family "IBM Plex Serif" :size 22 :weight 'light)
   doom-unicode-font        (font-spec :family "Iosevka"        :size 24 :weight 'light)
 
   ;; Column used as limit for various modes.
@@ -49,14 +49,22 @@
   left-margin-width 1
   right-margin-width 1)
 
-;; Set colors consistent with Base16-Eighties theme.
 (custom-set-faces!
+  ;; Set colors consistent with Base16-Eighties theme.
   '(default              :background "#2d2d2d")
   '(hl-line              :background "#323232")
   '(mode-line            :background "#282828")
   '(vertical-border      :background "#282828" :foreground "#282828")
   '(solaire-default-face :background "#282828")
-  '(solaire-hl-line-face :background "#323232"))
+  '(solaire-hl-line-face :background "#323232")
+
+  ;; Set heading sizes for HTML documents.
+  '(shr-h1 :height 1.9 :weight bold)
+  '(shr-h2 :height 1.6 :weight bold)
+  '(shr-h3 :height 1.4 :weight bold)
+  '(shr-h4 :height 1.2 :weight bold)
+  '(shr-h5 :height 1.1 :weight bold)
+  '(shr-h6 :height 1.1 :weight normal))
 
 ;;;
 ;;; Package-specific configuration.
@@ -64,12 +72,12 @@
 
 (setq-default shell-file-name "/usr/bin/fish")
 
-(after! counsel
-  (setq counsel-rg-base-command "rg -M 240 --with-filename --no-heading --line-number --color never %s || true"))
+(after! browse-url
+  (setq browse-url-browser-function 'eww-browse-url))
 
 (after! dash-docs
-  (setq-default +lookup-open-url-fn #'eww)
-  (setq dash-docs-docsets-path "~/.local/share/docsets"))
+  (setq dash-docs-docsets-path "~/.local/share/docsets"
+        dash-docs-browser-func #'browse-url))
 
 (after! docker-tramp
   (setq docker-tramp-use-names t))
@@ -84,15 +92,9 @@
   (set-popup-rule! "^\\*eshell\\*" :vslot -5 :size 0.35 :select t :modeline nil :quit nil :ttl nil))
 
 (after! eww
-  (set-popup-rule! "^\\*eww\\*" :side 'right :select t :quit 'current :slot 0 :width 0.5))
-
-(after! helm
-  (setq helm-ff-lynx-style-map t
-        helm-imenu-lynx-style-map t
-        helm-semantic-lynx-style-map t
-        helm-occur-use-ioccur-style-keys t)
-  (define-key helm-map (kbd "<left>") 'helm-previous-source)
-  (define-key helm-map (kbd "<right>") 'helm-next-source))
+  (setq shr-use-fonts nil
+        shr-discard-aria-hidden t)
+  (set-popup-rule! "^\\*eww\\*" :side 'right :select t :quit 'nil :slot 0 :width 0.5))
 
 (after! (json-mode evil)
   (evil-define-key 'normal json-mode-map (kbd "<tab>") 'evil-toggle-fold))
@@ -161,6 +163,10 @@
   (setq ranger-cleanup-on-disable t
         ranger-return-to-ranger t
         ranger-hide-cursor t))
+
+(after! shr
+  (require 'shr-tag-pre-highlight)
+  (add-to-list 'shr-external-rendering-functions '(pre . shr-tag-pre-highlight)))
 
 (after! sh-script
   (setq sh-basic-offset 4))
