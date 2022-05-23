@@ -1,4 +1,3 @@
 [Default Applications]
 application/pdf=emacs.desktop;
-image/jpeg=emacs.desktop;
-image/png=emacs.desktop;
+x-scheme-handler/mailto=thunderbird.desktop;

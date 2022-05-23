@@ -1,0 +1,17 @@
+# General Options.
+[options]
+background = 2d2d2d
+overlay_font = Iosevka:18
+overlay_background_color = 282828
+
+# Keybindings.
+[binds]
+h = prev 1
+j = zoom 5
+k = zoom -5
+l = next 1
+
+<Shift+H> = pan -100 0
+<Shift+J> = pan 0 100
+<Shift+K> = pan 0 -100
+<Shift+L> = pan 100 0
