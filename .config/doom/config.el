@@ -22,7 +22,7 @@
   ;; Font definitions.
   doom-font                (font-spec :family "Iosevka"        :size 24 :weight 'light)
   doom-big-font            (font-spec :family "Iosevka"        :size 28 :weight 'light)
-  doom-variable-pitch-font (font-spec :family "IBM Plex Sans"  :size 24 :weight 'light)
+  doom-variable-pitch-font (font-spec :family "IBM Plex Sans"  :size 22 :weight 'light)
   doom-serif-font          (font-spec :family "IBM Plex Serif" :size 22 :weight 'light)
   doom-unicode-font        (font-spec :family "Iosevka"        :size 24 :weight 'light)
 
@@ -72,12 +72,9 @@
 
 (setq-default shell-file-name "/usr/bin/fish")
 
-(after! browse-url
-  (setq browse-url-browser-function 'eww-browse-url))
-
 (after! dash-docs
   (setq dash-docs-docsets-path "~/.local/share/docsets"
-        dash-docs-browser-func #'browse-url))
+        dash-docs-browser-func #'eww))
 
 (after! docker-tramp
   (setq docker-tramp-use-names t))
@@ -234,9 +231,6 @@
 (add-hook! git-commit-mode
   (setq indent-tabs-mode nil))
 
-(add-hook! go-mode
-  (add-hook 'before-save-hook 'gofmt-before-save))
-
 (add-hook! 'go-mode-lsp-hook
   (flycheck-add-next-checker 'lsp 'golangci-lint))
 
@@ -371,7 +365,7 @@
           :desc "Kill other buffers"          "O"   #'doom/kill-other-buffers
           :desc "Previous buffer"             "p"   #'previous-buffer
           :desc "Paste and replace buffer"    "P"   #'+custom/paste-buffer
-                                              "r"   nil
+          :desc "Rename buffer"               "r"   #'rename-buffer
           :desc "Revert buffer"               "R"   #'+custom/safe-revert-buffer
           :desc "Save buffer"                 "s"   #'basic-save-buffer
           :desc "Save all buffers"            "S"   #'evil-write-all

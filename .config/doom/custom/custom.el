@@ -1,5 +1,9 @@
 ;;; custom.el -*- lexical-binding: t; -*-
 
+(defvar +custom--killed-buffer-list nil
+  "List of recently killed buffers.")
+
+;;;###autoload
 (defun +custom/alternate-buffer-in-persp (&optional window)
   "Switch back and forth between current and last buffer in the current window."
   (interactive)
@@ -15,26 +19,27 @@
         (message "Last buffer not found.")
       (set-window-buffer-start-and-point window buf start pos))))
 
-(defvar +custom--killed-buffer-list nil
-  "List of recently killed buffers.")
-
+;;;###autoload
 (defun +custom--add-buffer-to-killed-list-h ()
   "If buffer is associated with a file name, add that file
 to the `killed-buffer-list' when killing the buffer."
   (when buffer-file-name
     (push buffer-file-name +custom--killed-buffer-list)))
 
+;;;###autoload
 (defun +custom/reopen-killed-buffer ()
   "Reopen the most recently killed file buffer, if one exists."
   (interactive)
   (when +custom--killed-buffer-list
     (find-file (pop +custom--killed-buffer-list))))
 
+;;;###autoload
 (defun +custom/yank-buffer ()
   "Copy entire buffer to the kill ring"
   (interactive)
   (clipboard-kill-ring-save (point-min) (point-max)))
 
+;;;###autoload
 (defun +custom/paste-buffer ()
   "Copy clipboard and replace buffer"
   (interactive)
@@ -42,11 +47,13 @@ to the `killed-buffer-list' when killing the buffer."
   (clipboard-yank)
   (deactivate-mark))
 
+;;;###autoload
 (defun +custom/safe-revert-buffer ()
   "Prompt before reverting the file."
   (interactive)
   (revert-buffer nil nil))
 
+;;;###autoload
 (defun +custom/query-replace-buffer ()
   "Search and replace literal string in buffer."
   (interactive)
@@ -56,6 +63,7 @@ to the `killed-buffer-list' when killing the buffer."
       (call-interactively 'query-replace))
     (goto-char orig-point)))
 
+;;;###autoload
 (defun +custom/copy-this-file (new-path &optional force-p)
   "Copy current buffer's file to NEW-PATH, switching to the file immediately."
   (interactive

@@ -25,6 +25,7 @@
 
        :editor
        (evil +everywhere)
+       (format +onsave)
        file-templates
        fold
        multiple-cursors
@@ -66,6 +67,7 @@
        (php +lsp)
        (python +lsp)
        rest
+       (rust +lsp)
        sh
        web
        yaml

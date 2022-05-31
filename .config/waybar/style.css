@@ -61,6 +61,11 @@ tooltip {
     margin-right: 0.25rem;
 }
 
+#tray label {
+    font-family: "IBM Plex Sans", sans-serif;
+    font-size: 1.1rem;
+}
+
 #battery.critical {
     color: #ab4642;
 }
