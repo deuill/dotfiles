@@ -17,7 +17,7 @@
        nav-flash
        ophints
        (popup +all +defaults)
-       treemacs
+       (treemacs +lsp)
        vc-gutter
        (window-select +numbers +switch-window)
        workspaces

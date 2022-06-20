@@ -71,3 +71,15 @@ to the `killed-buffer-list' when killing the buffer."
          current-prefix-arg))
   (doom/copy-this-file new-path force-p)
   (find-file new-path))
+
+;;;###autoload
+(defun +custom/shr-add-font (start end type)
+  (save-excursion
+    (goto-char start)
+    (while (< (point) end)
+      (when (bolp)
+        (skip-chars-forward " "))
+      (add-face-text-property (point) (min (line-end-position) end) type)
+      (if (< (line-end-position) end)
+          (forward-line 1)
+        (goto-char end)))))

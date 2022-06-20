@@ -20,11 +20,10 @@
   doom-theme 'doom-monokai-pro
 
   ;; Font definitions.
-  doom-font                (font-spec :family "Iosevka"        :size 24 :weight 'light)
-  doom-big-font            (font-spec :family "Iosevka"        :size 28 :weight 'light)
-  doom-variable-pitch-font (font-spec :family "IBM Plex Sans"  :size 22 :weight 'light)
-  doom-serif-font          (font-spec :family "IBM Plex Serif" :size 22 :weight 'light)
-  doom-unicode-font        (font-spec :family "Iosevka"        :size 24 :weight 'light)
+  doom-font                (font-spec :family "Iosevka"       :size 24 :weight 'light)
+  doom-big-font            (font-spec :family "Iosevka"       :size 28 :weight 'light)
+  doom-variable-pitch-font (font-spec :family "IBM Plex Sans" :size 22 :weight 'light)
+  doom-unicode-font        (font-spec :family "Iosevka"       :size 24 :weight 'light)
 
   ;; Column used as limit for various modes.
   fill-column 100
@@ -89,9 +88,12 @@
   (set-popup-rule! "^\\*eshell\\*" :vslot -5 :size 0.35 :select t :modeline nil :quit nil :ttl nil))
 
 (after! eww
-  (setq shr-use-fonts nil
-        shr-discard-aria-hidden t)
-  (set-popup-rule! "^\\*eww\\*" :side 'right :select t :quit 'nil :slot 0 :width 0.5))
+  (setq shr-use-fonts t
+        shr-discard-aria-hidden t
+        shr-max-width fill-column
+        eww-search-prefix "https://lite.duckduckgo.com/lite?q=")
+  (defun shr-add-font (start end type) (+custom/shr-add-font start end type))
+  (set-popup-rule! "^\\*eww\\*" :side 'right :select t :quit 'nil :slot 0 :width (+ fill-column 4)))
 
 (after! (json-mode evil)
   (evil-define-key 'normal json-mode-map (kbd "<tab>") 'evil-toggle-fold))
