@@ -91,6 +91,8 @@
   (setq shr-use-fonts t
         shr-discard-aria-hidden t
         shr-max-width fill-column
+        shr-hr-line ?━
+        shr-bullet "• "
         eww-search-prefix "https://lite.duckduckgo.com/lite?q=")
   (defun shr-add-font (start end type) (+custom/shr-add-font start end type))
   (set-popup-rule! "^\\*eww\\*" :side 'right :select t :quit 'nil :slot 0 :width (+ fill-column 4)))
