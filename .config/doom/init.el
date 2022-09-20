@@ -1,7 +1,7 @@
 ;;; .doom.d/init.el -*- lexical-binding: t; -*-
 
 (doom! :completion
-       company
+       (company +childframe)
        (vertico +icons)
 
        :checkers
@@ -10,7 +10,6 @@
 
        :ui
        doom
-       fill-column
        hl-todo
        hydra
        modeline
@@ -75,6 +74,6 @@
        :config
        (default +bindings +smartparens))
 
-(after! core-cli-env
+(after! doom-cli-env
   ;; Allow SSH-related environment variables to be set in persistent configuration.
   (add-to-list 'doom-env-allow "^SSH_"))

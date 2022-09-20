@@ -34,12 +34,6 @@ to the `killed-buffer-list' when killing the buffer."
     (find-file (pop +custom--killed-buffer-list))))
 
 ;;;###autoload
-(defun +custom/yank-buffer ()
-  "Copy entire buffer to the kill ring"
-  (interactive)
-  (clipboard-kill-ring-save (point-min) (point-max)))
-
-;;;###autoload
 (defun +custom/paste-buffer ()
   "Copy clipboard and replace buffer"
   (interactive)
