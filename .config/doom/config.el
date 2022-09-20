@@ -30,6 +30,7 @@
   ;; Have which-key behave more sanely.
   which-key-idle-delay 0.2
   which-key-max-description-length 35
+  which-key-prefix-prefix ""
 
   ;; Have Page Up/Down move to start/end of buffer when possible.
   scroll-error-top-bottom t
@@ -300,15 +301,15 @@
         :desc "Go to next buffer"     :n "<S-right>" #'evil-next-buffer)
 
   (map! :leader
-        :desc "Open shell here"       ";" (cond ((modulep! :term vterm) #'vterm)
-                                                ((modulep! :term eshell) #'eshell))
+        :desc "Open shell here"       ";"   (cond ((modulep! :term vterm)  #'vterm)
+                                                  ((modulep! :term eshell) #'eshell))
 
         :desc "Switch to last buffer" "TAB" (cond ((modulep! :ui workspaces) #'+custom/alternate-buffer-in-persp)
-                                                     (t                      #'evil-switch-to-windows-last-buffer))
+                                                  (t                         #'evil-switch-to-windows-last-buffer))
 
-        :desc "Resume last search"    "SPC" (cond ((modulep! :completion vertico)       #'vertico-repeat)
-                                                           ((modulep! :completion ivy)  #'ivy-resume)
-                                                           ((modulep! :completion helm) #'helm-resume))
+        :desc "Resume last search"    "SPC" (cond ((modulep! :completion vertico) #'vertico-repeat)
+                                                  ((modulep! :completion ivy)     #'ivy-resume)
+                                                  ((modulep! :completion helm)    #'helm-resume))
 
         "."   nil
         ","   nil
@@ -332,7 +333,7 @@
         "x" nil
         "X" nil
 
-        (:prefix-map ("b" . "buffer")
+        (:prefix "b"
           :desc "Kill all buffers"             "D"   #'doom/kill-all-buffers
                                                "k"   nil
                                                "K"   nil
@@ -346,7 +347,7 @@
           :desc "Pop up scratch buffer"        "x"   #'doom/open-scratch-buffer
           :desc "Switch to scratch buffer"     "X"   #'doom/switch-to-scratch-buffer)
 
-        (:prefix-map ("f" . "file")
+        (:prefix "f"
                                                "c"   nil
           :desc "Find file as root"            "e"   #'doom/sudo-find-file
           :desc "Open current file as root"    "E"   #'doom/sudo-this-file
@@ -356,7 +357,7 @@
                                                "u"   nil
                                                "U"   nil)
 
-        (:prefix-map ("g" . "git")
+        (:prefix "g"
           (:when (modulep! :ui vc-gutter)
                                                "]"   nil
                                                "["   nil
@@ -378,7 +379,7 @@
         "n" nil
         "o" nil
 
-        (:prefix-map ("p" . "project")
+        (:prefix "p"
           (:when (modulep! :ui workspaces)
             :desc "Switch to last project"     "TAB" #'+workspace/other
             :desc "Switch to next project"     "]"   #'+workspace/switch-right
@@ -396,7 +397,7 @@
                                                ">"   nil
                                                "!"   nil
           :desc "Open shell in project"        ";"   (cond ((modulep! :term vterm) #'+vterm/toggle)
-                                                            ((modulep! :term eshell) #'+eshell/toggle))
+                                                           ((modulep! :term eshell) #'+eshell/toggle))
                                                "b"   nil
                                                "c"   nil
                                                "C"   nil
@@ -415,13 +416,13 @@
                                                "s"   nil
           :desc "Save project files"           "S"   #'projectile-save-project-buffers
           :desc "Toggle file tree"             "t"   (cond ((modulep! :ui neotree)  #'+neotree/open)
-                                                            ((modulep! :ui treemacs) #'+treemacs/toggle))
+                                                           ((modulep! :ui treemacs) #'+treemacs/toggle))
                                                "T"   nil
           :desc "Switch project workspace"     "w"   #'+workspace/switch-to
           :desc "Remove project"               "x"   nil
                                                "X"   #'projectile-remove-known-project)
 
-        (:prefix-map ("s" . "search")
+        (:prefix "s"
                                                "f"   nil
                                                "p"   nil
                                                "P"   nil
@@ -430,7 +431,7 @@
 
         "r" nil
 
-        (:prefix-map ("t" . "toggle")
+        (:prefix "t"
                                                "f"   nil
                                                "F"   nil
                                                "g"   nil
