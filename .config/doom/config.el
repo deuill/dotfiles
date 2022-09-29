@@ -13,6 +13,13 @@
 ;; Disable blinking cursor.
 (blink-cursor-mode -1)
 
+;; Show indentation whitespace characters.
+(setq whitespace-style '(face tabs tab-mark spaces space-mark trailing))
+(global-whitespace-mode 1)
+
+;; Hide fringes.
+(set-fringe-style nil)
+
 ;; Set default values for UI parameters.
 (setq-default
   ;; Default theme.
@@ -58,6 +65,10 @@
   '(solaire-default-face :background "#282828")
   '(solaire-hl-line-face :background "#323232")
 
+  ;; Have whitespace blend into background until highlighted.
+  '(whitespace-space :background "#2d2d2d" :foreground "#2d2d2d")
+  '(whitespace-tab   :background "#2d2d2d" :foreground "#2d2d2d")
+
   ;; Set heading sizes for HTML documents.
   '(shr-h1 :height 1.9 :weight bold)
   '(shr-h2 :height 1.6 :weight bold)
@@ -71,7 +82,6 @@
 ;;;
 
 (setq-default shell-file-name "/usr/bin/fish")
-(set-fringe-style nil)
 
 (after! dash-docs
   (setq dash-docs-docsets-path "~/.local/share/docsets"
@@ -304,7 +314,7 @@
         :desc "Open shell here"       ";"   (cond ((modulep! :term vterm)  #'vterm)
                                                   ((modulep! :term eshell) #'eshell))
 
-        :desc "Switch to last buffer" "TAB" (cond ((modulep! :ui workspaces) #'+custom/alternate-buffer-in-persp)
+        :desc "Switch to last buffer" "TAB" (cond ((modulep! :ui workspaces) #'+custom/alternate-buffer-in-workspace)
                                                   (t                         #'evil-switch-to-windows-last-buffer))
 
         :desc "Resume last search"    "SPC" (cond ((modulep! :completion vertico) #'vertico-repeat)

@@ -4,14 +4,14 @@
   "List of recently killed buffers.")
 
 ;;;###autoload
-(defun +custom/alternate-buffer-in-persp (&optional window)
+(defun +custom/alternate-buffer-in-workspace (&optional window)
   "Switch back and forth between current and last buffer in the current window."
   (interactive)
   (cl-destructuring-bind (buf start pos)
-    (let ((buffer-list (persp-buffer-list))
-          (my-buffer (window-buffer window)))
+    (let ((buffer-list (+workspace-buffer-list))
+          (buf (window-buffer window)))
       (seq-find (lambda (it)
-                  (and (not (eq (car it) my-buffer))
+                  (and (not (eq (car it) buf))
                         (member (car it) buffer-list)))
                 (window-prev-buffers)
                 (list nil nil nil)))

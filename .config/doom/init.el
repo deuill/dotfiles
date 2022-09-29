@@ -12,6 +12,7 @@
        doom
        hl-todo
        hydra
+       ligatures
        modeline
        nav-flash
        ophints
