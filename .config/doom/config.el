@@ -14,7 +14,7 @@
 (blink-cursor-mode -1)
 
 ;; Show indentation whitespace characters.
-(setq whitespace-style '(face tabs tab-mark spaces space-mark trailing))
+(setq whitespace-style '(face trailing))
 (global-whitespace-mode 1)
 
 ;; Hide fringes.
@@ -243,6 +243,16 @@
 (add-hook! eww-mode
   (writeroom-mode t)
   (display-fill-column-indicator-mode 0))
+
+(add-hook! 'evil-visual-state-entry-hook
+  (setq-local whitespace-style '(face tabs tab-mark spaces space-mark trailing))
+  (whitespace-turn-off)
+  (whitespace-turn-on-if-enabled))
+
+(add-hook! 'evil-visual-state-exit-hook
+  (kill-local-variable 'whitespace-style)
+  (whitespace-turn-off)
+  (whitespace-turn-on-if-enabled))
 
 (add-hook! git-commit-mode
   (setq indent-tabs-mode nil))
