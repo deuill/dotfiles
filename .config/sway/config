@@ -27,14 +27,11 @@ set {
     $terminal alacritty
     $launcher rofi -terminal $terminal -run-command 'bash -ic "{cmd}"'
     $locker   swaylock -f
-    $player   playerctl
-    $notify   dunstctl
     $mixer    pulsemixer --max-volume 100
 }
 
 # Display output configuration.
 output * {
-    scale    1
     subpixel none
 }
 
@@ -70,10 +67,10 @@ exec swayidle -w \
      timeout 420 'swaymsg "output * dpms off"' \
           resume 'swaymsg "output * dpms on"' \
     before-sleep '$locker' \
-            lock '$player pause' \
-            lock '$notify set-paused true' \
-          unlock '$player pause' \
-          unlock '$notify set-paused false'
+            lock 'playerctl pause' \
+            lock 'dunstctl set-paused true' \
+          unlock 'playerctl pause' \
+          unlock 'dunstctl set-paused false'
 
 # Inhibit idle tracking for specific applications.
 for_window {
@@ -96,7 +93,8 @@ bindsym --to-code {
     $mod+Return  exec $terminal
     $mod+d       exec $launcher -show drun -show-icons
     $mod+Shift+d exec $launcher -show run
-    $mod+c       exec $launcher -show filebrowser -show-icons
+    $mod+o       exec $launcher -show filebrowser -show-icons
+    $mod+c       exec $launcher -show calc -calc-command "echo -n '{result}' | wl-copy"
 
     # Change focus
     $mod+h     focus left
@@ -181,33 +179,35 @@ bindsym --to-code {
     $mod+Shift+Delete exec $locker
 
     # Notification handling.
-    $mod+x           exec $notify close
-    $mod+Shift+x     exec $notify close-all
-    $mod+grave       exec $notify history-pop
-    $mod+Shift+grave exec $notify context
+    $mod+x           exec dunstctl close
+    $mod+Shift+x     exec dunstctl close-all
+    $mod+grave       exec dunstctl history-pop
+    $mod+Shift+grave exec dunstctl context
 
-    --no-repeat {
+    --no-repeat --locked {
         # Volume keys.
         XF86AudioRaiseVolume exec $mixer --change-volume +5
         XF86AudioLowerVolume exec $mixer --change-volume -5
         XF86AudioMute        exec $mixer --toggle-mute
 
         # Media keys.
-        $mod+Ctrl+Up    exec $player stop
-        $mod+Ctrl+Down  exec $player play-pause
-        $mod+Ctrl+Left  exec $player previous
-        $mod+Ctrl+Right exec $player next
+        $mod+Ctrl+Up    exec playerctl stop
+        $mod+Ctrl+Down  exec playerctl play-pause
+        $mod+Ctrl+Left  exec playerctl previous
+        $mod+Ctrl+Right exec playerctl next
 
-        XF86AudioStop    exec $player stop
-        XF86AudioPlay    exec $player play-pause
-        XF86AudioPrev    exec $player previous
-        XF86AudioNext    exec $player next
-        XF86AudioRewind  exec $player position 10-
-        XF86AudioForward exec $player position 10+
+        XF86AudioStop    exec playerctl stop
+        XF86AudioPlay    exec playerctl play-pause
+        XF86AudioPrev    exec playerctl previous
+        XF86AudioNext    exec playerctl next
+        XF86AudioRewind  exec playerctl position 10-
+        XF86AudioForward exec playerctl position 10+
 
         XF86MonBrightnessDown exec brightnessctl set 10%-
         XF86MonBrightnessUp exec brightnessctl set +10%
+    }
 
+    --no-repeat {
         $mod+p       exec grim - | wl-copy --type image/png && notify-send "Screenshot Copied"
         $mod+Shift+p exec grim -g $(slurp -d) - | wl-copy --type image/png && notify-send "Screenshot Copied"
     }

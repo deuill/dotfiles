@@ -30,7 +30,7 @@ c.tabs.new_position.related = "next"
 c.url.default_page = 'https://duckduckgo.com'
 c.input.insert_mode.auto_leave = False
 c.input.insert_mode.auto_load = True
-c.zoom.default = "100%"
+c.zoom.default = "130%"
 
 # Searches.
 c.url.searchengines['DEFAULT'] = 'https://duckduckgo.com/?q={}'
@@ -67,8 +67,8 @@ c.window.title_format = "{current_title}"
 
 # Fonts.
 c.fonts.default_family = ["Iosevka"]
-c.fonts.default_size = "14pt"
-c.fonts.prompts = "14pt Iosevka"
+c.fonts.default_size = "20pt"
+c.fonts.prompts = "20pt Iosevka"
 c.fonts.web.family.standard = "IBM Plex Sans"
 c.fonts.web.family.sans_serif = c.fonts.web.family.standard
 c.fonts.web.family.serif = "IBM Plex Serif"

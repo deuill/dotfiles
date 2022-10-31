@@ -26,10 +26,11 @@
   doom-theme 'doom-monokai-pro
 
   ;; Font definitions.
-  doom-font                (font-spec :family "Iosevka"       :size 24 :weight 'light)
-  doom-big-font            (font-spec :family "Iosevka"       :size 28 :weight 'light)
-  doom-variable-pitch-font (font-spec :family "IBM Plex Sans" :size 22 :weight 'light)
-  doom-unicode-font        (font-spec :family "Iosevka"       :size 24 :weight 'light)
+  doom-font                (font-spec :family "Iosevka"        :size 24 :weight 'light)
+  doom-big-font            (font-spec :family "Iosevka"        :size 28 :weight 'light)
+  doom-variable-pitch-font (font-spec :family "IBM Plex Sans"  :size 22 :weight 'light)
+  doom-serif-font          (font-spec :family "IBM Plex Serif" :size 22 :weight 'light)
+  doom-unicode-font        (font-spec :family "Iosevka"        :size 24 :weight 'light)
 
   ;; Column used as limit for various modes.
   fill-column 100
@@ -109,6 +110,9 @@
   (defun shr-add-font (start end type) (+custom/shr-add-font start end type))
   (set-popup-rule! "^\\*eww\\*" :side 'right :select t :quit 'nil :slot 0 :width (+ fill-column 4)))
 
+(after! info
+  (set-popup-rule! "^\\*info\\*" :side 'right :select t :quit 'current :slot 0 :width (+ fill-column 4)))
+
 (after! (json-mode evil)
   (evil-define-key 'normal json-mode-map (kbd "<tab>") 'evil-toggle-fold))
 
@@ -118,10 +122,6 @@
         kubernetes-redraw-frequency 15)
   (load-library "kubernetes-evil")
   (set-popup-rule! "^\\*kubernetes" :ignore t))
-
-(after! kubel
-  (load-library "kubel-evil")
-  (set-popup-rule! "^\\*kubel" :side 'right :select t :quit 'current :slot 0 :width 0.5))
 
 (after! lsp-mode
   (setq lsp-auto-guess-root t
@@ -213,7 +213,7 @@
   (set-popup-rule! "^\\*vterm\\*" :vslot -5 :size 0.35 :select t :modeline nil :quit nil :ttl nil))
 
 (after! (:or man woman)
-  (set-popup-rule! "^\\*\\(?:Wo\\)?Man " :side 'right :select t :quit 'current :slot 0 :width 0.5))
+  (set-popup-rule! "^\\*\\(?:Wo\\)?Man " :side 'right :select t :quit 'current :slot 0 :width (+ fill-column 4)))
 
 (after! writeroom-mode
   (setq writeroom-width 100
@@ -259,6 +259,9 @@
 
 (add-hook! 'go-mode-lsp-hook
   (flycheck-add-next-checker 'lsp 'golangci-lint))
+
+(add-hook! Info-mode
+  (writeroom-mode t))
 
 (add-hook! json-mode
   (hs-minor-mode))
