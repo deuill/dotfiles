@@ -32,6 +32,7 @@ set {
 
 # Display output configuration.
 output * {
+    scale 1
     subpixel none
 }
 

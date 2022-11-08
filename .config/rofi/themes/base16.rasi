@@ -35,7 +35,7 @@
 }
 
 element {
-    border-radius: 5px;
+    border-radius: 0;
     border:        0;
     padding:       20px;
     spacing:       5px;
@@ -102,11 +102,11 @@ element-icon {
 window {
     background-color: var(background);
     border:           10px;
-    border-radius:    5px;
+    border-radius:    0;
     location:         north;
     padding:          0;
     y-offset:         5%;
-    width:            30%;
+    width:            40%;
 }
 
 mainbox {
@@ -130,16 +130,16 @@ listview {
     fixed-height: false;
     lines:        10;
     padding:      2px 0px 0px;
-    scrollbar:    false;
+    scrollbar:    true;
     spacing:      0px;
 }
 
 scrollbar {
     width:        4px;
-    padding:      0;
+    padding:      0 0 0 8px;
     handle-width: 8px;
     border:       0;
-    handle-color: var(normal-foreground);
+    handle-color: #585858;
 }
 
 sidebar {

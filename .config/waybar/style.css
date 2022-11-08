@@ -26,9 +26,14 @@ tooltip {
     padding-right: 0.2rem;
 }
 
+.modules-left button, .modules-right button {
+    border-radius: 0;
+}
+
 .modules-left label, .modules-right label {
     border: 0;
-    padding: 0.4rem 0.5rem;
+    color: #d8d8d8;
+    padding: 0 0.2rem;
 }
 
 #workspaces button {
@@ -53,7 +58,11 @@ tooltip {
     color: #ab4642;
 }
 
-#mode {
+#window {
+    padding-left: 0.5rem;
+}
+
+#mode label {
     color: #ab4642;
 }
 

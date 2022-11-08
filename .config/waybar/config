@@ -28,7 +28,7 @@
         "on-click": "alacritty -e htop"
     },
     "custom/mpris": {
-        "format": "{icon} {}",
+        "format": "{} {icon}",
         "return-type": "json",
         "format-icons": {
             "playing": "<span color='#585858' size='smaller'>play</span>",
@@ -76,7 +76,7 @@
         "smooth-scrolling-threshold": 5
     },
     "sway/window": {
-        "format": "",
+        "format": "<span color='#585858' size='smaller'></span>",
         "on-click": "rofi -show drun -show-icons",
         "icon": false,
         "align": 0,
