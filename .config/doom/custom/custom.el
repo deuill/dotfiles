@@ -77,3 +77,10 @@ to the `killed-buffer-list' when killing the buffer."
       (if (< (line-end-position) end)
           (forward-line 1)
         (goto-char end)))))
+
+;;;###autoload
+(defun +custom/deft-popup ()
+  "Pop *Deft* buffer and load files."
+  (pop-to-buffer deft-buffer)
+  (if (not (eq major-mode 'deft-mode))
+      (deft-mode)))

@@ -9,6 +9,7 @@
        spell
 
        :ui
+       deft
        doom
        hl-todo
        hydra

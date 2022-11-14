@@ -82,11 +82,19 @@
 ;;; Package-specific configuration.
 ;;;
 
-(setq-default shell-file-name "/usr/bin/fish")
+(setq-default shell-file-name "/usr/bin/fish"
+              doom-scratch-initial-major-mode 'text-mode)
+(set-popup-rule! "^\\*doom:scratch" :side 'right :select t :quit 'other :slot 0 :width (+ fill-column 4))
 
 (after! dash-docs
   (setq dash-docs-docsets-path "~/.local/share/docsets"
         dash-docs-browser-func #'eww))
+
+(after! deft
+  (setq deft-directory "~/Documents/Notes"
+        deft-default-extension "md")
+  (defun deft () (interactive)(+custom/deft-popup))
+  (set-popup-rule! "^\\*Deft\\*" :side 'right :select t :quit 'other :slot 0 :width (+ fill-column 4)))
 
 (after! docker-tramp
   (setq docker-tramp-use-names t))
@@ -98,7 +106,7 @@
 
 (after! eshell
   (setq eshell-banner-message "")
-  (set-popup-rule! "^\\*eshell\\*" :vslot -5 :size 0.35 :select t :modeline nil :quit nil :ttl nil))
+  (set-popup-rule! "^\\*eshell\\*" :vslot -5 :select t :modeline nil :quit nil :ttl nil))
 
 (after! eww
   (setq shr-use-fonts t
@@ -210,7 +218,7 @@
   (define-key transient-sticky-map (kbd "<escape>") 'transient-quit-seq))
 
 (after! vterm
-  (set-popup-rule! "^\\*vterm\\*" :vslot -5 :size 0.35 :select t :modeline nil :quit nil :ttl nil))
+  (set-popup-rule! "^\\*vterm\\*" :vslot -5 :select t :modeline nil :quit nil :ttl nil))
 
 (after! (:or man woman)
   (set-popup-rule! "^\\*\\(?:Wo\\)?Man " :side 'right :select t :quit 'current :slot 0 :width (+ fill-column 4)))
@@ -224,7 +232,7 @@
     (setq +zen-text-scale 0)))
 
 (after! (yaml-mode evil)
-  (evil-define-key 'normal yaml-mode-map (kbd "<tab>") 'evil-toggle-fold))
+  (evil-define-key* 'normal yaml-mode-map (kbd "<tab>") #'evil-toggle-fold))
 
 ;;;
 ;;; Hooks and mode-specific configuration.
@@ -239,6 +247,9 @@
   (writeroom-mode t)
   (visual-line-mode t)
   (display-fill-column-indicator-mode 0))
+
+(add-hook! 'doom-scratch-buffer-created-hook
+  (evil-define-key* 'normal 'local (kbd "q") #'(lambda () (interactive) (+popup/close nil t))))
 
 (add-hook! eww-mode
   (writeroom-mode t)
@@ -442,8 +453,8 @@
                                                            ((modulep! :ui treemacs) #'+treemacs/toggle))
                                                "T"   nil
           :desc "Switch project workspace"     "w"   #'+workspace/switch-to
-          :desc "Remove project"               "x"   nil
-                                               "X"   #'projectile-remove-known-project)
+          :desc "Pop up scratch buffer"        "x"   #'doom/open-project-scratch-buffer
+          :desc "Remove project"               "X"   #'projectile-remove-known-project)
 
         (:prefix "s"
                                                "f"   nil
