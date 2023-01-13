@@ -25,7 +25,7 @@
 (defun +sql/set-product ()
   "Set dialect-specific highlighting for buffer"
   (interactive)
-  (cond ((featurep! :completion ivy)
+  (cond ((modulep! :completion ivy)
          (ivy-read "SQL products: "
                    (+sql--get-product-names +sql--startable-product-list)
                    :require-match t

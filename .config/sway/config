@@ -20,6 +20,7 @@ set {
 set {
     $resize  "Resize Window"
     $session "Session: Ⓢ Suspend, Ⓛ Logout, Ⓡ Reboot, Ⓟ Power off"
+    $mousekeys "Mouse Keys: Ⓖ Grid, Ⓗ Hint, Ⓝ Normal"
 }
 
 # Application aliases.
@@ -220,6 +221,7 @@ bindsym --to-code {
 
     # Modes.
     $mod+r       mode $resize
+    $mod+g       mode $mousekeys
     $mod+Shift+q mode $session
 }
 
@@ -284,6 +286,16 @@ mode $session bindsym --to-code {
     l exec swaymsg exit, mode "default"
     r exec systemctl reboot, mode "default"
     p exec systemctl poweroff -i, mode "default"
+
+    # Back to normal mode: Enter or Escape
+    Return mode "default"
+    Escape mode "default"
+}
+
+mode $mousekeys bindsym --to-code {
+    h exec warpd --hint, mode "default"
+    g exec warpd --grid, mode "default"
+    n exec warpd --normal, mode "default"
 
     # Back to normal mode: Enter or Escape
     Return mode "default"

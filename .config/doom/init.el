@@ -9,11 +9,9 @@
        spell
 
        :ui
-       deft
        doom
        hl-todo
        hydra
-       ligatures
        modeline
        nav-flash
        ophints

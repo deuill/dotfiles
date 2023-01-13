@@ -82,9 +82,10 @@
 ;;; Package-specific configuration.
 ;;;
 
+(set-popup-rule! "^\\*doom:scratch" :side 'right :select t :quit 'other :slot 0 :width (+ fill-column 4))
+
 (setq-default shell-file-name "/usr/bin/fish"
               doom-scratch-initial-major-mode 'text-mode)
-(set-popup-rule! "^\\*doom:scratch" :side 'right :select t :quit 'other :slot 0 :width (+ fill-column 4))
 
 (after! dash-docs
   (setq dash-docs-docsets-path "~/.local/share/docsets"
@@ -96,9 +97,6 @@
   (defun deft () (interactive)(+custom/deft-popup))
   (set-popup-rule! "^\\*Deft\\*" :side 'right :select t :quit 'other :slot 0 :width (+ fill-column 4)))
 
-(after! docker-tramp
-  (setq docker-tramp-use-names t))
-
 (after! evil
   ;; Transpose lines with J/K when in visual mode.
   (define-key evil-visual-state-map "J" (concat ":m '>+1" (kbd "RET") "gv=gv"))
@@ -106,7 +104,7 @@
 
 (after! eshell
   (setq eshell-banner-message "")
-  (set-popup-rule! "^\\*eshell\\*" :vslot -5 :select t :modeline nil :quit nil :ttl nil))
+  (set-popup-rule! "^\\*eshell\\*" :vslot -5 :select t :modeline nil :quit nil :ttl nil :height 0.25))
 
 (after! eww
   (setq shr-use-fonts t
@@ -218,7 +216,7 @@
   (define-key transient-sticky-map (kbd "<escape>") 'transient-quit-seq))
 
 (after! vterm
-  (set-popup-rule! "^\\*vterm\\*" :vslot -5 :select t :modeline nil :quit nil :ttl nil))
+  (set-popup-rule! "^\\*vterm\\*" :vslot -5 :select t :modeline nil :quit nil :ttl nil :height 0.25))
 
 (after! (:or man woman)
   (set-popup-rule! "^\\*\\(?:Wo\\)?Man " :side 'right :select t :quit 'current :slot 0 :width (+ fill-column 4)))
@@ -383,6 +381,7 @@
 
         (:prefix "f"
                                                "c"   nil
+          :desc "Copy this file"               "C"   #'+custom/copy-this-file
           :desc "Find file as root"            "e"   #'doom/sudo-find-file
           :desc "Open current file as root"    "E"   #'doom/sudo-this-file
                                                "l"   nil
