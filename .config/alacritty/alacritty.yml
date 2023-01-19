@@ -2,8 +2,8 @@ window:
   decorations: none
   decorations_theme_variant: dark
   padding:
-    x: 10
-    y: 10
+    x: 20
+    y: 20
 
 font:
   size: 19

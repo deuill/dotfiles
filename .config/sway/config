@@ -11,9 +11,7 @@ set {
     $code  2:code
     $cmd   3:cmd
     $chat  4:chat
-    $media 5:media
-    $games 6:games
-    $misc  7:misc
+    $misc  5:misc
 }
 
 # Mode aliases.
@@ -161,18 +159,14 @@ bindsym --to-code {
     $mod+2 workspace $code
     $mod+3 workspace $cmd
     $mod+4 workspace $chat
-    $mod+5 workspace $media
-    $mod+6 workspace $games
-    $mod+7 workspace $misc
+    $mod+5 workspace $misc
 
     # Move focused window to workspace.
     $mod+Shift+1 move container to workspace $www
     $mod+Shift+2 move container to workspace $code
     $mod+Shift+3 move container to workspace $cmd
     $mod+Shift+4 move container to workspace $chat
-    $mod+Shift+5 move container to workspace $media
-    $mod+Shift+6 move container to workspace $games
-    $mod+Shift+7 move container to workspace $misc
+    $mod+Shift+5 move container to workspace $misc
 
     # Window manager.
     $mod+q            kill
@@ -239,7 +233,7 @@ output * bg ~/.config/sway/default-bg fill
 default_border          pixel 3
 default_floating_border pixel 3
 hide_edge_borders --i3  smart
-gaps                    inner 10
+gaps                    inner 20
 smart_gaps              on
 
 # Color names.

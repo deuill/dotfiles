@@ -1,9 +1,10 @@
 [Desktop Entry]
+Version=1.0
+Type=Application
 Name=Emacs
 GenericName=File Viewer
 Comment=View files with Emacs
 Exec=emacsclient --socket-name=main --alternate-editor=emacs --create-frame %F
-Type=Application
 Terminal=false
 StartupWMClass=Emacs
 NoDisplay=true
