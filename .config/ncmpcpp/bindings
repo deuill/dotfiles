@@ -8,6 +8,13 @@ def_key "k"
 def_key "l"
   next_column
 
+def_key "v"
+    select_item
+def_key "V"
+    select_range
+def_key "ctrl-v"
+    remove_selection
+
 def_key "ctrl-u"
     page_up
 def_key "ctrl-d"
