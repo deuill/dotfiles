@@ -25,7 +25,7 @@
         "interval": 10,
         "format": "<span color='#585858' size='smaller'>cpu</span> {usage}%",
         "max-length": 10,
-        "on-click": "alacritty -e htop"
+        "on-click": "sensible-terminal -e htop"
     },
     "custom/mpris": {
         "format": "{} {icon}",
@@ -46,7 +46,7 @@
     "memory": {
         "interval": 30,
         "format": "<span color='#585858' size='smaller'>mem</span> {}%",
-        "on-click": "alacritty -e htop"
+        "on-click": "sensible-terminal -e htop"
     },
     "network": {
         "format": "<span color='#585858' size='smaller'>net</span> {ifname}",
@@ -63,7 +63,7 @@
         "format-muted": "<span color='#585858' size='smaller'>vol</span> <span color='#ab4642'>{volume}%</span>",
         "tooltip-format": "{desc}",
         "scroll-step": 1,
-        "on-click": "alacritty -e pulsemixer"
+        "on-click": "sensible-terminal -e pulsemixer"
     },
     "sway/language": {
         "format": "<span color='#585858' size='smaller'>key</span> {}",

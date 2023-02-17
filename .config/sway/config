@@ -23,8 +23,7 @@ set {
 
 # Application aliases.
 set {
-    $terminal alacritty
-    $launcher rofi -terminal $terminal -run-command 'bash -ic "{cmd}"'
+    $launcher rofi -run-command 'bash -ic "{cmd}"'
     $locker   swaylock -f
     $mixer    pulsemixer --max-volume 100
 }
@@ -90,7 +89,7 @@ floating_modifier $mod
 
 bindsym --to-code {
     # Application launching
-    $mod+Return  exec $terminal
+    $mod+Return  exec sensible-terminal
     $mod+d       exec $launcher -show drun -show-icons
     $mod+Shift+d exec $launcher -show run
     $mod+o       exec $launcher -show filebrowser -show-icons

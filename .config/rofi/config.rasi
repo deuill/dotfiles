@@ -4,7 +4,7 @@ configuration {
 	matching: "prefix";
 	modi: "run,calc";
 	sidebar-mode: false;
-	terminal: "alacritty";
+	terminal: "sensible-terminal";
 }
 
 @theme "base16"
