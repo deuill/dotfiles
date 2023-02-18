@@ -25,7 +25,7 @@
         "interval": 10,
         "format": "<span color='#585858' size='smaller'>cpu</span> {usage}%",
         "max-length": 10,
-        "on-click": "sensible-terminal -e htop"
+        "on-click": "sensible-terminal -e btop"
     },
     "custom/mpris": {
         "format": "{} {icon}",
@@ -42,6 +42,36 @@
         "on-click-right": "cantata",
         "on-scroll-up": "playerctl previous",
         "on-scroll-down": "playerctl next"
+    },
+    "mpd": {
+        "format": "{stateIcon} {artist} - {title}<small>{consumeIcon}{randomIcon}{repeatIcon}{singleIcon}</small>",
+        "format-stopped": "",
+        "format-disconnected": "",
+        "interval": 5,
+        "max-length": 60,
+        "artist-len": 40,
+        "title-len": 40,
+        "random-icons": {
+            "off": "",
+            "on": " "
+        },
+        "repeat-icons": {
+            "on": " "
+        },
+        "single-icons": {
+            "on": " ¹"
+        },
+        "state-icons": {
+            "paused": "",
+            "playing": ""
+        },
+        "tooltip-format": "{artist} - {album} - {title} ({elapsedTime:%M:%S}/{totalTime:%M:%S})",
+        "tooltip-format-disconnected": "MPD (disconnected)",
+        "smooth-scrolling-threshold": 20,
+        "on-click": "mpc toggle",
+        "on-click-right": "cantata",
+        "on-scroll-up": "mpc prev",
+        "on-scroll-down": "mpc next"
     },
     "memory": {
         "interval": 30,
@@ -76,7 +106,7 @@
         "smooth-scrolling-threshold": 5
     },
     "sway/window": {
-        "format": "<span color='#585858' size='smaller'></span>",
+        "format": "<span color='#585858' size='smaller'>⋮</span>",
         "on-click": "rofi -show drun -show-icons",
         "icon": false,
         "align": 0,
