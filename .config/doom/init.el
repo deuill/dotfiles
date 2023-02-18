@@ -6,7 +6,7 @@
 
        :checkers
        (syntax +childframe)
-       spell
+       (spell +hunspell)
 
        :ui
        doom
