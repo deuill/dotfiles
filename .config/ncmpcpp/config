@@ -1,18 +1,20 @@
 [header]
 header_visibility = "no"
-header_window_color = "black"
+header_window_color = "white"
 volume_color = "green"
-state_line_color = "black"
+state_line_color = "white"
 
 [playlist]
-playlist_display_mode = "classic"
-song_list_format = "$5%t $R$6%a $7%N$9"
-now_playing_prefix = ">> $b"
+playlist_display_mode = "columns"
+titles_visibility = "no"
+song_list_format = "$5%t$9 $R$6%a$9 $3%N$9"
+song_columns_list_format = (7f)[green]{NE} (50)[]{t|f:Title} (20)[magenta]{ar} (20)[cyan]{br}
+now_playing_prefix = "$b"
 now_playing_suffix = "$/b"
 
 [statusbar]
-progressbar_look = "━━━"
-progressbar_color = "black"
+progressbar_look = "━► "
+progressbar_color = "white"
 statusbar_visibility = "yes"
 progressbar_elapsed_color = "cyan"
 statusbar_color = "3"
@@ -20,10 +22,11 @@ song_status_format = "{%t - %a}"
 
 [library]
 song_library_format = "{{%a - %t}|{%f}}{$R%l}"
-empty_tag_color = "black"
+empty_tag_color = "cyan"
 
 [global]
+connected_message_on_startup = "no"
 main_window_color = "default"
 centered_cursor = "yes"
 enable_window_title = "yes"
-external_editor = "emacs -nw"
+external_editor = "emacs"
