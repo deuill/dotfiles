@@ -177,7 +177,7 @@ bindsym --to-code {
     $mod+x           exec dunstctl close
     $mod+Shift+x     exec dunstctl close-all
     $mod+grave       exec dunstctl history-pop
-    $mod+Shift+grave exec dunstctl context
+    $mod+Shift+grave exec dunstctl action
 
     --no-repeat --locked {
         # Volume keys.
@@ -186,17 +186,17 @@ bindsym --to-code {
         XF86AudioMute        exec $mixer --toggle-mute
 
         # Media keys.
-        $mod+Ctrl+Up    exec playerctl stop
-        $mod+Ctrl+Down  exec playerctl play-pause
-        $mod+Ctrl+Left  exec playerctl previous
-        $mod+Ctrl+Right exec playerctl next
+        $mod+Ctrl+Up    exec mpc stop
+        $mod+Ctrl+Down  exec mpc toggle
+        $mod+Ctrl+Left  exec mpc prev
+        $mod+Ctrl+Right exec mpc next
 
-        XF86AudioStop    exec playerctl stop
-        XF86AudioPlay    exec playerctl play-pause
-        XF86AudioPrev    exec playerctl previous
-        XF86AudioNext    exec playerctl next
-        XF86AudioRewind  exec playerctl position 10-
-        XF86AudioForward exec playerctl position 10+
+        XF86AudioStop    exec mpc stop
+        XF86AudioPlay    exec mpc toggle
+        XF86AudioPrev    exec mpc prev
+        XF86AudioNext    exec mpc next
+        XF86AudioRewind  exec mpc seek 10-
+        XF86AudioForward exec mpc seek 10+
 
         XF86MonBrightnessDown exec brightnessctl set 10%-
         XF86MonBrightnessUp exec brightnessctl set +10%

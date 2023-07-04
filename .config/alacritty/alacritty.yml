@@ -1,6 +1,6 @@
 window:
   decorations: none
-  decorations_theme_variant: dark
+  decorations_theme_variant: Dark
   padding:
     x: 20
     y: 20

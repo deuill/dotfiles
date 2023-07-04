@@ -11,7 +11,6 @@ c.content.blocking.adblock.lists = [
     "https://raw.githubusercontent.com/uBlockOrigin/uAssets/master/filters/unbreak.txt",
     "https://easylist.to/easylist/easylist.txt",
     "https://easylist.to/easylist/easyprivacy.txt",
-    "https://curben.gitlab.io/malware-filter/urlhaus-filter-online.txt",
     "https://pgl.yoyo.org/adservers/serverlist.php?hostformat=hosts&showintro=1&mimetype=plaintext",
 ]
 c.confirm_quit = ["multiple-tabs", "downloads"]
@@ -27,31 +26,36 @@ c.tabs.show = "multiple"
 c.tabs.tabs_are_windows = False
 c.tabs.background = True
 c.tabs.new_position.related = "next"
-c.url.default_page = 'https://duckduckgo.com'
+c.url.default_page = "https://duckduckgo.com"
 c.input.insert_mode.auto_leave = False
 c.input.insert_mode.auto_load = True
 c.zoom.default = "130%"
 
 # Searches.
-c.url.searchengines['DEFAULT'] = 'https://duckduckgo.com/?q={}'
-c.url.searchengines['!aw'] = 'https://wiki.archlinux.org/?search={}'
-c.url.searchengines['!ap'] = 'https://www.archlinux.org/packages/?sort=&q={}'
-c.url.searchengines['!g'] = 'http://www.google.com/search?hl=en&source=hp&ie=ISO-8859-l&q={}'
-c.url.searchengines['!yt'] = 'https://www.youtube.com/results?search_query={}'
-c.url.searchengines['!w'] = 'https://secure.wikimedia.org/wikipedia/en/w/index.php?title=Special%%3ASearch&search={}'
-c.url.searchengines['!gh'] = 'https://github.com/search?q={}&type=Code'
+c.url.searchengines["DEFAULT"] = "https://duckduckgo.com/?q={}"
+c.url.searchengines["!aw"] = "https://wiki.archlinux.org/?search={}"
+c.url.searchengines["!ap"] = "https://www.archlinux.org/packages/?sort=&q={}"
+c.url.searchengines["!g"] = "http://www.google.com/search?hl=en&source=hp&ie=ISO-8859-l&q={}"
+c.url.searchengines["!yt"] = "https://www.youtube.com/results?search_query={}"
+c.url.searchengines["!w"] = "https://secure.wikimedia.org/wikipedia/en/w/index.php?title=Special%%3ASearch&search={}"
+c.url.searchengines["!gh"] = "https://github.com/search?q={}&type=Code"
 
 # Key bindings.
-config.bind('gH', 'tab-move -', mode='normal')
-config.bind('gL', 'tab-move +', mode='normal')
-config.bind('tj', 'back -t', mode='normal')
-config.bind('wj', 'back -w', mode='normal')
-config.bind('tk', 'forward -t', mode='normal')
-config.bind('wk', 'forward -w', mode='normal')
-config.bind('H', 'tab-prev', mode='normal')
-config.bind('J', 'back', mode='normal')
-config.bind('K', 'forward', mode='normal')
-config.bind('L', 'tab-next', mode='normal')
+config.bind("gH", "tab-move -", mode="normal")
+config.bind("gL", "tab-move +", mode="normal")
+config.bind("tj", "back -t", mode="normal")
+config.bind("wj", "back -w", mode="normal")
+config.bind("tk", "forward -t", mode="normal")
+config.bind("wk", "forward -w", mode="normal")
+config.bind("H", "tab-prev", mode="normal")
+config.bind("J", "back", mode="normal")
+config.bind("K", "forward", mode="normal")
+config.bind("L", "tab-next", mode="normal")
+
+config.bind("zl", "spawn --userscript qute-pass")
+config.bind("zul", "spawn --userscript qute-pass --username-only")
+config.bind("zpl", "spawn --userscript qute-pass --password-only")
+config.bind("zol", "spawn --userscript qute-pass --otp-only")
 
 # UI controls.
 c.completion.height = "30%"
@@ -148,12 +152,12 @@ c.colors.contextmenu.disabled.fg = base04
 c.colors.contextmenu.menu.bg = base00
 
 # Foreground color of the context menu. If set to null, the Qt default is used.
-c.colors.contextmenu.menu.fg =  base05
+c.colors.contextmenu.menu.fg = base05
 
 # Background color of the context menu’s selected item. If set to null, the Qt default is used.
 c.colors.contextmenu.selected.bg = base02
 
-#Foreground color of the context menu’s selected item. If set to null, the Qt default is used.
+# Foreground color of the context menu’s selected item. If set to null, the Qt default is used.
 c.colors.contextmenu.selected.fg = base05
 
 # Background color for the download bar.

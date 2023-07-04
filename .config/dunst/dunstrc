@@ -7,11 +7,11 @@ width  = (400, 600)   # The minimum and maximum width of any notification.
 origin = bottom-right # The screen location from which notifications appear.
 offset = 20x20        # The horizontal and vertical edge offset for notifications.
 
-progress_bar             = true # Turn on the progess bar.
-progress_bar_height      = 20   # Set the progress bar height.
-progress_bar_frame_width = 1    # Set the frame width of the progress bar.
-progress_bar_min_width   = 600  # Set the minimum width for the progress bar.
-progress_bar_max_width   = 600  # Set the maximum width for the progress bar.
+progress_bar             = yes # Turn on the progess bar.
+progress_bar_height      = 20  # Set the progress bar height.
+progress_bar_frame_width = 1   # Set the frame width of the progress bar.
+progress_bar_min_width   = 600 # Set the minimum width for the progress bar.
+progress_bar_max_width   = 600 # Set the maximum width for the progress bar.
 
 notification_limit = 5   # Show a maximum of 5 notifications on-screen at the same time.
 indicate_hidden    = yes # Show how many messages are currently hidden (because of geometry).
@@ -60,14 +60,13 @@ max_icon_size = 64   # Scale larger icons down to this size, set to 0 to disable
 sticky_history = yes # Whether notifications from history should be sticky.
 history_length = 20  # Maximum amount of notifications kept in history.
 
-# Misc/Advanced settings.
-dmenu   = /usr/bin/wofi --dmenu -p dunst:   # Path to dmenu-compatible launcher.
-browser = /usr/bin/qutebrowser --target tab # Browser for opening URLs in context menu.
-
 # Interaction settings.
 mouse_left_click   = close_current
 mouse_middle_click = do_action, close_current
 mouse_right_click  = close_all
+
+# Misc/Advanced settings.
+dmenu = /usr/bin/rofi -dmenu # Path to dmenu-compatible launcher.
 
 # Notification-specific settings.
 [urgency_low]

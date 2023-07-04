@@ -1,7 +1,7 @@
 {
     "layer": "top",
     "height": 32,
-    "modules-left": ["sway/window", "custom/mpris", "sway/mode"],
+    "modules-left": ["sway/window", "mpd", "sway/mode"],
     "modules-center": ["sway/workspaces"],
     "modules-right": ["pulseaudio", "network", "battery", "cpu", "memory", "temperature", "sway/language", "clock", "tray"],
     "battery": {
@@ -18,7 +18,7 @@
         "format-alt": "<span color='#585858' size='smaller'>date</span> {:%A, %d %B %H:%M %Z}",
         "tooltip-format": "  <big>{:%d %B %Y}</big>\n{calendar}",
         "today-format": "<span color='#ab4642'>{}</span>",
-        "timezones": ["", "America/New_York", "America/Los_Angeles"],
+        "timezones": ["Europe/London", "America/New_York", "America/Los_Angeles"],
         "smooth-scrolling-threshold": 20
     },
     "cpu": {
@@ -33,7 +33,7 @@
         "format-icons": {
             "playing": "<span color='#585858' size='smaller'>play</span>",
             "paused": "<span color='#585858' size='smaller'>paus</span>",
-            "stopped": "<span color='#585858' size='smaller'>stop</span>",
+            "stopped": "<span color='#585858' size='smaller'>stop</span>"
         },
         "max-length": 60,
         "exec": "playerctl --follow metadata --format '{\"text\": \"{{markup_escape(artist)}} - {{markup_escape(title)}}\", \"tooltip\": \"{{markup_escape(artist)}} - {{markup_escape(album)}} - {{markup_escape(title)}} ({{playerName}})\", \"alt\": \"{{lc(status)}}\", \"class\": \"{{lc(status)}}\"}'",
@@ -44,32 +44,22 @@
         "on-scroll-down": "playerctl next"
     },
     "mpd": {
-        "format": "{stateIcon} {artist} - {title}<small>{consumeIcon}{randomIcon}{repeatIcon}{singleIcon}</small>",
+        "format": "{artist} - {title} {stateIcon}",
         "format-stopped": "",
         "format-disconnected": "",
         "interval": 5,
         "max-length": 60,
         "artist-len": 40,
         "title-len": 40,
-        "random-icons": {
-            "off": "",
-            "on": " "
-        },
-        "repeat-icons": {
-            "on": " "
-        },
-        "single-icons": {
-            "on": " ¹"
-        },
         "state-icons": {
-            "paused": "",
-            "playing": ""
+            "paused": "<span color='#585858' size='smaller'>paus</span>",
+            "playing": "<span color='#585858' size='smaller'>play</span>"
         },
         "tooltip-format": "{artist} - {album} - {title} ({elapsedTime:%M:%S}/{totalTime:%M:%S})",
-        "tooltip-format-disconnected": "MPD (disconnected)",
+        "tooltip-format-disconnected": "MPD (Disconnected)",
         "smooth-scrolling-threshold": 20,
         "on-click": "mpc toggle",
-        "on-click-right": "cantata",
+        "on-click-right": "sensible-terminal -e ncmpcpp",
         "on-scroll-up": "mpc prev",
         "on-scroll-down": "mpc next"
     },

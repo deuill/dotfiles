@@ -28,8 +28,8 @@
   ;; Font definitions.
   doom-font                (font-spec :family "Iosevka"        :size 24 :weight 'light)
   doom-big-font            (font-spec :family "Iosevka"        :size 28 :weight 'light)
-  doom-variable-pitch-font (font-spec :family "IBM Plex Sans"  :size 22 :weight 'light)
-  doom-serif-font          (font-spec :family "IBM Plex Serif" :size 22 :weight 'light)
+  doom-variable-pitch-font (font-spec :family "IBM Plex Sans"  :size 24 :weight 'light)
+  doom-serif-font          (font-spec :family "IBM Plex Serif" :size 24 :weight 'light)
   doom-unicode-font        (font-spec :family "Iosevka"        :size 24 :weight 'light)
 
   ;; Column used as limit for various modes.
@@ -104,11 +104,11 @@
 
 (after! eshell
   (setq eshell-banner-message "")
-  (set-popup-rule! "^\\*eshell\\*" :vslot -5 :select t :modeline nil :quit nil :ttl nil :height 0.25))
+  (set-popup-rule! "^\\*\\(?:doom:\\)eshell" :vslot -5 :select t :modeline nil :quit nil :ttl nil :height 0.25))
 
 (after! eww
   (setq shr-use-fonts t
-        shr-discard-aria-hidden t
+        shr-discard-aria-hidden nil
         shr-max-width fill-column
         shr-hr-line ?━
         shr-bullet "• "
@@ -150,8 +150,8 @@
         lsp-clients-lua-language-server-main-location "/usr/lib/lua-language-server/bin/main.lua"))
 
 (after! magit
-   (setq magit-diff-refine-hunk t
-         magit-display-buffer-function #'magit-display-buffer-traditional))
+  (setq magit-diff-refine-hunk t
+        magit-display-buffer-function #'magit-display-buffer-traditional))
 
 (after! (magit evil)
   (evil-define-key* 'normal magit-status-mode-map (kbd "<escape>") #'magit-mode-bury-buffer))
@@ -216,7 +216,10 @@
   (define-key transient-sticky-map (kbd "<escape>") 'transient-quit-seq))
 
 (after! vterm
-  (set-popup-rule! "^\\*vterm\\*" :vslot -5 :select t :modeline nil :quit nil :ttl nil :height 0.25))
+  (set-popup-rule! "^\\*\\(?:doom:\\)vterm" :vslot -5 :select t :modeline nil :quit nil :ttl nil :height 0.25))
+
+(after! vundo
+  (setq vundo-glyph-alist vundo-ascii-symbols))
 
 (after! (:or man woman)
   (set-popup-rule! "^\\*\\(?:Wo\\)?Man " :side 'right :select t :quit 'current :slot 0 :width (+ fill-column 4)))
@@ -282,6 +285,7 @@
   (run-hooks (intern (format "%s-lsp-hook" major-mode))))
 
 (add-hook! markdown-mode
+  (setq markdown-fontify-code-blocks-natively t)
   (auto-fill-mode t))
 
 (add-hook! pdf-view-mode

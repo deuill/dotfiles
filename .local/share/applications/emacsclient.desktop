@@ -4,7 +4,7 @@ Type=Application
 Name=Emacs
 GenericName=File Viewer
 Comment=View files with Emacs
-Exec=emacsclient --socket-name=main --alternate-editor=emacs --create-frame %F
+Exec=emacsclient --socket-name=server --alternate-editor=emacs %F
 Terminal=false
 StartupWMClass=Emacs
 NoDisplay=true

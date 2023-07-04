@@ -43,7 +43,7 @@ to the `killed-buffer-list' when killing the buffer."
 
 ;;;###autoload
 (defun +custom/safe-revert-buffer ()
-  "Prompt before reverting the file."
+  "Prompt before reverting buffer."
   (interactive)
   (revert-buffer nil nil))
 
@@ -84,3 +84,17 @@ to the `killed-buffer-list' when killing the buffer."
   (pop-to-buffer deft-buffer)
   (if (not (eq major-mode 'deft-mode))
       (deft-mode)))
+
+;;;###autoload
+(define-derived-mode rich-view-mode fundamental-mode "rich-view-mode"
+  "Major mode for viewing rich text (e.g. RTF, DOC) files."
+  (delete-region (point-min) (point-max))
+  (rename-buffer (concat "*" (buffer-file-name) "*"))
+  (call-process "pandoc" nil t t "--to" "html" (buffer-file-name))
+  (shr-render-region (point-min) (point-max))
+  (set-buffer-modified-p nil)
+  (read-only-mode))
+
+(add-to-list 'auto-mode-alist '("\\.rtf\\'" . rich-view-mode))
+(add-to-list 'auto-mode-alist '("\\.docx\\'" . rich-view-mode))
+(add-to-list 'auto-mode-alist '("\\.odt\\'" . rich-view-mode))

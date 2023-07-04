@@ -6,7 +6,7 @@
 
        :checkers
        (syntax +childframe)
-       (spell +hunspell)
+       (spell +flyspell +hunspell)
 
        :ui
        doom
@@ -36,7 +36,7 @@
        (dired +ranger +icons)
        electric
        ibuffer
-       (undo +tree)
+       undo
        vc
 
        :term

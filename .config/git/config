@@ -2,6 +2,8 @@
 	excludesfile = ~/.config/git/ignore
 [push]
 	default = current
+[pull]
+	rebase = false
 [color]
 	ui = 1
 [help]
