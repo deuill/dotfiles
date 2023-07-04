@@ -1,0 +1,56 @@
+# -------------------------------------
+# Core
+# -------------------------------------
+poll_method epoll
+
+# -------------------------------------
+# SIP
+# -------------------------------------
+sip_cafile /etc/ssl/certs/ca-certificates.crt
+
+audio_player pipewire,default
+audio_source pipewire,default
+audio_alert  pipewire,default
+
+# -------------------------------------
+# Modules
+# -------------------------------------
+
+module_path /usr/lib/baresip/modules
+
+# UI modules
+module stdio.so
+
+# Audio codec modules
+module g711.so
+
+# Audio driver Modules
+module pipewire.so
+
+# Compatibility modules
+module uuid.so
+
+# Media NAT modules
+module stun.so
+module turn.so
+module ice.so
+
+# -------------------------------------
+# Application Modules
+# -------------------------------------
+
+module_app account.so
+module_app gtk.so
+module_app menu.so
+module_app netroam.so
+
+# -------------------------------------
+# Module parameters
+# -------------------------------------
+
+# UI module parameters
+evdev_device   /dev/input/event0
+vumeter_stderr yes
+
+# Alerts and sounds
+ring_aufile none
