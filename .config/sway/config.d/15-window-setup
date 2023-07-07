@@ -1,0 +1,4 @@
+for_window {
+    [app_id="thunar"] floating enable
+    [app_id="io.github.celluloid_player.Celluloid"] floating enable
+}
