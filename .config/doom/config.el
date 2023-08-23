@@ -83,9 +83,12 @@
 ;;;
 
 (set-popup-rule! "^\\*doom:scratch" :side 'right :select t :quit 'other :slot 0 :width (+ fill-column 4))
+(set-popup-rule! "^ ?\\*Treemacs" :ignore t)
 
-(setq-default shell-file-name "/usr/bin/fish"
-              doom-scratch-initial-major-mode 'text-mode)
+(setq-default auth-sources '(default)
+              browse-url-browser-function 'eww-browse-url
+              doom-scratch-initial-major-mode 'text-mode
+              shell-file-name "/usr/bin/fish")
 
 (after! dash-docs
   (setq dash-docs-docsets-path "~/.local/share/docsets"
@@ -151,7 +154,8 @@
 
 (after! magit
   (setq magit-diff-refine-hunk t
-        magit-display-buffer-function #'magit-display-buffer-traditional))
+        magit-display-buffer-function #'magit-display-buffer-traditional)
+        magit-revision-show-gravatars '("^Author:     " . "^Commit:     "))
 
 (after! (magit evil)
   (evil-define-key* 'normal magit-status-mode-map (kbd "<escape>") #'magit-mode-bury-buffer))
@@ -257,14 +261,16 @@
   (display-fill-column-indicator-mode 0))
 
 (add-hook! 'evil-visual-state-entry-hook
-  (setq-local whitespace-style '(face tabs tab-mark spaces space-mark trailing))
-  (whitespace-turn-off)
-  (whitespace-turn-on-if-enabled))
+  (when (funcall whitespace-enable-predicate)
+    (setq-local whitespace-style '(face tabs tab-mark spaces space-mark trailing))
+    (whitespace-turn-off)
+    (whitespace-turn-on)))
 
 (add-hook! 'evil-visual-state-exit-hook
-  (kill-local-variable 'whitespace-style)
-  (whitespace-turn-off)
-  (whitespace-turn-on-if-enabled))
+  (when (funcall whitespace-enable-predicate)
+    (kill-local-variable 'whitespace-style)
+    (whitespace-turn-off)
+    (whitespace-turn-on)))
 
 (add-hook! git-commit-mode
   (setq indent-tabs-mode nil))
@@ -396,21 +402,15 @@
 
         (:prefix "g"
           (:when (modulep! :ui vc-gutter)
-                                               "]"   nil
-                                               "["   nil
-                                               "."   nil
             :desc "Jump to next hunk"          "n"   #'git-gutter:next-hunk
             :desc "Jump to previous hunk"      "p"   #'git-gutter:previous-hunk
             :desc "Revert hunk"                "r"   #'git-gutter:revert-hunk
             :desc "Git stage hunk"             "s"   #'git-gutter:stage-hunk
             :desc "Git time machine"           "t"   #'git-timemachine-toggle)
           (:when (modulep! :tools magit)
-                                               "/"   nil
-                                               "'"   nil
                                                "D"   nil
             :desc "Git fetch"                  "f"   #'magit-fetch
-            :desc "Git pull"                   "F"   #'magit-pull
-                                               "f"   nil))
+            :desc "Git pull"                   "F"   #'magit-pull))
 
         "i" nil
         "n" nil

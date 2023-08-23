@@ -14,7 +14,7 @@ tooltip {
     transition: background-color 0.1s ease;
 }
 
-#waybar.empty {
+#waybar.empty, #waybar.floating {
     background-color: transparent;
 }
 
@@ -55,7 +55,8 @@ tooltip {
 }
 
 #window {
-    padding-left: 0.5rem;
+    padding: 0;
+    margin: 0;
 }
 
 #mode {

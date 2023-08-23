@@ -90,6 +90,7 @@ floating_modifier $mod
 bindsym --to-code {
     # Application launching
     $mod+Return  exec sensible-terminal
+    XF86LaunchA  exec $launcher -show drun -show-icons
     $mod+d       exec $launcher -show drun -show-icons
     $mod+Shift+d exec $launcher -show run
     $mod+o       exec $launcher -show filebrowser -show-icons
@@ -138,7 +139,7 @@ bindsym --to-code {
     $mod+e layout toggle split
 
     # Toggle tiling/floating
-    $mod+t       floating toggle
+    $mod+t       floating toggle; [tiling con_id=__focused__] border none; [floating con_id=__focused__] border pixel 3
     $mod+Shift+t sticky toggle
 
     # Focus the parent/child container.

@@ -17,7 +17,7 @@
        ophints
        (popup +all +defaults)
        (treemacs +lsp)
-       vc-gutter
+       (vc-gutter +diff-hl +pretty)
        (window-select +numbers +switch-window)
        workspaces
        zen
@@ -50,7 +50,7 @@
        (eval +overlay)
        (lookup +dictionary +docsets +offline)
        (lsp +peek)
-       magit
+       (magit +forge)
        pdf
        rgb
 

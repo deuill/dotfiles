@@ -46,9 +46,9 @@ show_age_threshold = 300 # Show age of message if message is older than show_age
 word_wrap      = yes # Split notifications into multiple lines if they don't fit into geometry.
 ignore_newline = no  # Ignore newlines ('\n') in notifications.
 
-stack_duplicates     = true # Stack together notifications with the same content.
-hide_duplicate_count = true # Hide the count of stacked notifications with the same content.
-show_indicators      = no   # Display indicators for URLs (U) and actions (A).
+stack_duplicates     = yes # Stack together notifications with the same content.
+hide_duplicate_count = yes # Hide the count of stacked notifications with the same content.
+show_indicators      = no  # Display indicators for URLs (U) and actions (A).
 
 # Icon settings.
 icon_path = /usr/share/icons/Adwaita/scalable/status/:/usr/share/icons/Adwaita/scalable/devices/
