@@ -1,8 +1,8 @@
 [header]
-header_visibility = "no"
-header_window_color = "white"
+header_visibility = "yes"
+header_window_color = "default"
 volume_color = "green"
-state_line_color = "white"
+state_line_color = "cyan"
 
 [playlist]
 playlist_display_mode = "columns"

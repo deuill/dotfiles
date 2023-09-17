@@ -22,49 +22,46 @@
 
 ;; Set default values for UI parameters.
 (setq-default
-  ;; Default theme.
-  doom-theme 'doom-monokai-pro
+ ;; Default theme.
+ doom-theme 'doom-monokai-pro
 
-  ;; Font definitions.
-  doom-font                (font-spec :family "Iosevka"        :size 24 :weight 'light)
-  doom-big-font            (font-spec :family "Iosevka"        :size 28 :weight 'light)
-  doom-variable-pitch-font (font-spec :family "IBM Plex Sans"  :size 24 :weight 'light)
-  doom-serif-font          (font-spec :family "IBM Plex Serif" :size 24 :weight 'light)
-  doom-unicode-font        (font-spec :family "Iosevka"        :size 24 :weight 'light)
+ ;; Font definitions.
+ doom-font                (font-spec :family "Iosevka"        :size 24 :weight 'light)
+ doom-big-font            (font-spec :family "Iosevka"        :size 28 :weight 'light)
+ doom-variable-pitch-font (font-spec :family "IBM Plex Sans"  :size 24 :weight 'light)
+ doom-serif-font          (font-spec :family "IBM Plex Serif" :size 24 :weight 'light)
+ doom-unicode-font        (font-spec :family "Iosevka"        :size 24 :weight 'light)
 
-  ;; Column used as limit for various modes.
-  fill-column 100
+ ;; Column used as limit for various modes.
+ fill-column 100
 
-  ;; Have which-key behave more sanely.
-  which-key-idle-delay 0.2
-  which-key-max-description-length 35
-  which-key-prefix-prefix ""
+ ;; Have which-key behave more sanely.
+ which-key-idle-delay 0.2
+ which-key-max-description-length 35
+ which-key-prefix-prefix ""
 
-  ;; Have Page Up/Down move to start/end of buffer when possible.
-  scroll-error-top-bottom t
+ ;; Have Page Up/Down move to start/end of buffer when possible.
+ scroll-error-top-bottom t
 
-  ;; Stretch cursor to fill width of character underneath.
-  x-stretch-cursor t
+ ;; Stretch cursor to fill width of character underneath.
+ x-stretch-cursor t
 
-  ;; Disable line numbers.
-  display-line-numbers-type nil
+ ;; Disable line numbers.
+ display-line-numbers-type nil
 
-  ;; Set up mode-line.
-  doom-modeline-persp-name t
-  doom-modeline-vcs-max-length 30
-
-  ;; Add horizontal margin to windows.
-  left-margin-width 1
-  right-margin-width 1)
+ ;; Set up mode-line.
+ doom-modeline-persp-name t
+ doom-modeline-vcs-max-length 30)
 
 (custom-set-faces!
   ;; Set colors consistent with Base16-Eighties theme.
-  '(default              :background "#2d2d2d")
-  '(hl-line              :background "#323232")
-  '(mode-line            :background "#282828")
-  '(vertical-border      :background "#282828" :foreground "#282828")
-  '(solaire-default-face :background "#282828")
-  '(solaire-hl-line-face :background "#323232")
+  '(default                         :background "#2d2d2d")
+  '(hl-line                         :background "#323232")
+  '(mode-line                       :background "#282828")
+  '(vertical-border                 :background "#282828" :foreground "#282828")
+  '(solaire-default-face            :background "#282828")
+  '(solaire-hl-line-face            :background "#323232")
+  '(treemacs-window-background-face :background "#323232")
 
   ;; Have whitespace blend into background until highlighted.
   '(whitespace-space :background "#2d2d2d" :foreground "#2d2d2d")
@@ -83,7 +80,6 @@
 ;;;
 
 (set-popup-rule! "^\\*doom:scratch" :side 'right :select t :quit 'other :slot 0 :width (+ fill-column 4))
-(set-popup-rule! "^ ?\\*Treemacs" :ignore t)
 
 (setq-default auth-sources '(default)
               browse-url-browser-function 'eww-browse-url
@@ -102,8 +98,8 @@
 
 (after! evil
   ;; Transpose lines with J/K when in visual mode.
-  (define-key evil-visual-state-map "J" (concat ":m '>+1" (kbd "RET") "gv=gv"))
-  (define-key evil-visual-state-map "K" (concat ":m '<-2" (kbd "RET") "gv=gv")))
+  (define-key evil-visual-state-map "J" #'drag-stuff-down)
+  (define-key evil-visual-state-map "K" #'drag-stuff-up))
 
 (after! eshell
   (setq eshell-banner-message "")
@@ -154,8 +150,8 @@
 
 (after! magit
   (setq magit-diff-refine-hunk t
-        magit-display-buffer-function #'magit-display-buffer-traditional)
-        magit-revision-show-gravatars '("^Author:     " . "^Commit:     "))
+        magit-display-buffer-function #'magit-display-buffer-traditional
+        magit-revision-show-gravatars '("^Author:     " . "^Commit:     ")))
 
 (after! (magit evil)
   (evil-define-key* 'normal magit-status-mode-map (kbd "<escape>") #'magit-mode-bury-buffer))
@@ -202,10 +198,10 @@
         :desc "Set SQL product"   "p" #'+sql/set-product
         :desc "Start SQL session" ";" #'+sql/start
         (:prefix ("s" . "send")
-          :desc "Send buffer"     "b" #'sql-send-buffer
-          :desc "Send region"     "r" #'sql-send-region
-          :desc "Send string"     "s" #'sql-send-string
-          :desc "Send paragraph"  "p" #'sql-send-paragraph))
+         :desc "Send buffer"     "b" #'sql-send-buffer
+         :desc "Send region"     "r" #'sql-send-region
+         :desc "Send string"     "s" #'sql-send-string
+         :desc "Send paragraph"  "p" #'sql-send-paragraph))
   (advice-add 'sql-add-product :after #'+sql--populate-product-list)
   (advice-add 'sql-del-product :after #'+sql--populate-product-list)
   (+sql--populate-product-list))
@@ -285,7 +281,7 @@
   (hs-minor-mode))
 
 (add-hook! 'kill-buffer-hook
-  '+custom--add-buffer-to-killed-list-h)
+           '+custom--add-buffer-to-killed-list-h)
 
 (add-hook! 'lsp-after-initialize-hook
   (run-hooks (intern (format "%s-lsp-hook" major-mode))))
@@ -376,103 +372,103 @@
         "X" nil
 
         (:prefix "b"
-          :desc "Kill all buffers"             "D"   #'doom/kill-all-buffers
-                                               "k"   nil
-                                               "K"   nil
-                                               "l"   nil
-          :desc "Paste and replace buffer"     "P"   #'+custom/paste-buffer
-          :desc "Rename buffer"                "r"   #'rename-buffer
-          :desc "Revert buffer"                "R"   #'+custom/safe-revert-buffer
-          :desc "Reopen killed buffer"         "u"   #'+custom/reopen-killed-buffer
-          (:when (modulep! :emacs undo +tree)
-            :desc "Open undo tree"             "U"   #'undo-tree-visualize)
-          :desc "Pop up scratch buffer"        "x"   #'doom/open-scratch-buffer
-          :desc "Switch to scratch buffer"     "X"   #'doom/switch-to-scratch-buffer)
+         :desc "Kill all buffers"             "D"   #'doom/kill-all-buffers
+         "k"   nil
+         "K"   nil
+         "l"   nil
+         :desc "Paste and replace buffer"     "P"   #'+custom/paste-buffer
+         :desc "Rename buffer"                "r"   #'rename-buffer
+         :desc "Revert buffer"                "R"   #'+custom/safe-revert-buffer
+         :desc "Reopen killed buffer"         "u"   #'+custom/reopen-killed-buffer
+         (:when (modulep! :emacs undo +tree)
+           :desc "Open undo tree"             "U"   #'undo-tree-visualize)
+         :desc "Pop up scratch buffer"        "x"   #'doom/open-scratch-buffer
+         :desc "Switch to scratch buffer"     "X"   #'doom/switch-to-scratch-buffer)
 
         (:prefix "f"
-                                               "c"   nil
-          :desc "Copy this file"               "C"   #'+custom/copy-this-file
-          :desc "Find file as root"            "e"   #'doom/sudo-find-file
-          :desc "Open current file as root"    "E"   #'doom/sudo-this-file
-                                               "l"   nil
-                                               "p"   nil
-                                               "P"   nil
-                                               "u"   nil
-                                               "U"   nil)
+         "c"   nil
+         :desc "Copy this file"               "C"   #'+custom/copy-this-file
+         :desc "Find file as root"            "e"   #'doom/sudo-find-file
+         :desc "Open current file as root"    "E"   #'doom/sudo-this-file
+         "l"   nil
+         "p"   nil
+         "P"   nil
+         "u"   nil
+         "U"   nil)
 
         (:prefix "g"
-          (:when (modulep! :ui vc-gutter)
-            :desc "Jump to next hunk"          "n"   #'git-gutter:next-hunk
-            :desc "Jump to previous hunk"      "p"   #'git-gutter:previous-hunk
-            :desc "Revert hunk"                "r"   #'git-gutter:revert-hunk
-            :desc "Git stage hunk"             "s"   #'git-gutter:stage-hunk
-            :desc "Git time machine"           "t"   #'git-timemachine-toggle)
-          (:when (modulep! :tools magit)
-                                               "D"   nil
-            :desc "Git fetch"                  "f"   #'magit-fetch
-            :desc "Git pull"                   "F"   #'magit-pull))
+                 (:when (modulep! :ui vc-gutter)
+                   :desc "Jump to next hunk"          "n"   #'git-gutter:next-hunk
+                   :desc "Jump to previous hunk"      "p"   #'git-gutter:previous-hunk
+                   :desc "Revert hunk"                "r"   #'git-gutter:revert-hunk
+                   :desc "Git stage hunk"             "s"   #'git-gutter:stage-hunk
+                   :desc "Git time machine"           "t"   #'git-timemachine-toggle)
+                 (:when (modulep! :tools magit)
+                   "D"   nil
+                   :desc "Git fetch"                  "f"   #'magit-fetch
+                   :desc "Git pull"                   "F"   #'magit-pull))
 
         "i" nil
         "n" nil
         "o" nil
 
         (:prefix "p"
-          (:when (modulep! :ui workspaces)
-            :desc "Switch to last project"     "TAB" #'+workspace/other
-            :desc "Switch to next project"     "]"   #'+workspace/switch-right
-            :desc "Switch to previous project" "["   #'+workspace/switch-left
-            :desc "Switch to 1st project"      "1"   #'+workspace/switch-to-0
-            :desc "Switch to 2nd project"      "2"   #'+workspace/switch-to-1
-            :desc "Switch to 3rd project"      "3"   #'+workspace/switch-to-2
-            :desc "Switch to 4th project"      "4"   #'+workspace/switch-to-3
-            :desc "Switch to 5th project"      "5"   #'+workspace/switch-to-4
-            :desc "Switch to 6th project"      "6"   #'+workspace/switch-to-5
-            :desc "Switch to 7th project"      "7"   #'+workspace/switch-to-6
-            :desc "Switch to 8th project"      "8"   #'+workspace/switch-to-7
-            :desc "Switch to 9th project"      "9"   #'+workspace/switch-to-8)
-                                               "."   nil
-                                               ">"   nil
-                                               "!"   nil
-          :desc "Open shell in project"        ";"   (cond ((modulep! :term vterm) #'+vterm/toggle)
-                                                           ((modulep! :term eshell) #'+eshell/toggle))
-                                               "b"   nil
-                                               "c"   nil
-                                               "C"   nil
-                                               "d"   nil
-          :desc "Delete project workspace"     "D"   #'+workspace/delete
-                                               "e"   nil
-          :desc "Find file in project"         "f"   #'projectile-find-file
-                                               "F"   nil
-                                               "g"   nil
-                                               "i"   nil
-                                               "k"   nil
-          :desc "List project workspaces"      "l"   #'+workspace/display
-          :desc "New project workspace"        "n"   #'+workspace/new
-                                               "o"   nil
-          :desc "Rename project workspace"     "R"   #'+workspace/rename
-                                               "s"   nil
-          :desc "Save project files"           "S"   #'projectile-save-project-buffers
-          :desc "Toggle file tree"             "t"   (cond ((modulep! :ui neotree)  #'+neotree/open)
-                                                           ((modulep! :ui treemacs) #'+treemacs/toggle))
-                                               "T"   nil
-          :desc "Switch project workspace"     "w"   #'+workspace/switch-to
-          :desc "Pop up scratch buffer"        "x"   #'doom/open-project-scratch-buffer
-          :desc "Remove project"               "X"   #'projectile-remove-known-project)
+                 (:when (modulep! :ui workspaces)
+                   :desc "Switch to last project"     "TAB" #'+workspace/other
+                   :desc "Switch to next project"     "]"   #'+workspace/switch-right
+                   :desc "Switch to previous project" "["   #'+workspace/switch-left
+                   :desc "Switch to 1st project"      "1"   #'+workspace/switch-to-0
+                   :desc "Switch to 2nd project"      "2"   #'+workspace/switch-to-1
+                   :desc "Switch to 3rd project"      "3"   #'+workspace/switch-to-2
+                   :desc "Switch to 4th project"      "4"   #'+workspace/switch-to-3
+                   :desc "Switch to 5th project"      "5"   #'+workspace/switch-to-4
+                   :desc "Switch to 6th project"      "6"   #'+workspace/switch-to-5
+                   :desc "Switch to 7th project"      "7"   #'+workspace/switch-to-6
+                   :desc "Switch to 8th project"      "8"   #'+workspace/switch-to-7
+                   :desc "Switch to 9th project"      "9"   #'+workspace/switch-to-8)
+                 "."   nil
+                 ">"   nil
+                 "!"   nil
+                 :desc "Open shell in project"        ";"   (cond ((modulep! :term vterm) #'+vterm/toggle)
+                                                                  ((modulep! :term eshell) #'+eshell/toggle))
+                 "b"   nil
+                 "c"   nil
+                 "C"   nil
+                 "d"   nil
+                 :desc "Delete project workspace"     "D"   #'+workspace/delete
+                 "e"   nil
+                 :desc "Find file in project"         "f"   #'projectile-find-file
+                 "F"   nil
+                 "g"   nil
+                 "i"   nil
+                 "k"   nil
+                 :desc "List project workspaces"      "l"   #'+workspace/display
+                 :desc "New project workspace"        "n"   #'+workspace/new
+                 "o"   nil
+                 :desc "Rename project workspace"     "R"   #'+workspace/rename
+                 "s"   nil
+                 :desc "Save project files"           "S"   #'projectile-save-project-buffers
+                 :desc "Toggle file tree"             "t"   (cond ((modulep! :ui neotree)  #'+neotree/open)
+                                                                  ((modulep! :ui treemacs) #'+treemacs/toggle))
+                 "T"   nil
+                 :desc "Switch project workspace"     "w"   #'+workspace/switch-to
+                 :desc "Pop up scratch buffer"        "x"   #'doom/open-project-scratch-buffer
+                 :desc "Remove project"               "X"   #'projectile-remove-known-project)
 
         (:prefix "s"
-                                               "f"   nil
-                                               "p"   nil
-                                               "P"   nil
-          :desc "Replace in buffer"            "r"   #'+custom/query-replace-buffer
-          :desc "Replace in project"           "R"   #'projectile-replace)
+         "f"   nil
+         "p"   nil
+         "P"   nil
+         :desc "Replace in buffer"            "r"   #'+custom/query-replace-buffer
+         :desc "Replace in project"           "R"   #'projectile-replace)
 
         "r" nil
 
         (:prefix "t"
-                                               "f"   nil
-                                               "F"   nil
-                                               "g"   nil
-                                               "p"   nil
-                                               "r"   nil
-                                               "s"   nil
-          :desc "Zoom"                         "z"   #'+hydra/text-zoom/body)))
+         "f"   nil
+         "F"   nil
+         "g"   nil
+         "p"   nil
+         "r"   nil
+         "s"   nil
+         :desc "Zoom"                         "z"   #'+hydra/text-zoom/body)))

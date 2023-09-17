@@ -11,6 +11,7 @@
 	],
 	"modules-right": [
 		"pulseaudio",
+		"bluetooth",
 		"network",
 		"battery",
 		"cpu",
@@ -28,6 +29,16 @@
 		},
 		"format": "<span color='#585858' size='smaller'>bat</span> {capacity}%",
 		"max-length": 25
+	},
+	"bluetooth": {
+		"format-off": "",
+		"format-on": "<span color='#585858' size='smaller'>bt</span> ⋯",
+		"format-connected": "<span color='#585858' size='smaller'>bt</span> {device_alias}",
+		"format-connected-battery": "<span color='#585858' size='smaller'>bt</span> {device_alias} {device_battery_percentage}%",
+		"tooltip-format": "Controller:  {controller_alias} ({controller_address})\nConnections: {num_connections}",
+		"tooltip-format-connected": "Controller:  {controller_alias} ({controller_address})\nConnections: {num_connections}{device_enumerate}",
+		"tooltip-format-enumerate-connected": "\n\nDevice: {device_alias} ({device_address})",
+		"tooltip-format-enumerate-connected-battery": "\n\nDevice:  {device_alias} ({device_address})\nBattery: {device_battery_percentage}%"
 	},
 	"clock": {
 		"format": "<span color='#585858' size='smaller'>time</span> {:%H:%M %Z}",
