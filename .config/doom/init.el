@@ -6,7 +6,7 @@
 
        :checkers
        (syntax +childframe)
-       (spell +flyspell +hunspell)
+       (spell +hunspell)
 
        :ui
        doom
@@ -53,23 +53,24 @@
        (magit +forge)
        pdf
        rgb
+       tree-sitter
 
        :lang
-       cc
+       (cc +tree-sitter)
        data
        emacs-lisp
-       (go +lsp)
-       javascript
-       (lua +lsp)
+       (go +lsp +tree-sitter)
+       (javascript +tree-sitter)
+       (lua +lsp +tree-sitter)
        markdown
        (org +dragndrop +present)
-       (php +lsp)
-       (python +lsp)
+       (php +lsp +tree-sitter)
+       (python +lsp +tree-sitter)
        rest
-       (rust +lsp)
-       sh
-       web
-       yaml
+       (rust +lsp +tree-sitter)
+       (sh +fish +lsp +tree-sitter)
+       (web +tree-sitter)
+       (yaml +tree-sitter)
 
        :config
        (default +bindings +smartparens))

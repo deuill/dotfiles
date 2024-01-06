@@ -55,13 +55,14 @@
 
 (custom-set-faces!
   ;; Set colors consistent with Base16-Eighties theme.
-  '(default                         :background "#2d2d2d")
-  '(hl-line                         :background "#323232")
-  '(mode-line                       :background "#282828")
-  '(vertical-border                 :background "#282828" :foreground "#282828")
-  '(solaire-default-face            :background "#282828")
-  '(solaire-hl-line-face            :background "#323232")
-  '(treemacs-window-background-face :background "#323232")
+  '(default                           :background "#2d2d2d")
+  '(hl-line                           :background "#323232")
+  '(mode-line                         :background "#282828")
+  '(vertical-border                   :background "#282828" :foreground "#282828")
+  '(solaire-default-face              :background "#282828")
+  '(solaire-hl-line-face              :background "#323232")
+  '(treemacs-window-background-face   :background "#323232")
+  `(tree-sitter-hl-face:function.call :foreground ,(doom-color 'functions))
 
   ;; Have whitespace blend into background until highlighted.
   '(whitespace-space :background "#2d2d2d" :foreground "#2d2d2d")
@@ -160,13 +161,6 @@
   (setq markdown-asymmetric-header t
         markdown-enable-wiki-links t
         markdown-fontify-code-blocks-natively t))
-
-(after! org
-  (setq org-fontify-quote-and-verse-blocks nil
-        org-fontify-whole-heading-line nil
-        org-hide-leading-stars nil
-        org-startup-indented nil)
-  (remove-hook! org-mode #'org-superstar-mode))
 
 (after! org-roam
   (setq org-roam-directory "~/Documents/Notes"))
