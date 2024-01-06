@@ -8,7 +8,6 @@ DATA_DIR="${XDG_DATA_HOME:-$HOME/.local/share}/calcurse"
 test -f "$DATA_DIR/caldav/lock" && exit
 
 # Run the CalDAV synchronization script in the background.
-if test -d "$DATA_DIR/caldav" && command -v calcurse-caldav >/dev/null; then
-	cd "$DATA_DIR"
-	exec systemd-cat --identifier=calcurse-caldav calcurse-caldav
+if test -d "$DATA_DIR/caldav" && command -v calcurse-caldav > /dev/null; then
+	(cd "$DATA_DIR"; systemd-cat --identifier=calcurse-caldav calcurse-caldav) > /dev/null 2>&1 &
 fi
