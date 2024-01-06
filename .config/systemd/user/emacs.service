@@ -6,6 +6,7 @@ PartOf=graphical-session.target
 [Service]
 Type=simple
 Restart=on-failure
+Environment=DISPLAY=
 ExecStart=/usr/bin/emacs --fg-daemon=main
 ExecStop=/usr/bin/emacsclient --socket-name=main --eval "(kill-emacs)"
 
