@@ -4,7 +4,7 @@
 ;;; Includes and required libraries.
 ;;;
 
-(load! "custom/custom")
+(load! "custom" "~/.config/doom/custom")
 
 ;;;
 ;;; UI configuration.
@@ -112,6 +112,7 @@
         shr-max-width fill-column
         shr-hr-line ?━
         shr-bullet "• "
+        url-user-agent "Mozilla/5.0 (Android 14; Mobile; rv:109.0) Gecko/121.0 Firefox/121.0"
         eww-search-prefix "https://lite.duckduckgo.com/lite?q=")
   (defun shr-add-font (start end type) (+custom/shr-add-font start end type))
   (set-popup-rule! "^\\*eww\\*" :side 'right :select t :quit 'nil :slot 0 :width (+ fill-column 4)))
@@ -242,6 +243,10 @@
   (writeroom-mode t)
   (visual-line-mode t)
   (display-fill-column-indicator-mode 0))
+
+(add-hook! 'doom-load-theme-hook :append
+  (unless (display-graphic-p)
+    (solaire-global-mode -1)))
 
 (add-hook! 'doom-scratch-buffer-created-hook
   (evil-define-key* 'normal 'local (kbd "q") #'(lambda () (interactive) (+popup/close nil t))))

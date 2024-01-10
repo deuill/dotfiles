@@ -72,6 +72,9 @@
        (web +tree-sitter)
        (yaml +tree-sitter)
 
+       :os
+       (tty +osc)
+
        :config
        (default +bindings +smartparens))
 

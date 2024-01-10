@@ -6,9 +6,6 @@
 ;; (package! another-package :recipe (:host github :repo "username/repo"))
 ;; (package! builtin-package :disable t)
 
-;; Core package overrides.
-(package! eshell-did-you-mean :disable t)
-
 ;; Add-ons.
 (package! shr-tag-pre-highlight :pin "931c447bc0d6c134ddc9657c664eeee33afbc54d")
 
