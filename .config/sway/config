@@ -40,21 +40,25 @@ bindswitch --reload --locked {
 }
 
 # Input configuration.
-input "type:keyboard" {
-    xkb_layout   us,gr
-    xkb_options  grp:caps_toggle,grp_led:caps
-    repeat_delay 400
-    repeat_rate  80
-}
+input {
+    "type:keyboard" {
+        xkb_layout   us,gr
+        xkb_options  grp:caps_toggle,grp_led:caps
+        repeat_delay 400
+        repeat_rate  80
+    }
 
-input "type:touchpad" {
-    tap            enabled
-    natural_scroll enabled
-}
+    "type:touchpad" {
+        tap            enabled
+        natural_scroll enabled
+    }
 
-input "type:pointer" {
-    accel_profile adaptive
-    pointer_accel 0.5
+    "type:pointer" {
+        accel_profile    adaptive
+        middle_emulation enabled
+        pointer_accel    0.5
+        scroll_factor    1.5
+    }
 }
 
 # Hide cursor after 30 seconds of inactivity.
