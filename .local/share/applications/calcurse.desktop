@@ -1,0 +1,13 @@
+[Desktop Entry]
+Version=1.0
+Name=Calcurse
+GenericName=Calendar
+Comment=Launches the Calcurse application
+Keywords=Calendar,PIM
+Keywords=Calendar;Event;Reminder;
+Categories=Office;Network;Calendar;ConsoleOnly
+Type=Application
+Icon=calendar
+Terminal=true
+Exec=calcurse
+MimeType=text/calendar;

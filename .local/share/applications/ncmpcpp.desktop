@@ -5,6 +5,6 @@ Name=NCMPCpp
 GenericName=Music Player
 Comment=Play Music with MPD
 Exec=ncmpcpp
-Icon=audio-x-generic
+Icon=gnome-music
 Terminal=true
 Categories=ConsoleOnly;Audio
