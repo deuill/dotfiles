@@ -39,8 +39,11 @@ completion*.selected.bold=true
 completion*.bg="#282828"
 completion*.fg="#d8d8d8"
 
-tab.bg="#2d2d2d"
-tab.fg="#b8b8b8"
+tab.bg="#d8d8d8"
+tab.fg="#282828"
+tab.selected.bg="#282828"
+tab.selected.fg="#d8d8d8"
+tab.selected.bold=true
 
 border.bg="#282828"
 border.fg="#2d2d2d"
