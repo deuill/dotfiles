@@ -1,5 +1,5 @@
 # Set system-wide environment from systemd environment.
-for conf in "$HOME"/.config/environment.d/*.conf; do set -a; . "$conf"; set +a; done
+for conf in "$HOME"/.config/environment.d/*.conf; do set -a; source "$conf"; set +a; done
 
 # Import specific environment variables for user units.
 systemctl --user import-environment PATH
