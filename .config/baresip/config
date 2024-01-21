@@ -19,6 +19,7 @@ audio_alert  pipewire,default
 module_path /usr/lib/baresip/modules
 
 # UI modules
+module cons.so
 module stdio.so
 
 # Audio codec modules
@@ -27,6 +28,7 @@ module g711.so
 # Audio filter modules
 module auconv.so
 module auresamp.so
+module webrtc_aec.so
 
 # Audio driver Modules
 module pipewire.so
@@ -48,6 +50,7 @@ module_app contact.so
 module_app gtk.so
 module_app menu.so
 module_app netroam.so
+module_app debug_cmd.so
 
 # -------------------------------------
 # Module parameters
@@ -59,3 +62,6 @@ vumeter_stderr yes
 
 # Alerts and sounds
 ring_aufile none
+
+# Console UI UDP/TCP socket
+cons_listen 127.0.0.1:5555
