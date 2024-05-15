@@ -1,13 +1,13 @@
 [Desktop Entry]
 Version=1.0
-Name=Calcurse
+Name=Khal
 GenericName=Calendar
-Comment=Launches the Calcurse application
+Comment=Launches the Khal calendar application
 Keywords=Calendar,PIM
 Keywords=Calendar;Event;Reminder;
 Categories=Office;Network;Calendar;ConsoleOnly
 Type=Application
 Icon=calendar
 Terminal=true
-Exec=calcurse
+Exec=ikhal
 MimeType=text/calendar;
