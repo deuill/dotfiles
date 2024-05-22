@@ -4,7 +4,7 @@
 ;;; Includes and required libraries.
 ;;;
 
-(load! "custom" "~/.config/doom/custom")
+(load! "custom/custom" "~/.config/doom")
 
 ;;;
 ;;; UI configuration.
@@ -114,6 +114,7 @@
         shr-bullet "• "
         url-user-agent "Mozilla/5.0 (Android 14; Mobile; rv:109.0) Gecko/121.0 Firefox/121.0"
         eww-search-prefix "https://lite.duckduckgo.com/lite?q=")
+  (evil-define-key* 'normal eww-mode-map (kbd "r") 'eww-reload)
   (defun shr-add-font (start end type) (+custom/shr-add-font start end type))
   (set-popup-rule! "^\\*eww\\*" :side 'right :select t :quit 'nil :slot 0 :width (+ fill-column 4)))
 
@@ -133,7 +134,8 @@
 (after! lsp-mode
   (setq lsp-auto-guess-root t
         lsp-enable-file-watchers nil
-        lsp-log-max nil))
+        lsp-log-max nil)
+  (delete 'lsp-terraform lsp-client-packages))
 
 (after! lsp-php
   (setq lsp-serenata-server-path "/usr/bin/serenata")
@@ -237,6 +239,9 @@
 (add-hook! artist-mode
   (evil-emacs-state +1))
 
+(add-hook! csv-mode
+  (csv-align-mode t))
+
 (add-hook! (doc-mode org-mode markdown-mode)
   (setq indent-tabs-mode nil)
   (flycheck-mode t)
@@ -303,6 +308,9 @@
 
 (add-hook! sql-mode
   (after! lsp-sqls (lsp-deferred)))
+
+(add-hook! yaml-mode
+  (indent-tabs-mode -1))
 
 ;;;
 ;;; Keybindings.

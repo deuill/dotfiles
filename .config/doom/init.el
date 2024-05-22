@@ -1,12 +1,12 @@
 ;;; .doom.d/init.el -*- lexical-binding: t; -*-
 
 (doom! :completion
-       (company +childframe)
+       (company +icons)
        (vertico +icons)
 
        :checkers
        (syntax +childframe)
-       (spell +hunspell)
+       spell
 
        :ui
        doom
@@ -33,7 +33,7 @@
        word-wrap
 
        :emacs
-       (dired +ranger +icons)
+       (dired +icons)
        electric
        ibuffer
        undo
@@ -41,7 +41,6 @@
 
        :term
        vterm
-       eshell
 
        :tools
        (debugger +lsp)

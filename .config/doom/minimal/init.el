@@ -1,12 +1,12 @@
 ;;; .doom.d/init.minimal.el -*- lexical-binding: t; -*-
 
 (doom! :completion
-       company
+       corfu
        vertico
 
        :checkers
        syntax
-       (spell +hunspell)
+       spell
 
        :ui
        doom
@@ -26,15 +26,12 @@
        word-wrap
 
        :emacs
+       (dired +icons)
        electric
-       ibuffer
        undo
 
        :term
        eshell
-
-       :tools
-       (lookup +dictionary +docsets +offline)
 
        :lang
        markdown
@@ -44,3 +41,8 @@
 
        :config
        (default +bindings +smartparens))
+
+(add-hook! 'emacs-startup-hook
+  (setq confirm-kill-emacs nil)
+  (add-hook! '(kill-buffer-hook quit-window-hook) :local
+    (save-buffers-kill-terminal t)))
