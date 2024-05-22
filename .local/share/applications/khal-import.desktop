@@ -1,0 +1,9 @@
+[Desktop Entry]
+Version=1.0
+Name=Khal Import
+Comment=Imports ICS files into Khal
+Type=Application
+Terminal=true
+Exec=khal import %F
+MimeType=text/calendar;
+NoDisplay=true

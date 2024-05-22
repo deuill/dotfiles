@@ -10,4 +10,3 @@ Type=Application
 Icon=calendar
 Terminal=true
 Exec=ikhal
-MimeType=text/calendar;
