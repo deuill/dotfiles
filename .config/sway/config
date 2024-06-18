@@ -26,6 +26,7 @@ set {
     $launcher rofi -run-command 'bash -ic "{cmd}"'
     $locker   swaylock -f
     $mixer    pulsemixer --max-volume 100
+    $terminal sensible-terminal
 }
 
 # Display output configuration.
@@ -93,12 +94,12 @@ floating_modifier $mod
 
 bindsym --to-code {
     # Application launching
-    $mod+Return  exec sensible-terminal
+    $mod+Return  exec $terminal
     XF86LaunchA  exec $launcher -show drun -show-icons
     $mod+d       exec $launcher -show drun -show-icons
     $mod+Shift+d exec $launcher -show run
     $mod+o       exec $launcher -show filebrowser -show-icons
-    $mod+c       exec $launcher -show calc -calc-command "echo -n '{result}' | wl-copy"
+    $mod+c       exec $terminal --class floating -e qalc
 
     # Change focus
     $mod+h     focus left

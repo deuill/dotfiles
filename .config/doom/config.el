@@ -63,16 +63,17 @@
   '(solaire-hl-line-face              :background "#323232")
   '(treemacs-window-background-face   :background "#323232")
   `(tree-sitter-hl-face:function.call :foreground ,(doom-color 'functions))
+  '(eglot-highlight-symbol-face       :inherit region)
 
   ;; Have whitespace blend into background until highlighted.
   '(whitespace-space :background "#2d2d2d" :foreground "#2d2d2d")
   '(whitespace-tab   :background "#2d2d2d" :foreground "#2d2d2d")
 
   ;; Set heading sizes for HTML documents.
-  '(shr-h1 :height 1.9 :weight bold)
-  '(shr-h2 :height 1.6 :weight bold)
-  '(shr-h3 :height 1.4 :weight bold)
-  '(shr-h4 :height 1.2 :weight bold)
+  '(shr-h1 :height 1.6 :weight bold)
+  '(shr-h2 :height 1.3 :weight bold)
+  '(shr-h3 :height 1.2 :weight bold)
+  '(shr-h4 :height 1.15 :weight bold)
   '(shr-h5 :height 1.1 :weight bold)
   '(shr-h6 :height 1.1 :weight normal))
 
@@ -86,6 +87,9 @@
               browse-url-browser-function 'eww-browse-url
               doom-scratch-initial-major-mode 'text-mode
               shell-file-name "/usr/bin/fish")
+
+(after! dape
+  (setq dape-cwd-fn 'projectile-project-root))
 
 (after! dash-docs
   (setq dash-docs-docsets-path "~/.local/share/docsets"
@@ -228,6 +232,9 @@
         writeroom-maximize-window nil)
   (when (modulep! :ui zen)
     (setq +zen-text-scale 0)))
+
+(after! yaml-mode
+  (add-to-list 'auto-mode-alist '("\\.bu\\'" . yaml-mode)))
 
 (after! (yaml-mode evil)
   (evil-define-key* 'normal yaml-mode-map (kbd "<tab>") #'evil-toggle-fold))
@@ -392,6 +399,9 @@
          :desc "Pop up scratch buffer"        "x"   #'doom/open-scratch-buffer
          :desc "Switch to scratch buffer"     "X"   #'doom/switch-to-scratch-buffer)
 
+        (:prefix "c"
+         :desc "Open debugger" "X"  #'+debugger/start)
+
         (:prefix "f"
          "c"   nil
          :desc "Copy this file"               "C"   #'+custom/copy-this-file
@@ -404,12 +414,6 @@
          "U"   nil)
 
         (:prefix "g"
-                 (:when (modulep! :ui vc-gutter)
-                   :desc "Jump to next hunk"          "n"   #'git-gutter:next-hunk
-                   :desc "Jump to previous hunk"      "p"   #'git-gutter:previous-hunk
-                   :desc "Revert hunk"                "r"   #'git-gutter:revert-hunk
-                   :desc "Git stage hunk"             "s"   #'git-gutter:stage-hunk
-                   :desc "Git time machine"           "t"   #'git-timemachine-toggle)
                  (:when (modulep! :tools magit)
                    "D"   nil
                    :desc "Git fetch"                  "f"   #'magit-fetch

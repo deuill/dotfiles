@@ -1,4 +1,6 @@
 for_window {
     [app_id="thunar"] floating enable
     [app_id="io.github.celluloid_player.Celluloid"] floating enable
+    [app_id="gnome-calls"] floating enable
+    [app_id="floating"] floating enable; border pixel 3
 }

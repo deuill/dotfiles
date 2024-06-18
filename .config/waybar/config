@@ -16,7 +16,6 @@
 		"battery",
 		"cpu",
 		"memory",
-		"temperature",
 		"sway/language",
 		"clock",
 		"tray"
@@ -38,7 +37,8 @@
 		"tooltip-format": "Controller:  {controller_alias} ({controller_address})\nConnections: {num_connections}",
 		"tooltip-format-connected": "Controller:  {controller_alias} ({controller_address})\nConnections: {num_connections}{device_enumerate}",
 		"tooltip-format-enumerate-connected": "\n\nDevice: {device_alias} ({device_address})",
-		"tooltip-format-enumerate-connected-battery": "\n\nDevice:  {device_alias} ({device_address})\nBattery: {device_battery_percentage}%"
+		"tooltip-format-enumerate-connected-battery": "\n\nDevice:  {device_alias} ({device_address})\nBattery: {device_battery_percentage}%",
+		"on-click": "sensible-terminal -e bluetuith"
 	},
 	"clock": {
 		"format": "<span color='#585858' size='smaller'>time</span> {:%H:%M %Z}",

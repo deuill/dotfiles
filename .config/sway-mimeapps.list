@@ -8,3 +8,6 @@ image/png=imv-dir.desktop
 image/jpeg=imv-dir.desktop
 image/webp=imv-dir.desktop
 text/calendar=khal-import.desktop
+application/x-rar=tuiarchiver.desktop;
+application/zip=tuiarchiver.desktop;
+application/x-tar=tuiarchiver.desktop;

@@ -18,26 +18,33 @@ c.content.autoplay = False
 c.content.blocking.enabled = True
 c.content.geolocation = False
 c.colors.webpage.preferred_color_scheme = "dark"
+c.colors.webpage.darkmode.enabled = True
 c.editor.command = ["emacsclient", "-c", "-a", "emacs", "{}"]
 c.qt.highdpi = True
-c.scrolling.smooth = True
+c.scrolling.smooth = False
 c.statusbar.widgets = ["url", "progress", "scroll"]
 c.tabs.show = "multiple"
 c.tabs.tabs_are_windows = False
 c.tabs.background = True
 c.tabs.new_position.related = "next"
-c.url.default_page = "https://duckduckgo.com"
+c.url.default_page = "https://kagi.com"
+c.url.start_pages = c.url.default_page
 c.input.insert_mode.auto_leave = False
 c.input.insert_mode.auto_load = True
 c.zoom.default = "130%"
 
 # Searches.
-c.url.searchengines["DEFAULT"] = "https://duckduckgo.com/?q={}"
+c.url.searchengines["DEFAULT"] = "https://kagi.com/search/?q={}"
+c.url.searchengines["!d"] = "https://duckduckgo.com/?q={}"
 c.url.searchengines["!aw"] = "https://wiki.archlinux.org/?search={}"
 c.url.searchengines["!ap"] = "https://www.archlinux.org/packages/?sort=&q={}"
-c.url.searchengines["!g"] = "http://www.google.com/search?hl=en&source=hp&ie=ISO-8859-l&q={}"
+c.url.searchengines["!g"] = (
+    "http://www.google.com/search?hl=en&source=hp&ie=ISO-8859-l&q={}"
+)
 c.url.searchengines["!yt"] = "https://www.youtube.com/results?search_query={}"
-c.url.searchengines["!w"] = "https://secure.wikimedia.org/wikipedia/en/w/index.php?title=Special%%3ASearch&search={}"
+c.url.searchengines["!w"] = (
+    "https://secure.wikimedia.org/wikipedia/en/w/index.php?title=Special%%3ASearch&search={}"
+)
 c.url.searchengines["!gh"] = "https://github.com/search?q={}&type=Code"
 
 # Key bindings.
@@ -51,6 +58,7 @@ config.bind("H", "tab-prev", mode="normal")
 config.bind("J", "back", mode="normal")
 config.bind("K", "forward", mode="normal")
 config.bind("L", "tab-next", mode="normal")
+config.bind("q", "close", mode="normal")
 
 config.bind("zl", "spawn --userscript qute-pass")
 config.bind("zul", "spawn --userscript qute-pass --username-only")
@@ -73,10 +81,10 @@ c.window.title_format = "{current_title}"
 c.fonts.default_family = ["Iosevka"]
 c.fonts.default_size = "20pt"
 c.fonts.prompts = "20pt Iosevka"
-c.fonts.web.family.standard = "IBM Plex Sans"
-c.fonts.web.family.sans_serif = c.fonts.web.family.standard
+c.fonts.web.family.sans_serif = "IBM Plex Sans"
 c.fonts.web.family.serif = "IBM Plex Serif"
 c.fonts.web.family.fixed = "IBM Plex Mono"
+c.fonts.web.family.standard = c.fonts.web.family.sans_serif
 
 # Colors.
 base00 = "#181818"

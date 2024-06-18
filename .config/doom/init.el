@@ -16,7 +16,7 @@
        nav-flash
        ophints
        (popup +all +defaults)
-       (treemacs +lsp)
+       treemacs
        (vc-gutter +diff-hl +pretty)
        (window-select +numbers +switch-window)
        workspaces
@@ -33,7 +33,7 @@
        word-wrap
 
        :emacs
-       (dired +icons)
+       (dired +icons +ranger)
        electric
        ibuffer
        undo
@@ -43,12 +43,12 @@
        vterm
 
        :tools
-       (debugger +lsp)
+       debugger
        docker
        editorconfig
        (eval +overlay)
        (lookup +dictionary +docsets +offline)
-       (lsp +peek)
+       (lsp +eglot)
        (magit +forge)
        pdf
        rgb
@@ -62,7 +62,7 @@
        (javascript +tree-sitter)
        (lua +lsp +tree-sitter)
        markdown
-       (org +dragndrop +present)
+       (org +pretty)
        (php +lsp +tree-sitter)
        (python +lsp +tree-sitter)
        rest
