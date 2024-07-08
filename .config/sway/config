@@ -23,7 +23,7 @@ set {
 
 # Application aliases.
 set {
-    $launcher rofi -run-command 'bash -ic "{cmd}"'
+    $launcher rofi -run-command 'rofi-open "{cmd}"'
     $locker   swaylock -f
     $mixer    pulsemixer --max-volume 100
     $terminal sensible-terminal

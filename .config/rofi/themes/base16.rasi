@@ -188,7 +188,7 @@ case-indicator {
 entry {
     padding: 10px;
     placeholder-color: #585858;
-    placeholder: "Type to filter...";
+    placeholder: "Type to filter or search...";
     spacing: 0;
     text-color: var(normal-foreground);
 }
