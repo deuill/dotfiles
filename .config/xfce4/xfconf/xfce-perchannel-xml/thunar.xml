@@ -12,7 +12,8 @@
   <property name="last-side-pane" type="string" value="void"/>
   <property name="last-statusbar-visible" type="bool" value="false"/>
   <property name="last-toolbar-item-order" type="string" value="0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17"/>
-  <property name="last-toolbar-visible-buttons" type="string" value="1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0"/>
+  <property name="last-toolbar-visible-buttons" type="string" value="0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0,0,0"/>
   <property name="last-window-width" type="int" value="910"/>
   <property name="last-window-height" type="int" value="820"/>
+  <property name="last-location-bar" type="string" value="ThunarLocationButtons"/>
 </channel>
