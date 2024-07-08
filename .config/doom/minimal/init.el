@@ -10,7 +10,6 @@
 
        :ui
        doom
-       hydra
        (modeline +light)
        nav-flash
        ophints

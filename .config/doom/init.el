@@ -11,7 +11,6 @@
        :ui
        doom
        hl-todo
-       hydra
        modeline
        nav-flash
        ophints
@@ -51,7 +50,6 @@
        (lsp +eglot)
        (magit +forge)
        pdf
-       rgb
        tree-sitter
 
        :lang
