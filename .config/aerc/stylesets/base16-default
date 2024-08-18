@@ -2,52 +2,54 @@
 # Base16 style-set for Aerc.
 #
 
-*.default=true
-*.selected.reverse=true
-*.bg="#2d2d2d"
+*.default = true
+*.normal = true
 
-title.bold=true
-header.italic=true
+*.selected.reverse = true
+*.bg = "#2d2d2d"
 
-*error.bold=true
-error.fg="#ab4642"
-warning.fg="#dc9656"
-success.fg="#a1b56c"
+title.bold = true
+header.italic = true
 
-statusline_default.reverse=false
-statusline*.bg="#282828"
-statusline_default.fg="#b8b8b8"
-statusline_error.fg="#ab4642"
-statusline_error.reverse=true
+*error.bold = true
+error.fg = "#ab4642"
+warning.fg = "#dc9656"
+success.fg = "#a1b56c"
 
-msglist_unread.bold=true
-msglist_unread.fg="#e8e8e8"
-msglist_deleted.fg="#585858"
-msglist_marked.bg="#383838"
-msglist_flagged.fg="#f7ca88"
+statusline_default.reverse = false
+statusline*.bg = "#282828"
+statusline_default.fg = "#b8b8b8"
+statusline_error.fg = "#ab4642"
+statusline_error.reverse = true
 
-dirlist*.fg="#b8b8b8"
-dirlist_unread.fg="#d8d8d8"
-dirlist*.bg="#2d2d2d"
-dirlist*.selected.bg="#383838"
-dirlist*.selected.fg="#d8d8d8"
-dirlist*.selected.bold=true
-dirlist_recent.italic=true
+msglist_unread.bold = true
+msglist_unread.fg = "#e8e8e8"
+msglist_deleted.fg = "#585858"
+msglist_marked.bg = "#383838"
+msglist_flagged.fg = "#f7ca88"
 
-completion*.selected.reverse=true
-completion*.selected.bold=true
-completion*.bg="#282828"
-completion*.fg="#d8d8d8"
+dirlist*.fg = "#b8b8b8"
+dirlist_unread.fg = "#d8d8d8"
+dirlist*.bg = "#2d2d2d"
+dirlist*.selected.bg = "#383838"
+dirlist*.selected.fg = "#d8d8d8"
+dirlist*.selected.bold = true
+dirlist_recent.italic = true
 
-tab.bg="#d8d8d8"
-tab.fg="#282828"
-tab.selected.bg="#282828"
-tab.selected.fg="#d8d8d8"
-tab.selected.bold=true
+completion*.selected.reverse = true
+completion*.selected.bold = true
+completion*.bg = "#282828"
+completion*.fg = "#d8d8d8"
 
-border.bg="#282828"
-border.fg="#2d2d2d"
-spinner.fg="#585858"
+tab.bg = "#282828"
+tab.fg = "#d8d8d8"
+tab.selected.bg = "#282828"
+tab.selected.fg = "#d8d8d8"
+tab.selected.bold = true
 
-selector_focused.reverse=true
-selector_chooser.bold=true
+border.bg = "#282828"
+border.fg = "#2d2d2d"
+spinner.fg = "#585858"
+
+selector_focused.reverse = true
+selector_chooser.bold = true

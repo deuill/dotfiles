@@ -93,7 +93,8 @@ to the `killed-buffer-list' when killing the buffer."
   (call-process "pandoc" nil t t "--to" "html" (buffer-file-name))
   (shr-render-region (point-min) (point-max))
   (set-buffer-modified-p nil)
-  (read-only-mode))
+  (read-only-mode)
+  (goto-char (point-min)))
 
 (add-to-list 'auto-mode-alist '("\\.rtf\\'" . rich-view-mode))
 (add-to-list 'auto-mode-alist '("\\.docx\\'" . rich-view-mode))

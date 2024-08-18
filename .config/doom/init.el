@@ -1,7 +1,7 @@
 ;;; .doom.d/init.el -*- lexical-binding: t; -*-
 
 (doom! :completion
-       (company +icons)
+       (corfu +icons)
        (vertico +icons)
 
        :checkers
@@ -23,7 +23,7 @@
 
        :editor
        (evil +everywhere)
-       (format +onsave)
+       (format +onsave +lsp)
        file-templates
        fold
        multiple-cursors
