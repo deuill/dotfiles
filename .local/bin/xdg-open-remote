@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+set -eu
+
+function main() {
+    local tmpfile
+    if test $# -eq 0; then
+        echo "Error: No URL given, please provide a valid URL"
+        exit 1
+    fi
+
+    local url="$1"
+    if test -z "$url"; then
+        echo "Error: Empty URL given, please provide a valid URL"
+        exit 1
+    fi
+
+    tmpfile="$(mktemp --quiet)"
+    trap "rm --force $tmpfile" EXIT
+
+    curl --fail --silent --show-error --output "$tmpfile" -- "$url"
+    xdg-open "$tmpfile"
+}
+
+main "$@"

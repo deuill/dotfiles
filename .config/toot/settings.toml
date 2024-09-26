@@ -1,0 +1,79 @@
+[common]
+# Whether to use ANSI color in output
+color = true
+
+[commands.tui]
+# Media viewer to use.
+media_viewer = "xdg-open-remote"
+
+# Use 24-bit color mode in TUI.
+colors = 16777216
+
+[tui.palette]
+# Base16-dark based theme.
+# Components.
+button                   = ["", "", "", "#e8e8e8", "#383838"]
+button_focused           = ["", "", "", "#181818", "#ab4642"]
+card_author              = ["", "", "", "", "#cc0000"]
+card_title               = ["", "", "", "", "#cc0000"]
+columns_divider          = ["", "", "", "#585858", ""]
+content_warning          = ["", "", "", "#ab4642", ""]
+editbox                  = ["", "", "", "", "#383838"]
+editbox_focused          = ["", "", "", "", "#282828"]
+footer_message           = ["", "", "", "#86c1b9", ""]
+footer_message_error     = ["", "", "", "#ab4642", ""]
+footer_status            = ["", "", "", "#e8e8e8", "#585858"]
+footer_status_bold       = ["", "", "", "#f8f8f8, bold", "#585858"]
+header                   = ["", "", "", "#e8e8e8", "#585858"]
+header_bold              = ["", "", "", "#f8f8f8, bold", "#585858"]
+intro_bigtext            = ["", "", "", "#86c1b9", ""]
+intro_smalltext          = ["", "", "", "#a1b56c", ""]
+poll_bar                 = ["", "", "", "", "#cc0000"]
+status_detail_account    = ["", "", "", "#86c1b9", "#cc0000"]
+status_detail_bookmarked = ["", "", "", "#f7ca88", ""]
+status_detail_timestamp  = ["", "", "", "#a1b56c", ""]
+status_list_account      = ["", "", "", "#86c1b9", ""]
+status_list_selected     = ["", "", "", "#f8f8f8, bold", "#383838"]
+status_list_timestamp    = ["", "", "", "#a1b56c", ""]
+
+# Functional.
+account            = ["", "", "", "#86c1b9", ""]
+hashtag            = ["", "", "", "#dc9656", ""]
+hashtag_followed   = ["", "", "", "#ba8baf", ""]
+link               = ["", "", "", "#7cafc2", ""]
+link_focused       = ["", "", "", "#7cafc2, bold", ""]
+shortcut           = ["", "", "", "#e8e8e8", ""]
+shortcut_highlight = ["", "", "", "#a1b56c, bold", ""]
+warning            = ["", "", "", "#ab4642", ""]
+
+# Visibility.
+visibility_public   = ["", "", "", "#787878", ""]
+visibility_unlisted = ["", "", "", "#ba8baf", ""]
+visibility_private  = ["", "", "", "#dc9656", ""]
+visibility_direct   = ["", "", "", "#ab4642, bold", ""]
+
+# Styles.
+bold      = ["", "", "", "#f8f8f8, bold", ""]
+dim       = ["", "", "", "#787878", ""]
+highlight = ["", "", "", "#f7ca88", ""]
+success   = ["", "", "", "#ba8baf", ""]
+
+# HTML tag styling.
+a          = ["", "", "", "", "#cc0000"]
+i          = ["", "", "", "", "#cc0000"]
+b          = ["", "", "", "", "#cc0000"]
+bi         = ["", "", "", "", "#cc0000"]
+u          = ["", "", "", "", "#cc0000"]
+del        = ["", "", "", "", "#cc0000"]
+code       = ["", "", "", "", "#cc0000"]
+pre        = ["", "", "", "", "#cc0000"]
+blockquote = ["", "", "", "", "#cc0000"]
+h1         = ["", "", "", "", "#cc0000"]
+h2         = ["", "", "", "", "#cc0000"]
+h3         = ["", "", "", "", "#cc0000"]
+h4         = ["", "", "", "", "#cc0000"]
+h5         = ["", "", "", "", "#cc0000"]
+h6         = ["", "", "", "", "#cc0000"]
+
+class_mention_hashtag = ["", "", "", "", "#cc0000"]
+class_hashtag         = ["", "", "", "", "#cc0000"]
