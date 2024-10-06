@@ -3,23 +3,27 @@
 set -eu
 
 function main() {
-    local tmpfile
+    local url tmpdir filename
+
     if test $# -eq 0; then
         echo "Error: No URL given, please provide a valid URL"
         exit 1
     fi
 
-    local url="$1"
-    if test -z "$url"; then
-        echo "Error: Empty URL given, please provide a valid URL"
-        exit 1
-    fi
+    tmpdir="$(mktemp --quiet --directory)"
+    trap "rm --force --recursive $tmpdir" EXIT
 
-    tmpfile="$(mktemp --quiet)"
-    trap "rm --force $tmpfile" EXIT
+    for url in "$@"; do
+        if test -z "$url"; then
+            echo "Error: Empty URL given, please provide a valid URL"
+            exit 1
+        fi
 
-    curl --fail --silent --show-error --output "$tmpfile" -- "$url"
-    xdg-open "$tmpfile"
+        filename="$(basename "$url")"
+
+        curl --fail --silent --show-error --output-dir "$tmpdir" --output "$filename" -- "$url"
+        xdg-open "$tmpdir/$filename"
+    done
 }
 
 main "$@"

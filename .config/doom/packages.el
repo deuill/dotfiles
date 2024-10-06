@@ -8,7 +8,8 @@
 
 ;; Add-ons.
 (package! shr-tag-pre-highlight)
-(package! flycheck-golangci-lint :pin "91c59b128aa6f719069cfb3e5df77588691a3e14")
+(package! drag-stuff)
+(package! dape)
 
 ;; Major modes.
 (package! systemd)

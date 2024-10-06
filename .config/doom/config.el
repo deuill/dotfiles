@@ -83,7 +83,7 @@
 
 (set-popup-rule! "^\\*doom:scratch" :side 'right :select t :quit 'other :slot 0 :width (+ fill-column 4))
 
-(setq-default auth-sources '(default)
+(setq-default auth-sources '("secrets:Login")
               browse-url-browser-function 'eww-browse-url
               doom-scratch-initial-major-mode 'text-mode
               shell-file-name "/usr/bin/fish")
@@ -446,7 +446,7 @@
                  "c"   nil
                  "C"   nil
                  "d"   nil
-                 :desc "Delete project workspace"     "D"   #'+workspace/delete
+                 :desc "Delete project workspace"     "D"   #'+workspace/kill
                  "e"   nil
                  :desc "Find file in project"         "f"   #'projectile-find-file
                  "F"   nil
@@ -476,10 +476,10 @@
         "r" nil
 
         (:prefix "t"
-         "f"   nil
-         "F"   nil
-         "g"   nil
-         "p"   nil
-         "r"   nil
-         "s"   nil
-         :desc "Zoom"                         "z"   #'+hydra/text-zoom/body)))
+                 "f"   nil
+                 "F"   nil
+                 "g"   nil
+                 "p"   nil
+                 "r"   nil
+                 "s"   nil
+                 "z"   nil)))

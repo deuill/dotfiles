@@ -13,7 +13,6 @@
        (modeline +light)
        nav-flash
        ophints
-       (popup +all +defaults)
        (window-select +numbers +switch-window)
        zen
 

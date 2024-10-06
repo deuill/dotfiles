@@ -3,3 +3,4 @@
 
 ;; Add-ons.
 (package! shr-tag-pre-highlight)
+(package! eshell-did-you-mean :disable t)

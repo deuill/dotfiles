@@ -47,8 +47,8 @@ tab.selected.bg = "#282828"
 tab.selected.fg = "#d8d8d8"
 tab.selected.bold = true
 
-border.bg = "#282828"
-border.fg = "#2d2d2d"
+border.bg = "#2d2d2d"
+border.fg = "#282828"
 spinner.fg = "#585858"
 
 selector_focused.reverse = true
