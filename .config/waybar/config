@@ -7,7 +7,8 @@
 		"sway/mode"
 	],
 	"modules-center": [
-		"sway/workspaces"
+		"sway/workspaces",
+		"sway/scratchpad"
 	],
 	"modules-right": [
 		"pulseaudio",
@@ -27,6 +28,7 @@
 			"critical": 15
 		},
 		"format": "<span color='#585858' size='smaller'>bat</span> {capacity}%",
+		"on-click": "sensible-terminal -e battop",
 		"max-length": 25
 	},
 	"bluetooth": {
@@ -38,7 +40,7 @@
 		"tooltip-format-connected": "Controller:  {controller_alias} ({controller_address})\nConnections: {num_connections}{device_enumerate}",
 		"tooltip-format-enumerate-connected": "\n\nDevice: {device_alias} ({device_address})",
 		"tooltip-format-enumerate-connected-battery": "\n\nDevice:  {device_alias} ({device_address})\nBattery: {device_battery_percentage}%",
-		"on-click": "sensible-terminal -e bluetuith"
+		"on-click": "sensible-terminal -e bluetui"
 	},
 	"clock": {
 		"format": "<span color='#585858' size='smaller'>time</span> {:%H:%M %Z}",
@@ -124,6 +126,7 @@
 		"tooltip-format-wifi": "{essid} ({signalStrength}%)",
 		"tooltip-format-ethernet": "{ifname}",
 		"tooltip-format-disconnected": "Disconnected",
+		"on-click": "sensible-terminal -e impala",
 		"max-length": 50
 	},
 	"pulseaudio": {
@@ -139,6 +142,14 @@
 		"max-length": 50,
 		"tooltip": false,
 		"on-click": "swaymsg input 'type:keyboard' xkb_switch_layout next"
+	},
+	"sway/scratchpad": {
+		"format": "{icon}",
+		"show-empty": false,
+		"format-icons": ["", "bg"],
+		"tooltip": true,
+		"tooltip-format": "{app}: {title}",
+		"on-click": "swaymsg 'scratchpad show'"
 	},
 	"sway/workspaces": {
 		"format": "{name}",

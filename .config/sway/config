@@ -147,6 +147,10 @@ bindsym --to-code {
     $mod+t       floating toggle; [tiling con_id=__focused__] border none; [floating con_id=__focused__] border pixel 3
     $mod+Shift+t sticky toggle
 
+    # Move to and show scratchpad.
+    $mod+minus move scratchpad
+    $mod+equal scratchpad show
+
     # Focus the parent/child container.
     $mod+a focus parent
 
