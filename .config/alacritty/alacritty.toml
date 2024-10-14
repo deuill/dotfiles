@@ -33,7 +33,7 @@ foreground = "0xd8d8d8"
 size = 19
 
 [font.normal]
-family = "Iosevka"
+family = "Iosevka Nerd Mono"
 
 [shell]
 args = ["--login"]

@@ -1,4 +1,5 @@
 [Default Applications]
+inode/directory=vifm.desktop;
 x-scheme-handler/mailto=aerc.desktop;
 application/pdf=org.pwmt.zathura-pdf-poppler.desktop;
 application/vnd.comicbook+zip=org.pwmt.zathura-pdf-poppler.desktop;

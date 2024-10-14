@@ -1,0 +1,30 @@
+" Base16-Default-Dark
+" by Alex Palaistras
+
+highlight clear
+
+highlight  Border      cterm=none               ctermfg=default  ctermbg=default
+highlight  BrokenLink  cterm=none               ctermfg=red      ctermbg=default
+highlight  CmdLine     cterm=none               ctermfg=white    ctermbg=default
+highlight  CurrLine    cterm=bold               ctermfg=white    ctermbg=08
+highlight  Device      cterm=none               ctermfg=red      ctermbg=default
+highlight  Directory   cterm=none               ctermfg=blue     ctermbg=default
+highlight  ErrorMsg    cterm=none               ctermfg=red      ctermbg=default
+highlight  Executable  cterm=none               ctermfg=green    ctermbg=default
+highlight  Fifo        cterm=none               ctermfg=cyan     ctermbg=default
+highlight  Link        cterm=none               ctermfg=green    ctermbg=default
+highlight  OtherLine   cterm=none               ctermfg=default  ctermbg=10
+highlight  Selected    cterm=none               ctermfg=magenta  ctermbg=default
+highlight  Socket      cterm=none               ctermfg=magenta  ctermbg=default
+highlight  StatusLine  cterm=none               ctermfg=white    ctermbg=11
+highlight  SuggestBox  cterm=none               ctermfg=white    ctermbg=default
+highlight  TopLine     cterm=none               ctermfg=white    ctermbg=11
+highlight  TopLineSel  cterm=bold               ctermfg=green    ctermbg=default
+highlight  WildMenu    cterm=underline,reverse  ctermfg=white    ctermbg=default
+highlight  Win         cterm=none               ctermfg=white    ctermbg=default
+
+if $USER == 'root'
+    highlight  Border      cterm=none  ctermfg=default  ctermbg=red
+    highlight  StatusLine  cterm=none  ctermfg=white    ctermbg=red
+    highlight  TopLine     cterm=none  ctermfg=default  ctermbg=red
+endif
