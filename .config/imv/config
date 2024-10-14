@@ -15,3 +15,8 @@ l = next 1
 <Shift+J> = pan 0 100
 <Shift+K> = pan 0 -100
 <Shift+L> = pan 100 0
+
+<Ctrl+h> = rotate by -90
+<Ctrl+j> = flip vertical
+<Ctrl+k> = flip horizontal
+<Ctrl+l> = rotate by 90
