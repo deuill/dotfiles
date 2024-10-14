@@ -27,7 +27,7 @@
 
  ;; Font definitions.
  doom-font                (font-spec :family "Iosevka"        :size 24 :weight 'light)
- doom-big-font            (font-spec :family "Iosevka"        :size 28 :weight 'light)
+ doom-big-font            (font-spec :family "Iosevka"        :size 32 :weight 'light)
  doom-variable-pitch-font (font-spec :family "IBM Plex Sans"  :size 24 :weight 'light)
  doom-serif-font          (font-spec :family "IBM Plex Serif" :size 24 :weight 'light)
  doom-unicode-font        (font-spec :family "Iosevka"        :size 24 :weight 'light)
