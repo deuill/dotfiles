@@ -55,8 +55,12 @@ tooltip {
 }
 
 #scratchpad {
-    color: #ab4642;
+    color: #585858;
     padding: 0.4rem 0.3rem;
+}
+
+#scratchpad:hover {
+    color: #989898;
 }
 
 #window {

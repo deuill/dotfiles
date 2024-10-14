@@ -16,8 +16,8 @@ set {
 
 # Mode aliases.
 set {
-    $resize  "Resize Window"
-    $session "Session: Ⓢ Suspend, Ⓛ Logout, Ⓡ Reboot, Ⓟ Power off"
+    $resize    "Resize Window"
+    $session   "Session: Ⓢ Suspend, Ⓛ Logout, Ⓡ Reboot, Ⓟ Power off"
     $mousekeys "Mouse Keys: Ⓖ Grid, Ⓗ Hint, Ⓝ Normal"
 }
 
@@ -36,7 +36,7 @@ output * {
 }
 
 bindswitch --reload --locked {
-    lid:on output eDP-1 disable
+    lid:on  output eDP-1 disable
     lid:off output eDP-1 enable
 }
 
@@ -148,8 +148,8 @@ bindsym --to-code {
     $mod+Shift+t sticky toggle
 
     # Move to and show scratchpad.
-    $mod+minus move scratchpad
-    $mod+equal scratchpad show
+    $mod+minus        scratchpad show; [tiling con_id=__focused__] border none; [floating con_id=__focused__] border pixel 3
+    $mod++Shift+minus move scratchpad
 
     # Focus the parent/child container.
     $mod+a focus parent
@@ -242,8 +242,9 @@ output * bg ~/.config/sway/default-bg fill
 default_border          pixel 3
 default_floating_border pixel 3
 hide_edge_borders --i3  smart
-gaps                    inner 20
-smart_gaps              on
+
+gaps       inner 20
+smart_gaps on
 
 # Color names.
 set {
