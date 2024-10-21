@@ -20,7 +20,6 @@ set syscalls
 
 " Trash Directory
 set trash
-set trashdir=~/.local/share/Trash
 
 " What should be saved automatically on restarting vifm.  Drop "savedirs"
 " value if you don't want vifm to remember last visited directories for you.
@@ -89,6 +88,7 @@ colorscheme Base16-Default-Dark
 " :mark mark /full/directory/path [filename]
 
 mark h ~/
+mark r /
 
 " ------------------------------------------------------------------------------
 " Commands
@@ -110,10 +110,10 @@ mark h ~/
 "  %u uses command's output to build a file list
 "  see `:help vifm-macros` and `:help vifm-filename-modifiers` for more
 
-command! run !! ./%f
+command! run    !! ./%f
 command! reload :write | restart full
-command! df df --human-readable %m 2> /dev/null
-command! du du --human-readable --time --all --total %m 2> /dev/null
+command! df     df --human-readable %m 2> /dev/null
+command! du     du --human-readable --time --all --total %m 2> /dev/null
 
 " ------------------------------------------------------------------------------
 " File types association
@@ -127,15 +127,21 @@ fileview */ tree %c -C
 fileview ../ tree %c -C -L 1
 
 " Documents
-fileviewer {*.pdf},<application/pdf> pdftotext -nopgbrk -l 10 %c -
+fileviewer {*.pdf},<application/pdf> pdftotext -nopgbrk -l 3 %c -
 
 " Archives
-fileviewer *.tgz,*.tar.gz tar -tzf %c
-fileviewer *.tar.bz2,*.tbz2 tar -tjf %c
-fileviewer *.tar.xz,*.txz tar -tJf %c
-fileviewer *.tar.zst,*.tzst tar -t --zstd -f %c
-fileviewer {*.tar},<application/x-tar> tar -tf %c
-fileviewer *.zip,*.jar,*.war,*.ear,*.oxt unzip -l %f
+fileviewer *.tgz,*.tar.gz
+         \ tar -tzf %c
+fileviewer *.tar.bz2,*.tbz2
+         \ tar -tjf %c
+fileviewer *.tar.xz,*.txz
+         \ tar -tJf %c
+fileviewer *.tar.zst,*.tzst
+         \ tar -t --zstd -f %c
+fileviewer {*.tar},<application/x-tar>
+         \ tar -tf %c
+fileviewer *.zip,*.jar,*.war,*.ear,*.oxt
+         \ unzip -l %f
 
 " Images
 fileviewer {*.bmp,*.jpg,*.jpeg,*.png,*.gif,*.xpm},<image/*>
@@ -237,7 +243,7 @@ nnoremap A cw
 " ------------------------------------------------------------------------------
 
 " Use RipGrep instead of grep
-set grepprg='ag --line-number %i %a %s'
+set grepprg='rg --line-number --smart-case %i %a %s'
 
 " ------------------------------------------------------------------------------
 " Icon decorations

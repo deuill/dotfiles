@@ -22,6 +22,7 @@ highlight  TopLine     cterm=none               ctermfg=white    ctermbg=11
 highlight  TopLineSel  cterm=bold               ctermfg=green    ctermbg=default
 highlight  WildMenu    cterm=underline,reverse  ctermfg=white    ctermbg=default
 highlight  Win         cterm=none               ctermfg=white    ctermbg=default
+highlight  JobLine     cterm=none               ctermfg=default  ctermbg=green
 
 if $USER == 'root'
     highlight  Border      cterm=none  ctermfg=default  ctermbg=red
