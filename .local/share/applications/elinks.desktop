@@ -1,0 +1,11 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=ELinks
+GenericName=Terminal Web Browser
+Comment=Browse the Web with ELinks
+Exec=elinks
+Icon=browser
+Terminal=true
+MimeType=x-scheme-handler/http;x-scheme-handler/https;x-scheme-handler/gemini;text/html;
+Categories=ConsoleOnly;Network;WebBrowser;
