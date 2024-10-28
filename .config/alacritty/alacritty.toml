@@ -35,7 +35,7 @@ size = 19
 [font.normal]
 family = "Iosevka Nerd Mono"
 
-[shell]
+[terminal.shell]
 args = ["--login"]
 program = "/usr/bin/fish"
 
