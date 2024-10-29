@@ -5,7 +5,7 @@ for conf in "$HOME"/.config/environment.d/*.conf; do set -a; source "$conf"; set
 systemctl --user import-environment PATH
 
 # Start Sway if no existing session has started.
-if test -z "$DISPLAY" && test "$XDG_VTNR" -eq 1
+if test -z "$DISPLAY" && test -n "$XDG_VTNR" && test "$XDG_VTNR" -eq 1
 then
     exec systemd-cat --identifier=sway sway
 fi

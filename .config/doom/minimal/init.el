@@ -24,7 +24,7 @@
        word-wrap
 
        :emacs
-       (dired +icons)
+       dired
        electric
        undo
 
@@ -38,7 +38,7 @@
        (tty +osc)
 
        :config
-       (default +bindings +smartparens))
+       (default +bindings))
 
 (add-hook! 'emacs-startup-hook
   (setq confirm-kill-emacs nil)

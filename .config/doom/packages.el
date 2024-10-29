@@ -7,9 +7,10 @@
 ;; (package! builtin-package :disable t)
 
 ;; Add-ons.
-(package! shr-tag-pre-highlight)
-(package! drag-stuff)
 (package! dape)
+(package! drag-stuff)
+(package! shr-tag-pre-highlight)
+(package! sqlite-mode-extras)
 
 ;; Major modes.
 (package! systemd)
