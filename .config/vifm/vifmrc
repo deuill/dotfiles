@@ -112,8 +112,11 @@ mark r /
 
 command! run    !! ./%f
 command! reload :write | restart full
-command! df     df --human-readable %m 2> /dev/null
-command! du     du --human-readable --time --all --total %m 2> /dev/null
+
+command! df df --human-readable %m 2> /dev/null
+command! du du --human-readable --time --all --total %m 2> /dev/null
+
+command! extract atool --extract --each %f &>/dev/null &
 
 " ------------------------------------------------------------------------------
 " File types association
@@ -127,21 +130,12 @@ fileview */ tree %c -C
 fileview ../ tree %c -C -L 1
 
 " Documents
-fileviewer {*.pdf},<application/pdf> pdftotext -nopgbrk -l 3 %c -
+fileviewer {*.pdf},<application/pdf> pdftotext -nopgbrk %c -
 
 " Archives
-fileviewer *.tgz,*.tar.gz
-         \ tar -tzf %c
-fileviewer *.tar.bz2,*.tbz2
-         \ tar -tjf %c
-fileviewer *.tar.xz,*.txz
-         \ tar -tJf %c
-fileviewer *.tar.zst,*.tzst
-         \ tar -t --zstd -f %c
-fileviewer {*.tar},<application/x-tar>
-         \ tar -tf %c
-fileviewer *.zip,*.jar,*.war,*.ear,*.oxt
-         \ unzip -l %f
+" view contents of archive files on opening them
+fileviewer {*.7z,*.bz2,*.cab,*.cpio,*.deb,*.gz,*.msi,*.pkg,*.rar,*.tar,*.tgz,*.xz,*.zip},<archive/*>
+         \ atool --list %c
 
 " Images
 fileviewer {*.bmp,*.jpg,*.jpeg,*.png,*.gif,*.xpm,*.svg},<image/*>
