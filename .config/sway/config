@@ -256,8 +256,8 @@ set {
 }
 
 # Window manager colors.
-# Class                 Border      Background  Text        Indicator
-client.focused          $background $background $foreground $focused
+# Class                 Border      Background  Text        Indicator    Child Border
+client.focused          $background $background $foreground $focused     $unfocused
 client.focused_inactive $background $background $unfocused  $focused
 client.unfocused        $background $background $unfocused  $background
 client.urgent           $urgent     $urgent     $background $urgent

@@ -144,7 +144,7 @@ fileviewer *.zip,*.jar,*.war,*.ear,*.oxt
          \ unzip -l %f
 
 " Images
-fileviewer {*.bmp,*.jpg,*.jpeg,*.png,*.gif,*.xpm},<image/*>
+fileviewer {*.bmp,*.jpg,*.jpeg,*.png,*.gif,*.xpm,*.svg},<image/*>
          \ chafa --polite on --colors 240 --preprocess on --symbols all --size %pwx%ph %f
 
 " Audio
