@@ -1,16 +1,9 @@
-" vim: filetype=vifm :
-" Sample configuration file for vifm (last updated: 3 April, 2023)
-" You can edit this file by hand.
-" The " character at the beginning of a line comments out the line.
-" Blank lines are ignored.
-" The basic format for each item is shown with an example.
-
 " ------------------------------------------------------------------------------
 " Main settings
 " ------------------------------------------------------------------------------
 
 " Default editor.
-let &vicmd = $EDITOR
+set vicmd='#editor#run emacs'
 
 " This makes vifm perform file operations on its own instead of relying on
 " standard utilities like `cp`.  While using `cp` and alike is a more universal
@@ -37,10 +30,6 @@ set sortnumbers
 
 " Maximum number of changes that can be undone.
 set undolevels=100
-
-" Use Vim's format of help file (has highlighting and "hyperlinks").
-" If you would rather use a plain text help file set novimhelp.
-set novimhelp
 
 " If you would like to run an executable file when you
 " press Enter, l or Right Arrow, set this.
@@ -131,6 +120,8 @@ fileview ../ tree %c -C -L 1
 
 " Documents
 fileviewer {*.pdf},<application/pdf> pdftotext -nopgbrk %c -
+fileviewer {*.docx,*.rtf,*.odt} pandoc --to ansi --columns %pw %c
+fileviewer {*.htm,*.html} elinks -localhost 1 -force-html -dump %c
 
 " Archives
 " view contents of archive files on opening them
