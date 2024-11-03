@@ -1,0 +1,10 @@
+[Unit]
+Description=Bi-directional Sync %h/%I with Rclone
+Documentation=man:rclone(1)
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/rclone bisync --create-empty-src-dirs --compare size,modtime,checksum --slow-hash-sync-only --metadata --fix-case --verbose %h/%i backup:%i
+
+[Install]
+WantedBy=default.target

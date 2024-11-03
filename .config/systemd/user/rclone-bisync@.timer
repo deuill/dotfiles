@@ -1,0 +1,10 @@
+[Unit]
+Description=Bi-directional Sync %h/%I with Rclone
+
+[Timer]
+OnBootSec=1h
+OnUnitActiveSec=6h
+Unit=rclone-bisync@%i.service
+
+[Install]
+WantedBy=timers.target
