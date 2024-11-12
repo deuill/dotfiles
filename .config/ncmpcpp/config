@@ -25,6 +25,7 @@ song_library_format = "{{%a - %t}|{%f}}{$R%l}"
 empty_tag_color = "cyan"
 
 [global]
+lyrics_directory = "~/.cache/mpd/lyrics"
 connected_message_on_startup = "no"
 main_window_color = "default"
 centered_cursor = "yes"

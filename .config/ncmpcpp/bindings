@@ -31,3 +31,5 @@ def_key "h"
     jump_to_parent_directory
 def_key "l"
     enter_directory
+def_key "L"
+    show_lyrics
