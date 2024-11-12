@@ -118,6 +118,10 @@ command! extract atool --extract --each %f &>/dev/null &
 fileview */ tree %c -C
 fileview ../ tree %c -C -L 1
 
+" Code & Data
+fileviewer {*.json},<text/*>
+         \ highlight --out-format truecolor --style base16/default-dark %c
+
 " Documents
 fileviewer {*.pdf},<application/pdf> pdftotext -nopgbrk %c -
 fileviewer {*.docx,*.rtf,*.odt} pandoc --to ansi --columns %pw %c
@@ -130,7 +134,7 @@ fileviewer {*.7z,*.bz2,*.cab,*.cpio,*.deb,*.gz,*.msi,*.pkg,*.rar,*.tar,*.tgz,*.x
 
 " Images
 fileviewer {*.bmp,*.jpg,*.jpeg,*.png,*.gif,*.xpm,*.svg},<image/*>
-         \ chafa --polite on --colors 240 --preprocess on --symbols all --size %pwx%ph %f
+         \ chafa --polite on --preprocess on --colors full --symbols all --size %pwx%ph %c
 
 " Audio
 fileviewer {*.wav,*.mp3,*.flac,*.m4a,,*.og[agx],*.opus,*.aac},<audio/*>
@@ -139,7 +143,7 @@ fileviewer {*.wav,*.mp3,*.flac,*.m4a,,*.og[agx],*.opus,*.aac},<audio/*>
 " Video
 fileviewer {*.avi,*.mp4,*.ogv,*.mkv,*.mpeg,*.webm,*.m4v,},<video/*>
          \ ffmpeg -i %c -f gif -frames:v 1 - 2> /dev/null |
-         \ chafa --polite on --colors 240 --preprocess on --symbols all --size %pwx%ph
+         \ chafa --polite on --preprocess on --colors full --symbols all --size %pwx%ph
 
 " Object
 filetype {*.o},<application/x-object> nm %f | less

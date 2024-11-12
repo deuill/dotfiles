@@ -6,19 +6,19 @@ highlight clear
 highlight  Border      cterm=none               ctermfg=default  ctermbg=default
 highlight  BrokenLink  cterm=none               ctermfg=red      ctermbg=default
 highlight  CmdLine     cterm=none               ctermfg=white    ctermbg=default
-highlight  CurrLine    cterm=bold               ctermfg=white    ctermbg=08
+highlight  CurrLine    cterm=bold               ctermfg=white    ctermbg=08      guifg=#d8d8d8 guibg=#585858
 highlight  Device      cterm=none               ctermfg=red      ctermbg=default
 highlight  Directory   cterm=none               ctermfg=blue     ctermbg=default
 highlight  ErrorMsg    cterm=none               ctermfg=red      ctermbg=default
 highlight  Executable  cterm=none               ctermfg=green    ctermbg=default
 highlight  Fifo        cterm=none               ctermfg=cyan     ctermbg=default
 highlight  Link        cterm=none               ctermfg=green    ctermbg=default
-highlight  OtherLine   cterm=none               ctermfg=default  ctermbg=10
+highlight  OtherLine   cterm=none               ctermfg=default  ctermbg=10      guibg=#282828
 highlight  Selected    cterm=none               ctermfg=magenta  ctermbg=default
 highlight  Socket      cterm=none               ctermfg=magenta  ctermbg=default
-highlight  StatusLine  cterm=none               ctermfg=white    ctermbg=11
+highlight  StatusLine  cterm=none               ctermfg=white    ctermbg=11      guifg=#d8d8d8 guibg=#383838
 highlight  SuggestBox  cterm=none               ctermfg=white    ctermbg=default
-highlight  TopLine     cterm=none               ctermfg=white    ctermbg=11
+highlight  TopLine     cterm=none               ctermfg=white    ctermbg=11      guifg=#d8d8d8 guibg=#383838
 highlight  TopLineSel  cterm=bold               ctermfg=green    ctermbg=default
 highlight  WildMenu    cterm=underline,reverse  ctermfg=white    ctermbg=default
 highlight  Win         cterm=none               ctermfg=white    ctermbg=default
