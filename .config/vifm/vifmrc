@@ -115,12 +115,14 @@ command! extract atool --extract --each %f &>/dev/null &
 " :fileviewer pattern1,pattern2 consoleviewer
 
 " Directories
-fileview */ tree %c -C
-fileview ../ tree %c -C -L 1
+fileviewer */ tree %c -C
+fileviewer ../ tree %c -C -L 1
 
 " Code & Data
 fileviewer {*.json},<text/*>
          \ highlight --out-format truecolor --style base16/default-dark %c
+filetype {*.json},<text/*>
+         \ emacs --no-splash --no-window-system --profile minimal %c
 
 " Documents
 fileviewer {*.pdf},<application/pdf> pdftotext -nopgbrk %c -
@@ -177,7 +179,7 @@ filetype {*.asc},<application/pgp-signature>
        \ !!gpg --verify %c,
 
 " Open all other files with default system programs.
-filetype * xdg-open %f 2> /dev/null &
+filetype * xdg-open %c > /dev/null 1>&2 &
 
 " ------------------------------------------------------------------------------
 " Panel configuration examples
@@ -198,19 +200,17 @@ filetype * xdg-open %f 2> /dev/null &
 
 " General mappings
 nnoremap Q :quit<cr>
+nnoremap O :!xdg-open %f > /dev/null 1>&2 &<cr>
 
 " Start shell in current directory
-nnoremap s :shell<cr>
+nnoremap S :shell<cr>
 
 " Display sorting dialog
-nnoremap S :sort<cr>
+nnoremap s :sort<cr>
 
 " Toggle visibility of preview window
 nnoremap w :view<cr>
 vnoremap w :view<cr>gv
-
-" Open file in the background using its default program
-nnoremap gb :file &<cr>l
 
 " Interaction with system clipboard
 if executable('wl-copy')
