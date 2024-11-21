@@ -86,6 +86,18 @@ to the `killed-buffer-list' when killing the buffer."
       (deft-mode)))
 
 ;;;###autoload
+(defun +custom/sqlite-view-file ()
+  "Runs `sqlite-mode-open-file' on the file name visited by the current buffer, killing it."
+  (let ((file-name buffer-file-name)
+        (directory default-directory))
+    (kill-current-buffer)
+    (switch-to-buffer (get-buffer-create (format "*SQLite %s*" (file-name-nondirectory file-name))))
+    (sqlite-mode-open-file file-name)
+    (setq default-directory directory)))
+
+(add-to-list 'magic-mode-alist '("SQLite format 3\x00" . +custom/sqlite-view-file))
+
+;;;###autoload
 (define-derived-mode rich-view-mode fundamental-mode "rich-view-mode"
   "Major mode for viewing rich text (e.g. RTF, DOC) files."
   (delete-region (point-min) (point-max))
@@ -99,3 +111,19 @@ to the `killed-buffer-list' when killing the buffer."
 (add-to-list 'auto-mode-alist '("\\.rtf\\'" . rich-view-mode))
 (add-to-list 'auto-mode-alist '("\\.docx\\'" . rich-view-mode))
 (add-to-list 'auto-mode-alist '("\\.odt\\'" . rich-view-mode))
+
+;;;###autoload
+(defvar-keymap aerc-compose-mode-map
+  "C-c C-c" #'(lambda () (interactive) (save-buffers-kill-terminal t))
+  "C-c C-k" #'kill-emacs
+  "C-c q"   #'kill-emacs)
+
+;;;###autoload
+(define-derived-mode aerc-compose-mode mail-mode "Aerc Compose"
+  "Major mode for Aerc email composition"
+  (setq-default mode-line-format nil)
+  (add-hook! 'doom-init-ui-hook :append
+    (setq mode-line-format nil))
+  (evil-insert-state))
+
+(add-to-list 'auto-mode-alist '("aerc-compose-[0-9]+\\.eml\\'" . aerc-compose-mode))

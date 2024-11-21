@@ -4,10 +4,6 @@
        corfu
        vertico
 
-       :checkers
-       syntax
-       spell
-
        :ui
        doom
        (modeline +light)
@@ -24,12 +20,14 @@
        word-wrap
 
        :emacs
-       dired
        electric
        undo
 
        :term
        eshell
+
+       :tools
+       magit
 
        :lang
        markdown

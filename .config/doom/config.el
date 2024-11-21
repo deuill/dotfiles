@@ -210,6 +210,24 @@
 (after! (sql lsp-sqls)
   (setq lsp-sqls-workspace-config-path nil))
 
+(after! sqlite-mode
+  (require 'sqlite-mode-extras)
+  (set-popup-rule! "^\\*SQLite " :ignore t)
+  (map! :map sqlite-mode-map
+        :nvi "h" #'sqlite-mode-extras-backtab-dwim
+        :nvi "j" #'next-line
+        :nvi "k" #'previous-line
+        :nvi "l" #'sqlite-mode-extras-tab-dwim
+        :nvi "a" #'sqlite-mode-extras-add-row
+        :nvi "D" #'sqlite-mode-extras-delete-row-dwim
+        :nvi "E" #'sqlite-mode-extras-execute
+        :nvi "C" #'sqlite-mode-extras-compose-and-execute
+        :nvi "S" #'sqlite-mode-extras-execute-and-display-select-query
+        :nvi "<backtab>" #'sqlite-mode-extras-backtab-dwim
+        :nvi "<tab>" #'sqlite-mode-extras-tab-dwim
+        :nvi "RET" #'sqlite-mode-extras-ret-dwim
+        :nvi "DEL" #'sqlite-mode-extras-delete-row-dwim))
+
 (after! transient
   ;; Close transient windows with 'Escape' key.
   (define-key transient-map        (kbd "<escape>") 'transient-quit-one)
@@ -315,6 +333,9 @@
 
 (add-hook! sql-mode
   (after! lsp-sqls (lsp-deferred)))
+
+(add-hook! sqlite-mode-hook
+  (sqlite-extras-minor-mode))
 
 (add-hook! yaml-mode
   (indent-tabs-mode -1))
