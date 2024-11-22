@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Toot
+GenericName=Fediverse Client
+Comment=Browse the Fediverse with Toot
+Exec=toot tui
+Icon=com.github.bleakgrey.tootle
+Terminal=true
+Categories=ConsoleOnly;Audio
