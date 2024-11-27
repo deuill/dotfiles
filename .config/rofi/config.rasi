@@ -1,10 +1,25 @@
 configuration {
+	// Base configuration.
 	dpi: 0;
 	font: "Iosevka 20";
 	matching: "prefix";
-	modi: "run,calc";
+	modi: "run,calc,filebrowser";
 	sidebar-mode: false;
 	terminal: "sensible-terminal";
+
+	// Keyboard bindings.
+	kb-remove-to-eol: "";
+	kb-remove-to-sol: "";
+	kb-remove-char-back: "BackSpace,Shift+BackSpace";
+	kb-accept-entry: "Control+m,Return,KP_Enter";
+	kb-mode-next: "Shift+Right,Control+Tab,Control+l";
+	kb-mode-previous: "Shift+Left,Control+ISO_Left_Tab,Control+h";
+	kb-mode-complete: "";
+	kb-row-up: "Up,Control+p,Control+k";
+	kb-row-down: "Down,Control+n,Control+j";
+	kb-row-tab: "";
+	kb-element-next: "Tab";
+	kb-element-prev: "ISO_Left_Tab";
 }
 
 @theme "base16"
