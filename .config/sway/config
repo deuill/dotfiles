@@ -17,8 +17,8 @@ set {
 # Mode aliases.
 set {
     $resize    "Resize Window"
+    $mousekeys "Mouse Keys"
     $session   "Session: Ⓢ Suspend, Ⓛ Logout, Ⓡ Reboot, Ⓟ Power off"
-    $mousekeys "Mouse Keys: Ⓖ Grid, Ⓗ Hint, Ⓝ Normal"
 }
 
 # Application aliases.
@@ -57,7 +57,6 @@ input {
     "type:pointer" {
         accel_profile    adaptive
         middle_emulation enabled
-        pointer_accel    0.5
         scroll_factor    1.5
     }
 }
@@ -71,9 +70,9 @@ exec swayidle -w \
      timeout 420 'swaymsg "output * dpms off"' \
           resume 'swaymsg "output * dpms on"' \
     before-sleep '$locker' \
-            lock 'playerctl pause' \
+            lock 'mpc pause' \
             lock 'dunstctl set-paused true' \
-          unlock 'playerctl pause' \
+          unlock 'mpc pause' \
           unlock 'dunstctl set-paused false'
 
 # Inhibit idle tracking for specific applications.
@@ -99,7 +98,8 @@ bindsym --to-code {
     $mod+d       exec $launcher -show drun -show-icons
     $mod+Shift+d exec $launcher -show run
     $mod+o       exec $launcher -show filebrowser -show-icons
-    $mod+c       exec $terminal --class floating -e qalc
+    XF86Explorer exec $launcher -show filebrowser -show-icons
+    $mod+equal   exec $launcher -show calc
 
     # Change focus
     $mod+h     focus left
@@ -217,14 +217,9 @@ bindsym --to-code {
         $mod+Shift+p exec grim -g $(slurp -d) - | wl-copy --type image/png && notify-send "Screenshot Copied"
     }
 
-    --whole-window --border {
-        $mod+button4 opacity minus 0.02
-        $mod+button5 opacity plus 0.02
-    }
-
     # Modes.
     $mod+r       mode $resize
-    $mod+g       mode $mousekeys
+    $mod+m       mode $mousekeys
     $mod+Shift+q mode $session
 }
 
@@ -297,12 +292,32 @@ mode $session bindsym --to-code {
 }
 
 mode $mousekeys bindsym --to-code {
-    h exec warpd --hint, mode "default"
-    g exec warpd --grid, mode "default"
-    n exec warpd --normal, mode "default"
+    k seat - cursor move 0 -10
+    j seat - cursor move 0 +10
+    h seat - cursor move -10 0
+    l seat - cursor move +10 0
 
-    # Back to normal mode: Enter or Escape
-    Return mode "default"
+    Shift+k seat - cursor move 0 -50
+    Shift+j seat - cursor move 0 +50
+    Shift+h seat - cursor move -50 0
+    Shift+l seat - cursor move +50 0
+
+    Up    seat - cursor move 0 -10
+    Down  seat - cursor move 0 +10
+    Left  seat - cursor move -10 0
+    Right seat - cursor move +10 0
+
+    Shift+Up    seat - cursor move 0 -50
+    Shift+Down  seat - cursor move 0 +50
+    Shift+Left  seat - cursor move -50 0
+    Shift+Right seat - cursor move +50 0
+
+    --no-repeat Return seat - cursor press button1
+    --release   Return seat - cursor release button1
+
+    --no-repeat Shift+Return seat - cursor press button3
+    --release   Shift+Return seat - cursor release button3
+
     Escape mode "default"
 }
 
