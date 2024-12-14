@@ -14,6 +14,9 @@ set syscalls
 " Trash Directory
 set trash
 
+" Ensure that GVFS mounts are handled as fast as possible
+set slowfs+=gvfsd-fuse
+
 " What should be saved automatically on restarting vifm.  Drop "savedirs"
 " value if you don't want vifm to remember last visited directories for you.
 set vifminfo=dhistory,savedirs,chistory,state,tui,shistory,
@@ -125,8 +128,8 @@ filetype {*.json},<text/*>
          \ emacs --no-splash --no-window-system --profile minimal %c
 
 " Documents
-fileviewer {*.pdf},<application/pdf> pdftotext -nopgbrk %c -
-fileviewer {*.docx,*.rtf,*.odt} pandoc --to ansi --columns %pw %c
+fileviewer {*.pdf},<application/pdf> mutool draw -P -i -q -KK -F text %c 1-5
+fileviewer {*.docx,*.rtf,*.odt} pandoc --to plain --columns %pw %c
 fileviewer {*.htm,*.html} elinks -localhost 1 -force-html -dump %c
 
 " Archives
@@ -139,7 +142,7 @@ fileviewer {*.bmp,*.jpg,*.jpeg,*.png,*.gif,*.xpm,*.svg},<image/*>
          \ chafa --polite on --preprocess on --colors full --symbols all --size %pwx%ph %c
 
 " Audio
-fileviewer {*.wav,*.mp3,*.flac,*.m4a,,*.og[agx],*.opus,*.aac},<audio/*>
+fileviewer {*.wav,*.mp3,*.flac,*.m4a,*.og[agx],*.opus,*.aac},<audio/*>
          \ exiftool -groupHeadings --ExifTool:all --File:all %c 2> /dev/null
 
 " Video
