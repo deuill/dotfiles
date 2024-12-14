@@ -1,5 +1,7 @@
 [core]
 	excludesfile = ~/.config/git/ignore
+[init]
+	defaultBranch = trunk
 [push]
 	default = current
 [pull]

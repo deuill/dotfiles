@@ -93,13 +93,14 @@ floating_modifier $mod
 
 bindsym --to-code {
     # Application launching
-    $mod+Return  exec $terminal
-    XF86LaunchA  exec $launcher -show drun -show-icons
-    $mod+d       exec $launcher -show drun -show-icons
-    $mod+Shift+d exec $launcher -show run
-    $mod+o       exec $launcher -show filebrowser -show-icons
-    XF86Explorer exec $launcher -show filebrowser -show-icons
-    $mod+equal   exec $launcher -show calc
+    $mod+Return    exec $terminal
+    XF86LaunchA    exec $launcher -show drun -show-icons
+    $mod+d         exec $launcher -show drun -show-icons
+    $mod+Shift+d   exec $launcher -show run
+    $mod+o         exec $launcher -show filebrowser -show-icons
+    XF86Explorer   exec $launcher -show filebrowser -show-icons
+    $mod+equal     exec $launcher -show calc
+    $mod+semicolon exec $launcher -modi emoji -show emoji
 
     # Change focus
     $mod+h     focus left

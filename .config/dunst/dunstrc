@@ -5,7 +5,7 @@ follow  = mouse          # Display notification on focused monitor.
 
 width  = (400, 600)   # The minimum and maximum width of any notification.
 origin = bottom-right # The screen location from which notifications appear.
-offset = 20x20        # The horizontal and vertical edge offset for notifications.
+offset = (20, 20)     # The horizontal and vertical edge offset for notifications.
 
 progress_bar             = yes # Turn on the progess bar.
 progress_bar_height      = 20  # Set the progress bar height.
