@@ -105,10 +105,10 @@ mark r /
 command! run    !! ./%f
 command! reload :write | restart full
 
-command! df df --human-readable %m 2> /dev/null
-command! du du --human-readable --time --all --total %m 2> /dev/null
+command! df df --human-readable %m 2>/dev/null
+command! du du --human-readable --time --all --total %m 2>/dev/null
 
-command! extract atool --extract --each %f &>/dev/null &
+command! extract bsdtar --extract --file %f &>/dev/null &
 
 " ------------------------------------------------------------------------------
 " File types association
@@ -134,8 +134,11 @@ fileviewer {*.htm,*.html} elinks -localhost 1 -force-html -dump %c
 
 " Archives
 " view contents of archive files on opening them
-fileviewer {*.7z,*.bz2,*.cab,*.cpio,*.deb,*.gz,*.msi,*.pkg,*.rar,*.tar,*.tgz,*.xz,*.zip},<archive/*>
-         \ atool --list %c
+fileviewer {*.7z,*.bz2,*.cab,*.cpio,*.deb,*.gz,*.msi,*.pkg,*.rar,*.tar,*.tgz,*.xz,*.zst,*.zip},<archive/*>
+         \ bsdtar --list --file %c 2>/dev/null | tree -C --fromfile /dev/stdin | tail --lines +2
+filetype {*.7z,*.bz2,*.cab,*.cpio,*.deb,*.gz,*.msi,*.pkg,*.rar,*.tar,*.tgz,*.xz,*.zst,*.zip},<archive/*>
+       \ {Mount with FUSE}
+       \ FUSE_MOUNT|fuse-archive %SOURCE_FILE %DESTINATION_DIR
 
 " Images
 fileviewer {*.bmp,*.jpg,*.jpeg,*.png,*.gif,*.xpm,*.svg},<image/*>
@@ -143,11 +146,11 @@ fileviewer {*.bmp,*.jpg,*.jpeg,*.png,*.gif,*.xpm,*.svg},<image/*>
 
 " Audio
 fileviewer {*.wav,*.mp3,*.flac,*.m4a,*.og[agx],*.opus,*.aac},<audio/*>
-         \ exiftool -groupHeadings --ExifTool:all --File:all %c 2> /dev/null
+         \ exiftool -groupHeadings --ExifTool:all --File:all %c 2>/dev/null
 
 " Video
 fileviewer {*.avi,*.mp4,*.ogv,*.mkv,*.mpeg,*.webm,*.m4v,},<video/*>
-         \ ffmpeg -i %c -f gif -frames:v 1 - 2> /dev/null |
+         \ ffmpeg -i %c -f gif -frames:v 1 - 2>/dev/null |
          \ chafa --polite on --preprocess on --colors full --symbols all --size %pwx%ph
 
 " Object
@@ -180,6 +183,10 @@ filetype *.sha512
 filetype {*.asc},<application/pgp-signature>
        \ {Check signature}
        \ !!gpg --verify %c,
+
+" Binary file hexadecimal view.
+fileviewer <application/octet-stream>,<application/x-executable>
+         \ hexdump --canonical --color=always %c | head --lines 100
 
 " Open all other files with default system programs.
 filetype * xdg-open %c > /dev/null 1>&2 &
