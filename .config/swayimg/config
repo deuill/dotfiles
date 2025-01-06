@@ -1,0 +1,108 @@
+################################################################################
+# Viewer mode configuration
+################################################################################
+[viewer]
+# Window background color (RGBA)
+window = #00000000
+# Background for transparent images (grid/RGBA)
+transparency = grid
+# Default image scale (optimal/fit/width/height/fill/real)
+scale = optimal
+# Initial image position
+position = center
+# Fix position of the image on the window surface (yes/no)
+fixed = yes
+# Anti-aliasing (yes/no)
+antialiasing = no
+# Run slideshow at startup (yes/no)
+slideshow = no
+# Slideshow image display time (seconds)
+slideshow_time = 3
+# Number of previously viewed images to store in cache
+history = 1
+# Number of preloaded images (read ahead)
+preload = 1
+
+################################################################################
+# Gallery mode configuration
+################################################################################
+[gallery]
+# Max size of the thumbnail (pixels)
+size = 300
+# Max number of thumbnails in cache, 0 to unlimit
+cache = 100
+# Fill the entire tile with thumbnail (yes/no)
+fill = yes
+# Use anti-aliasing for thumbnails (yes/no)
+antialiasing = no
+# Background color of the window (RGBA)
+window = #00000000
+# Background color of the tile (RGBA)
+background = #202020ff
+# Background color of the selected tile (RGBA)
+select = #333333ff
+# Border color of the selected tile (RGBA)
+border = #ab4642ff
+# Shadow color of the selected tile (RGBA)
+shadow = #00000000
+
+################################################################################
+# Font configuration
+################################################################################
+[font]
+# Font name
+name = Iosevka
+# Font size (pt)
+size = 18
+# Font color (RGBA)
+color = #fefefeff
+# Shadow color (RGBA)
+shadow = #333333ff
+# Background color (RGBA)
+background = #282828cc
+
+################################################################################
+# Image meta info scheme (format, size, EXIF, etc)
+################################################################################
+
+# Display scheme for viewer mode (position = content)
+[info.viewer]
+top_left = +name,+format,+filesize,+imagesize,+exif
+top_right = index
+bottom_left = scale,frame
+bottom_right = status
+
+# Display scheme for gallery mode (position = content)
+[info.gallery]
+top_left = none
+top_right = none
+bottom_left = none
+bottom_right = name,status
+
+################################################################################
+# Viewer mode key binding configuration.
+################################################################################
+[keys.viewer]
+h = prev_file
+j = zoom -10
+k = zoom +10
+l = next_file
+
+Shift+h = prev_dir
+Shift+j = rotate_left
+Shift+k = rotate_right
+Shift+l = next_dir
+
+Alt+h = step_left 10
+Alt+j = step_down 10
+Alt+k = step_up 10
+Alt+l = step_right 10
+
+################################################################################
+# Gallery mode key binding configuration.
+################################################################################
+[keys.gallery]
+h = step_left
+j = step_down
+k = step_up
+l = step_right
