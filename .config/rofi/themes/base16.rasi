@@ -101,10 +101,9 @@ element-icon {
 
 window {
     background-color: var(background);
-    border:           10px;
     border-radius:    0;
     location:         north;
-    padding:          0;
+    padding:          10px;
     y-offset:         5%;
     width:            40%;
 }

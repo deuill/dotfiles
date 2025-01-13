@@ -23,7 +23,7 @@ set {
 
 # Application aliases.
 set {
-    $launcher rofi -run-command 'rofi-open "{cmd}"'
+    $launcher rofi
     $locker   swaylock -f
     $mixer    pulsemixer --max-volume 100
     $terminal sensible-terminal
@@ -98,6 +98,7 @@ bindsym --to-code {
     $mod+d         exec $launcher -show drun -show-icons
     $mod+Shift+d   exec $launcher -show run
     $mod+o         exec $launcher -show filebrowser -show-icons
+    $mod+Shift+o   exec $launcher -show recursivebrowser -show-icons
     XF86Explorer   exec $launcher -show filebrowser -show-icons
     $mod+equal     exec $launcher -show calc
     $mod+semicolon exec $launcher -modi emoji -show emoji
