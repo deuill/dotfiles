@@ -326,6 +326,13 @@
   (php-enable-psr2-coding-style)
   (setq fill-column 100))
 
+(add-hook! (php-mode eglot)
+  (let ((key (with-temp-buffer
+               (progn (insert-file-contents "~/.config/intelephense/license.txt")
+                      (buffer-string)))))
+    (add-to-list 'eglot-server-programs `(((web-mode :language-id "php") (php-mode :language-id "php")) .
+                                          ("intelephense" "--stdio" :initializationOptions (:licenseKey ,key))))))
+
 (add-hook! prog-mode
   (setq fill-column 100
         show-trailing-whitespace t)

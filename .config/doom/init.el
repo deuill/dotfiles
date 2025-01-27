@@ -11,6 +11,7 @@
        :ui
        doom
        hl-todo
+       ligatures
        modeline
        nav-flash
        ophints
@@ -73,7 +74,7 @@
        (tty +osc)
 
        :config
-       (default +bindings +smartparens))
+       (default +bindings +gnupg +smartparens))
 
 (after! doom-cli-env
   ;; Allow SSH-related environment variables to be set in persistent configuration.
