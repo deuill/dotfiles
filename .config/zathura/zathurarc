@@ -1,6 +1,7 @@
 # Behaviour.
-set statusbar-basename true
-set database           sqlite
+set statusbar-basename  true
+set database            sqlite
+set selection-clipboard clipboard
 
 # Appearance and theme.
 set font                    "Iosevka 20"
