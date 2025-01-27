@@ -3,7 +3,7 @@
 
 highlight clear
 
-highlight  Border      cterm=none               ctermfg=default  ctermbg=default
+highlight  Border      cterm=none               ctermfg=08       ctermbg=default guifg=#383838 guibg=none
 highlight  BrokenLink  cterm=none               ctermfg=red      ctermbg=default
 highlight  CmdLine     cterm=none               ctermfg=white    ctermbg=default
 highlight  CurrLine    cterm=bold               ctermfg=white    ctermbg=08      guifg=#d8d8d8 guibg=#585858

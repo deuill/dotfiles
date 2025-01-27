@@ -30,7 +30,7 @@ M.handlers["edit-one"] = function(info)
     end
 
     local exitcode = vifm.run {
-        cmd = string.format("emacs --no-splash --no-window-system --profile minimal %s %s", vifm.escape(posarg),
+        cmd = string.format("emacs --no-splash --no-window-system %s %s", vifm.escape(posarg),
                             vifm.escape(info.path)),
         usetermmux = not info.mustwait,
     }
@@ -48,7 +48,7 @@ end
 
 M.handlers["edit-many"] = function(info)
     local exitcode = vifm.run {
-        cmd = string.format("emacs --no-splash --no-window-system --profile minimal %s",
+        cmd = string.format("emacs --no-splash --no-window-system %s",
                             table.concat(map(info.paths, vifm.escape), ' '))
     }
 

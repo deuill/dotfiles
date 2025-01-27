@@ -67,6 +67,9 @@ set incsearch
 " Try to leave some space from cursor to upper/lower border in lists
 set scrolloff=4
 
+" Clear preview when moving between previews.
+set previewoptions=hardgraphicsclear
+
 " Set custom status line look
 set statusline="  Hint: %z%= %A %10u:%-7g %15s %20d  "
 
@@ -125,12 +128,12 @@ fileviewer ../ tree %c -C -L 1
 fileviewer {*.json},<text/*>
          \ highlight --out-format truecolor --style base16/default-dark %c
 filetype {*.json},<text/*>
-         \ emacs --no-splash --no-window-system --profile minimal %c
+         \ emacs --no-splash --no-window-system %c 2>/dev/null
 
 " Documents
-fileviewer {*.pdf},<application/pdf> mutool draw -P -i -q -KK -F text %c 1-5
-fileviewer {*.docx,*.rtf,*.odt} pandoc --to plain --columns %pw %c
-fileviewer {*.htm,*.html} elinks -localhost 1 -force-html -dump %c
+fileviewer {*.pdf},<application/pdf> mutool draw -P -i -q -KK -F text %c 1-5 2>/dev/null
+fileviewer {*.docx,*.rtf,*.odt} pandoc --to plain --columns %pw %c 2>/dev/null
+fileviewer {*.htm,*.html} elinks -localhost 1 -force-html -dump %c 2>/dev/null
 
 " Archives
 " view contents of archive files on opening them
@@ -142,7 +145,7 @@ filetype {*.7z,*.bz2,*.cab,*.cpio,*.deb,*.gz,*.msi,*.pkg,*.rar,*.tar,*.tgz,*.xz,
 
 " Images
 fileviewer {*.bmp,*.jpg,*.jpeg,*.png,*.gif,*.xpm,*.svg},<image/*>
-         \ chafa --polite on --preprocess on --colors full --symbols all --size %pwx%ph %c
+         \ chafa --polite on --preprocess on --colors full --symbols all --size %pwx%ph %c 2>/dev/null
 
 " Audio
 fileviewer {*.wav,*.mp3,*.flac,*.m4a,*.og[agx],*.opus,*.aac},<audio/*>
@@ -151,7 +154,7 @@ fileviewer {*.wav,*.mp3,*.flac,*.m4a,*.og[agx],*.opus,*.aac},<audio/*>
 " Video
 fileviewer {*.avi,*.mp4,*.ogv,*.mkv,*.mpeg,*.webm,*.m4v,},<video/*>
          \ ffmpeg -i %c -f gif -frames:v 1 - 2>/dev/null |
-         \ chafa --polite on --preprocess on --colors full --symbols all --size %pwx%ph
+         \ chafa --polite on --preprocess on --colors full --symbols all --size %pwx%ph 2>/dev/null
 
 " Object
 filetype {*.o},<application/x-object> nm %f | less
@@ -189,20 +192,17 @@ fileviewer <application/octet-stream>,<application/x-executable>
          \ hexdump --canonical --color=always %c | head --lines 100
 
 " Open all other files with default system programs.
-filetype * xdg-open %c > /dev/null 1>&2 &
+filetype * xdg-open %c 2>/dev/null &
 
 " ------------------------------------------------------------------------------
 " Panel configuration examples
 " ------------------------------------------------------------------------------
 
 " Customize view columns a bit (enable ellipsis for truncated file names)
-" set viewcolumns=-{name}..,6{}.
+" set viewcolumns=-{name}..,-18{mtime},6{}.
 
 " Show vertical border
 " set fillchars=vborder:│
-
-" Filter-out build and temporary files
-" filter! {*.lo,*.o,*.d,*.class,*.pyc,*.pyo,.*~}
 
 " ------------------------------------------------------------------------------
 " Sample keyboard mappings
