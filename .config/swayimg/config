@@ -13,7 +13,7 @@ position = center
 # Fix position of the image on the window surface (yes/no)
 fixed = yes
 # Anti-aliasing (yes/no)
-antialiasing = no
+antialiasing = none
 # Run slideshow at startup (yes/no)
 slideshow = no
 # Slideshow image display time (seconds)
@@ -34,7 +34,7 @@ cache = 100
 # Fill the entire tile with thumbnail (yes/no)
 fill = yes
 # Use anti-aliasing for thumbnails (yes/no)
-antialiasing = no
+antialiasing = none
 # Background color of the window (RGBA)
 window = #00000000
 # Background color of the tile (RGBA)
@@ -45,6 +45,19 @@ select = #333333ff
 border = #ab4642ff
 # Shadow color of the selected tile (RGBA)
 shadow = #00000000
+
+################################################################################
+# Image list configuration
+################################################################################
+[list]
+# Default order (none/alpha/reverse/random)
+order = alpha
+# Looping list of images (yes/no)
+loop = yes
+# Read directories recursively (yes/no)
+recursive = no
+# Open all files in the directory of the specified file (yes/no)
+all = yes
 
 ################################################################################
 # Font configuration
@@ -98,6 +111,8 @@ Alt+j = step_down 10
 Alt+k = step_up 10
 Alt+l = step_right 10
 
+Shift+Delete = exec gio trash --force "%"; skip_file
+
 ################################################################################
 # Gallery mode key binding configuration.
 ################################################################################
@@ -106,3 +121,5 @@ h = step_left
 j = step_down
 k = step_up
 l = step_right
+
+Shift+Delete = exec gio trash --force "%"; skip_file
