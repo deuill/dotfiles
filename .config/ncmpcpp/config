@@ -1,37 +1,37 @@
-[header]
-header_visibility = "yes"
-header_window_color = "default"
-volume_color = "green"
-state_line_color = "cyan"
-
-[playlist]
-playlist_display_mode = "columns"
-titles_visibility = "no"
-song_list_format = "$5%t$9 $R$6%a$9 $3%N$9"
-song_columns_list_format = (3f)[green]{NE}(8f)[cyan]{l}(50)[]{t|f:Title}(20)[magenta]{ar}(20)[yellow]{br}(4f)[green]{y}
-now_playing_prefix = "$b$r"
-now_playing_suffix = "$/r$/b"
-
-[statusbar]
-progressbar_look = "━🞆 "
-progressbar_color = "white"
-statusbar_visibility = "yes"
-progressbar_elapsed_color = "cyan"
-statusbar_color = "3"
-song_status_format = "{%t - %a}"
-
-[library]
-song_library_format = "{{%a - %t}|{%f}}{$R%l}"
-empty_tag_color = "cyan"
-
 [global]
-lyrics_directory = "~/.cache/mpd/lyrics"
+lyrics_directory             = "~/.cache/mpd/lyrics"
 connected_message_on_startup = "no"
-main_window_color = "default"
-centered_cursor = "yes"
-enable_window_title = "yes"
-external_editor = "emacs"
+main_window_color            = "default"
+centered_cursor              = "yes"
+enable_window_title          = "yes"
+external_editor              = "emacs"
 
 visualizer_data_source = "~/.cache/mpd/mpd.fifo"
 visualizer_output_name = "fifo"
-visualizer_in_stereo = "yes"
+visualizer_in_stereo   = "yes"
+
+[header]
+header_visibility   = "yes"
+header_window_color = "default"
+volume_color        = "green"
+state_line_color    = "cyan"
+
+[playlist]
+playlist_display_mode    = "columns"
+titles_visibility        = "no"
+song_list_format         = "$5%t$9 $R$6%a$9 $3%N$9"
+song_columns_list_format = (3f)[green]{NE} (8f)[cyan]{lr} (50)[]{t|f:Title} (20)[magenta]{ar} (20)[yellow]{br} (4f)[green]{y}
+now_playing_prefix       = "$b$r"
+now_playing_suffix       = "$/r$/b"
+
+[statusbar]
+progressbar_look          = "━🞆 "
+progressbar_color         = "white"
+statusbar_visibility      = "yes"
+progressbar_elapsed_color = "cyan"
+statusbar_color           = "3"
+song_status_format        = "{%t - %a}"
+
+[library]
+song_library_format = "{{%a - %t}|{%f}}{$R%l}"
+empty_tag_color     = "cyan"
