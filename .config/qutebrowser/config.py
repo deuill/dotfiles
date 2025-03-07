@@ -18,8 +18,8 @@ c.content.autoplay = False
 c.content.blocking.enabled = True
 c.content.geolocation = False
 c.colors.webpage.preferred_color_scheme = "dark"
-c.colors.webpage.darkmode.enabled = True
-c.editor.command = ["emacsclient", "-c", "-a", "emacs", "{}"]
+c.colors.webpage.darkmode.enabled = False
+c.editor.command = ["emacsclient", "--create-frame", "{}"]
 c.qt.highdpi = True
 c.scrolling.smooth = False
 c.statusbar.widgets = ["url", "progress", "scroll"]
@@ -31,7 +31,7 @@ c.url.default_page = "https://kagi.com"
 c.url.start_pages = c.url.default_page
 c.input.insert_mode.auto_leave = False
 c.input.insert_mode.auto_load = True
-c.zoom.default = "130%"
+c.zoom.default = "140%"
 
 # Searches.
 c.url.searchengines["DEFAULT"] = "https://kagi.com/search/?q={}"

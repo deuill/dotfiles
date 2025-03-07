@@ -4,7 +4,7 @@ connected_message_on_startup = "no"
 main_window_color            = "default"
 centered_cursor              = "yes"
 enable_window_title          = "yes"
-external_editor              = "emacs"
+external_editor              = "emacsclient --create-frame"
 
 visualizer_data_source = "~/.cache/mpd/mpd.fifo"
 visualizer_output_name = "fifo"
