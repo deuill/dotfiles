@@ -137,8 +137,8 @@ bindsym --to-code {
     $mod+f fullscreen toggle
 
     # Horizontal/vertical orientation switching
-    $mod+bracketleft  split h
-    $mod+bracketright split v
+    $mod+bracketleft  split horizontal
+    $mod+bracketright split vertical
 
     # Change container layout (stacked, tabbed, toggle split)
     $mod+w layout tabbed
@@ -153,11 +153,11 @@ bindsym --to-code {
     $mod+minus        scratchpad show; [tiling con_id=__focused__] border none; [floating con_id=__focused__] border pixel 3
     $mod++Shift+minus move scratchpad
 
-    # Focus the parent/child container.
-    $mod+a focus parent
-
     # Focus between floating and split containers.
-    $mod+Shift+Tab focus mode_toggle
+    $mod+a focus mode_toggle
+
+    # Focus the parent/child container.
+    $mod+Shift+a focus parent
 
     # Focus urgent window.
     $mod+u [urgent=latest] focus
