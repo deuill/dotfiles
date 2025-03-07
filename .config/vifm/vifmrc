@@ -107,11 +107,10 @@ mark r /
 
 command! run    !! ./%f
 command! reload :write | restart full
-
 command! df df --human-readable %m 2>/dev/null
 command! du du --human-readable --time --all --total %m 2>/dev/null
-
 command! extract bsdtar --extract --file %f &>/dev/null &
+command! wallpaper sway-wallpaper %a %c:p 2>/dev/null &
 
 " ------------------------------------------------------------------------------
 " File types association
@@ -128,12 +127,17 @@ fileviewer ../ tree %c -C -L 1
 fileviewer {*.json},<text/*>
          \ highlight --out-format truecolor --style base16/default-dark %c
 filetype {*.json},<text/*>
-         \ emacs --no-splash --no-window-system %c 2>/dev/null
+         \ emacsclient --no-window-system %c 2>/dev/null
 
 " Documents
-fileviewer {*.pdf},<application/pdf> mutool draw -P -i -q -KK -F text %c 1-5 2>/dev/null
+fileviewer {*.pdf,*.epub},<application/pdf>
+          \ mutool draw -P -i -q  -F png -o - %c 1 2>/dev/null |
+          \ chafa --polite on --preprocess on --align vcenter --size %pwx%ph %pd %N 2>/dev/null
 fileviewer {*.docx,*.rtf,*.odt} pandoc --to plain --columns %pw %c 2>/dev/null
 fileviewer {*.htm,*.html} elinks -localhost 1 -force-html -dump %c 2>/dev/null
+fileviewer {*.cbz,*.cbr,*.cb7}
+         \ bsdtar --fast-read --to-stdout --extract --file %c '*.jpg' 2>/dev/null |
+         \ chafa --polite on --preprocess on --align vcenter --size %pwx%ph %pd %N 2>/dev/null
 
 " Archives
 " view contents of archive files on opening them
@@ -145,7 +149,7 @@ filetype {*.7z,*.bz2,*.cab,*.cpio,*.deb,*.gz,*.msi,*.pkg,*.rar,*.tar,*.tgz,*.xz,
 
 " Images
 fileviewer {*.bmp,*.jpg,*.jpeg,*.png,*.gif,*.xpm,*.svg},<image/*>
-         \ chafa --polite on --preprocess on --colors full --symbols all --size %pwx%ph %c 2>/dev/null
+         \ chafa --polite on --preprocess on --align vcenter --size %pwx%ph %c %pd %N 2>/dev/null
 
 " Audio
 fileviewer {*.wav,*.mp3,*.flac,*.m4a,*.og[agx],*.opus,*.aac},<audio/*>
@@ -154,7 +158,7 @@ fileviewer {*.wav,*.mp3,*.flac,*.m4a,*.og[agx],*.opus,*.aac},<audio/*>
 " Video
 fileviewer {*.avi,*.mp4,*.ogv,*.mkv,*.mpeg,*.webm,*.m4v,},<video/*>
          \ ffmpeg -i %c -f gif -frames:v 1 - 2>/dev/null |
-         \ chafa --polite on --preprocess on --colors full --symbols all --size %pwx%ph 2>/dev/null
+         \ chafa --polite on --preprocess on --align vcenter --size %pwx%ph %pd %N 2>/dev/null
 
 " Object
 filetype {*.o},<application/x-object> nm %f | less
@@ -197,6 +201,13 @@ filetype * xdg-open %c 2>/dev/null &
 " ------------------------------------------------------------------------------
 " Panel configuration examples
 " ------------------------------------------------------------------------------
+
+" Only show one panel.
+" only
+
+" Enable cascading panes in panel.
+" set millerview
+" set milleroptions=lsize:1,csize:2,rsize:0,rpreview=all
 
 " Customize view columns a bit (enable ellipsis for truncated file names)
 " set viewcolumns=-{name}..,-18{mtime},6{}.
