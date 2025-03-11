@@ -11,12 +11,10 @@
 		"sway/scratchpad"
 	],
 	"modules-right": [
-		"pulseaudio",
 		"bluetooth",
 		"network",
+		"pulseaudio",
 		"battery",
-		"cpu",
-		"memory",
 		"sway/language",
 		"clock",
 		"tray"

@@ -1,0 +1,12 @@
+[Unit]
+Description=Conky system monitor
+Documentation=man:conky(1) https://conky.cc
+PartOf=graphical-session.target
+After=graphical-session.target
+
+[Service]
+Restart=on-failure
+ExecStart=/usr/bin/conky
+
+[Install]
+WantedBy=graphical-session.target
