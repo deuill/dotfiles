@@ -1,9 +1,0 @@
-#!/usr/bin/env bash
-
-for terminal in $TERMINAL x-terminal-emulator xterm gnome-terminal alacritty kitty foot; do
-    if command -v $terminal >/dev/null 2>&1; then
-        exec $terminal "$@"
-    fi
-done
-
-swaynag --message "Failed to find a suitable terminal"

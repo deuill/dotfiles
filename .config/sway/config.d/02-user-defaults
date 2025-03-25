@@ -1,3 +1,0 @@
-# Apply configuration defaults for user environment.
-exec_always cat ~/.config/dconf/user-defaults | dconf load /
-exec_always xrdb -load ~/.config/Xresources

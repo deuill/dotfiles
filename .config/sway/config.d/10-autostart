@@ -1,2 +1,0 @@
-# This file contains optional, automatically started daemons for use in Sway.
-exec_always python ~/.config/sway/bin/keyboard-layout-per-window.py

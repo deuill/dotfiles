@@ -1,9 +1,0 @@
-# Exclude GTAGS files by default.
-/GPATH
-/GRTAGS
-/GSYMS
-/GTAGS
-/TAGS
-
-# Exclude other, Emacs-related files.
-.ac-php-conf.json
