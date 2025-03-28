@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Name=Glulx Interpreter
+Comment=Interpreter for Interactive Fiction
+Type=Application
+Terminal=false
+TryExec=glulxe-term
+Exec=xdg-terminal-exec glulxe-term %f
+MimeType=application/x-iff;
+NoDisplay=true

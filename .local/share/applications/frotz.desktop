@@ -1,0 +1,10 @@
+[Desktop Entry]
+Version=1.0
+Name=Frotz
+Comment=Interpreter for Z-Machine Interactive Fiction
+Type=Application
+Terminal=false
+TryExec=frotz
+Exec=xdg-terminal-exec frotz %f
+MimeType=application/x-zmachine;application/x-blorb;
+NoDisplay=true
