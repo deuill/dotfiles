@@ -2,6 +2,8 @@
 
 This repository contains *opinionated* configuration, mainly aimed at Sway-based environments; you can find more generic configuration [here](https://github.com/deuill/archlinux-packages/tree/trunk/deuill-sway/files/etc/skel/.config), and if you're on ArchLinux, installable as a [package](https://github.com/deuill/archlinux-packages/tree/trunk).
 
+*NOTE*: This branch is here to prevent spurious pushes from local.
+
 ## Installation
 
 You can pull these dotfiles into your `$HOME` by performing a bare clone, and then checking out into your home directory:
