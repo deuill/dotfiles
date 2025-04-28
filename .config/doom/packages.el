@@ -13,5 +13,16 @@
 (package! sqlite-mode-extras)
 
 ;; Major modes.
-(package! systemd)
 (package! capnp-mode)
+(package! code-review :pin "fba8fe3")
+(package! devdocs-browser)
+(package! pr-review)
+(package! protobuf-mode)
+(package! rfc-mode)
+(package! systemd)
+
+;; Minor modes.
+(package! flycheck-golangci-lint :pin "14bf143")
+
+;; Disabled packages.
+(package! code-review :disable t)

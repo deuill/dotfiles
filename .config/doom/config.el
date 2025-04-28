@@ -83,23 +83,34 @@
 
 (set-popup-rule! "^\\*doom:scratch" :side 'right :select t :quit 'other :slot 0 :width (+ fill-column 4))
 
-(setq-default auth-sources '("secrets:Login")
+(setq-default auth-sources '("secrets:login")
               browse-url-browser-function 'eww-browse-url
               doom-scratch-initial-major-mode 'text-mode
-              shell-file-name "/usr/bin/fish")
+              shell-file-name "/bin/bash")
+
+(after! code-review
+  (setq code-review-new-buffer-window-strategy #'switch-to-buffer
+        code-review-auth-login-marker 'forge)
+  (set-popup-rule! "^\\*Code Review" :side 'right :select t :quit 'other))
 
 (after! dape
   (setq dape-cwd-fn 'projectile-project-root))
-
-(after! dash-docs
-  (setq dash-docs-docsets-path "~/.local/share/docsets"
-        dash-docs-browser-func #'eww))
 
 (after! deft
   (setq deft-directory "~/Documents/Notes"
         deft-default-extension "md")
   (defun deft () (interactive)(+custom/deft-popup))
   (set-popup-rule! "^\\*Deft\\*" :side 'right :select t :quit 'other :slot 0 :width (+ fill-column 4)))
+
+(after! devdocs-browser
+  (set-popup-rule! "^\\*devdocs-" :side 'right :select t :quit 'other :slot 0 :width (+ fill-column 4)))
+
+(after! eglot
+  (set-popup-rule! "^\\*eglot-help" :side 'bottom :select t :quit 'current :slot 0 :height 0.5))
+
+(after! (eglot evil)
+  (evil-collection-define-key 'normal 'eglot-mode-map
+    "gD" 'xref-find-references))
 
 (after! evil
   ;; Transpose lines with J/K when in visual mode.
@@ -159,7 +170,8 @@
 (after! magit
   (setq magit-diff-refine-hunk t
         magit-display-buffer-function #'magit-display-buffer-traditional
-        magit-revision-show-gravatars '("^Author:     " . "^Commit:     ")))
+        magit-revision-show-gravatars '("^Author:     " . "^Commit:     "))
+  (require 'pr-review))
 
 (after! (magit evil)
   (evil-define-key* 'normal magit-status-mode-map (kbd "<escape>") #'magit-mode-bury-buffer))
@@ -179,10 +191,25 @@
 (after! projectile
   (setq projectile-globally-ignored-directories (append (default-value 'projectile-globally-ignored-directories) '("vendor"))))
 
+(after! pr-review
+  (setq pr-review-ghub-auth-name 'forge)
+  (transient-append-suffix 'magit-merge "d"
+    '("y" "Review pull request" +custom/start-pr-review))
+  (after! forge
+    (transient-append-suffix 'forge-dispatch "c u"
+      '("c r" "Review pull request" +custom/start-pr-review))))
+
 (after! ranger
   (setq ranger-cleanup-on-disable t
         ranger-return-to-ranger t
         ranger-hide-cursor t))
+
+(after! restclient
+  (set-popup-rule! "^\\*HTTP Response\\*" :side 'right :select t :quit 'current :slot 0 :width 0.5))
+
+(after! rfc-mode
+  (setq rfc-mode-directory (concat doom-data-dir "rfc/"))
+  (set-popup-rule! "^\\*rfc" :side 'right :select t :quit 'other :slot 0 :width (+ fill-column 4)))
 
 (after! shr
   (require 'shr-tag-pre-highlight)
@@ -235,6 +262,7 @@
   (define-key transient-sticky-map (kbd "<escape>") 'transient-quit-seq))
 
 (after! vterm
+  (setq vterm-shell "/usr/bin/fish")
   (set-popup-rule! "^\\*\\(?:doom:\\)vterm" :vslot -5 :select t :modeline nil :quit nil :ttl nil :height 0.25))
 
 (after! vundo
@@ -264,7 +292,11 @@
 (add-hook! artist-mode
   (evil-emacs-state +1))
 
+(add-hook! code-review-mode
+  (persp-add-buffer (current-buffer)))
+
 (add-hook! csv-mode
+  (setq csv-align-padding 3)
   (csv-align-mode t))
 
 (add-hook! (doc-mode org-mode markdown-mode)
@@ -300,8 +332,10 @@
 (add-hook! git-commit-mode
   (setq indent-tabs-mode nil))
 
-(add-hook! 'go-mode-lsp-hook
-  (flycheck-add-next-checker 'lsp 'golangci-lint))
+(add-hook! go-mode
+  (setq
+   ;; Enable support for additional Flycheck checkers, such as GolangCI-Lint.
+   flycheck-eglot-exclusive nil))
 
 (add-hook! Info-mode
   (writeroom-mode t))
@@ -337,6 +371,13 @@
   (setq fill-column 100
         show-trailing-whitespace t)
   (display-fill-column-indicator-mode))
+
+(add-hook! rfc-mode
+  (writeroom-mode t))
+
+(add-hook! scheme-mode
+  (after! geiser-mode
+    (setq geiser-mode-start-repl-p t)))
 
 (add-hook! sql-mode
   (after! lsp-sqls (lsp-deferred)))
@@ -496,10 +537,12 @@
 
         (:prefix "s"
          "f"   nil
+         :desc "Look up in docset"       "k" #'devdocs-browser-open
+         :desc "Look up in other docset" "K" #'devdocs-browser-open-in
          "p"   nil
          "P"   nil
-         :desc "Replace in buffer"            "r"   #'+custom/query-replace-buffer
-         :desc "Replace in project"           "R"   #'projectile-replace)
+         :desc "Replace in buffer"       "r" #'+custom/query-replace-buffer
+         :desc "Replace in project"      "R" #'projectile-replace)
 
         "r" nil
 

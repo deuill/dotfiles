@@ -85,6 +85,42 @@ to the `killed-buffer-list' when killing the buffer."
   (if (not (eq major-mode 'deft-mode))
       (deft-mode)))
 
+(defconst +custom--project-notes-filename "notes.org")
+
+;;;###autoload
+(defun +custom--pr-review-at-point ()
+  (interactive)
+  (or (forge-pullreq-at-point)
+      (and (forge-pullreq-p forge-buffer-topic)
+           forge-buffer-topic)
+      (user-error "No current pull-request"))
+  (let ((pullreq (or (forge-pullreq-at-point) (forge-current-topic))))
+    (if (not (forge-pullreq-p pullreq))
+        (user-error "We can only review PRs at the moment. You tried on something else."))
+    (let* ((repo (forge-get-repository pullreq))
+           (owner (oref repo owner))
+           (name (oref repo name))
+           (number (oref pullreq number)))
+      (message "Opening pull request %s..." (forge-get-url pullreq))
+      (pr-review-open owner name number))))
+
+;;;###autoload
+(defun +custom/start-pr-review (arg)
+  "Start PR review for the pull-request under current point."
+  (interactive "P")
+  (call-interactively
+   (if (or arg (not (featurep 'forge)))
+       #'pr-review
+     #'+custom--pr-review-at-point)))
+
+;;;###autoload
+(defun +custom/open-project-notes ()
+  "Creates or opens project-local notes file."
+  (interactive)
+  (find-file (expand-file-name +custom--project-notes-filename (projectile-project-root)))
+  (auto-save-mode t)
+  (add-hook! 'kill-buffer-hook :local 'save-buffer))
+
 ;;;###autoload
 (defun +custom/sqlite-view-file ()
   "Runs `sqlite-mode-open-file' on the file name visited by the current buffer, killing it."

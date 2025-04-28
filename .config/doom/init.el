@@ -10,6 +10,7 @@
 
        :ui
        doom
+       (emoji +github)
        hl-todo
        ligatures
        modeline
@@ -33,7 +34,7 @@
        word-wrap
 
        :emacs
-       (dired +icons +ranger)
+       (dired +icons)
        electric
        (ibuffer +icons)
        undo
@@ -47,7 +48,7 @@
        docker
        editorconfig
        (eval +overlay)
-       (lookup +dictionary +docsets +offline)
+       (lookup +dictionary +offline)
        (lsp +eglot)
        (magit +forge)
        pdf
@@ -66,6 +67,7 @@
        (python +lsp +tree-sitter)
        rest
        (rust +lsp +tree-sitter)
+       (scheme +guile)
        (sh +fish +lsp +tree-sitter)
        (web +tree-sitter)
        (yaml +tree-sitter)
