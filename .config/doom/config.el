@@ -86,7 +86,8 @@
 (setq-default auth-sources '("secrets:login")
               browse-url-browser-function 'eww-browse-url
               doom-scratch-initial-major-mode 'text-mode
-              shell-file-name "/bin/bash")
+              shell-file-name "/bin/bash"
+              explicit-shell-file-name "/usr/bin/fish")
 
 (after! code-review
   (setq code-review-new-buffer-window-strategy #'switch-to-buffer
@@ -418,8 +419,8 @@
   (map! :desc "Jump back in position history"    "<mouse-8>" #'better-jumper-jump-backward
         :desc "Jump forward in position history" "<mouse-9>" #'better-jumper-jump-forward)
 
-  (map! :desc "Go to previous buffer" :n "<S-left>"  #'evil-prev-buffer
-        :desc "Go to next buffer"     :n "<S-right>" #'evil-next-buffer)
+  (map! :desc "Go to previous buffer" :n "M-p" #'evil-prev-buffer
+        :desc "Go to next buffer"     :n "M-n" #'evil-next-buffer)
 
   (map! :leader
         :desc "Open shell here"       ";"   (cond ((modulep! :term vterm)  #'vterm)
@@ -462,6 +463,7 @@
          :desc "Paste and replace buffer"     "P"   #'+custom/paste-buffer
          :desc "Rename buffer"                "r"   #'rename-buffer
          :desc "Revert buffer"                "R"   #'+custom/safe-revert-buffer
+         :desc "Save buffer"                  "s"   #'basic-save-buffer
          :desc "Reopen killed buffer"         "u"   #'+custom/reopen-killed-buffer
          (:when (modulep! :emacs undo +tree)
            :desc "Open undo tree"             "U"   #'undo-tree-visualize)
@@ -479,6 +481,7 @@
          "l"   nil
          "p"   nil
          "P"   nil
+         :desc "Save file"                    "s"   #'save-buffer
          "u"   nil
          "U"   nil)
 
