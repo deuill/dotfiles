@@ -23,15 +23,6 @@
        electric
        undo
 
-       :term
-       eshell
-
-       :tools
-       magit
-
-       :lang
-       markdown
-
        :os
        (tty +osc)
 

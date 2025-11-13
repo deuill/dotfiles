@@ -26,11 +26,11 @@
  doom-theme 'doom-monokai-pro
 
  ;; Font definitions.
- doom-font                (font-spec :family "Iosevka"        :size 24 :weight 'light)
- doom-big-font            (font-spec :family "Iosevka"        :size 32 :weight 'light)
- doom-variable-pitch-font (font-spec :family "IBM Plex Sans"  :size 24 :weight 'light)
- doom-serif-font          (font-spec :family "IBM Plex Serif" :size 24 :weight 'light)
- doom-unicode-font        (font-spec :family "Iosevka"        :size 24 :weight 'light)
+ doom-font                (font-spec :family "Iosevka"        :size 12 :weight 'light)
+ doom-big-font            (font-spec :family "Iosevka"        :size 18 :weight 'light)
+ doom-variable-pitch-font (font-spec :family "IBM Plex Sans"  :size 12)
+ doom-serif-font          (font-spec :family "IBM Plex Serif" :size 18)
+ doom-unicode-font        (font-spec :family "Iosevka"        :size 12 :weight 'light)
 
  ;; Column used as limit for various modes.
  fill-column 100
@@ -55,15 +55,24 @@
 
 (custom-set-faces!
   ;; Set colors consistent with Base16-Eighties theme.
-  '(default                           :background "#2d2d2d")
-  '(hl-line                           :background "#323232")
-  '(mode-line                         :background "#282828")
-  '(vertical-border                   :background "#282828" :foreground "#282828")
-  '(solaire-default-face              :background "#282828")
-  '(solaire-hl-line-face              :background "#323232")
-  '(treemacs-window-background-face   :background "#323232")
-  `(tree-sitter-hl-face:function.call :foreground ,(doom-color 'functions))
-  '(eglot-highlight-symbol-face       :inherit region)
+  '(default                         :background "#2d2d2d")
+  '(hl-line                         :background "#323232")
+  '(mode-line                       :background "#282828")
+  '(vertical-border                 :background "#282828" :foreground "#282828")
+  '(solaire-default-face            :background "#282828")
+  '(solaire-hl-line-face            :background "#323232")
+  '(treemacs-window-background-face :background "#323232")
+
+  ;; Improve visibility for Ediff.
+  `(ediff-current-diff-A :background ,(doom-blend "#cc6666" "#2d2d2d" 0.1))
+  `(ediff-current-diff-B :background ,(doom-blend "#a9dc76" "#2d2d2d" 0.1))
+  `(ediff-current-diff-C :background ,(doom-blend "#ffd866" "#2d2d2d" 0.1))
+  `(ediff-fine-diff-A    :background ,(doom-blend "#cc6666" "#2d2d2d" 0.3) :weight bold)
+  `(ediff-fine-diff-B    :background ,(doom-blend "#a9dc76" "#2d2d2d" 0.3) :weight bold)
+  `(ediff-fine-diff-C    :background ,(doom-blend "#ffd866" "#2d2d2d" 0.3) :weight bold)
+
+  ;; Make LSP symbol highlights more prominent.
+  '(eglot-highlight-symbol-face :inherit region)
 
   ;; Have whitespace blend into background until highlighted.
   '(whitespace-space :background "#2d2d2d" :foreground "#2d2d2d")
@@ -83,16 +92,27 @@
 
 (set-popup-rule! "^\\*doom:scratch" :side 'right :select t :quit 'other :slot 0 :width (+ fill-column 4))
 
-(setq-default auth-sources '("secrets:login")
-              browse-url-browser-function 'eww-browse-url
-              doom-scratch-initial-major-mode 'text-mode
-              shell-file-name "/bin/bash"
-              explicit-shell-file-name "/usr/bin/fish")
+(setq-default
+ ;; Read from XDG secrets by default.
+ auth-sources '("secrets:Login")
+ ;; Always save bookmark list on modification.
+ bookmark-save-flag 1
+ ;; Use EWW for browing URLs by default.
+ browse-url-browser-function 'eww-browse-url
+ ;; Use a more reasonable default for scratch buffers.
+ doom-scratch-initial-major-mode 'text-mode
+ ;; Use Fish as shell in interative sessions.
+ explicit-shell-file-name "/usr/bin/fish"
+ ;; Use Bash for non-interactive shell calls.
+ shell-file-name "/bin/bash")
 
 (after! code-review
   (setq code-review-new-buffer-window-strategy #'switch-to-buffer
         code-review-auth-login-marker 'forge)
   (set-popup-rule! "^\\*Code Review" :side 'right :select t :quit 'other))
+
+(after! consult-gh
+  (setq consult-gh-preview-key "RET"))
 
 (after! dape
   (setq dape-cwd-fn 'projectile-project-root))
@@ -133,6 +153,9 @@
   (evil-define-key* 'normal eww-mode-map (kbd "r") 'eww-reload)
   (defun shr-add-font (start end type) (+custom/shr-add-font start end type))
   (set-popup-rule! "^\\*eww\\*" :side 'right :select t :quit 'nil :slot 0 :width (+ fill-column 4)))
+
+(after! go-playground
+  (setq go-playground-basedir "~/.go/src/play"))
 
 (after! info
   (set-popup-rule! "^\\*info\\*" :side 'right :select t :quit 'current :slot 0 :width (+ fill-column 4)))
@@ -334,9 +357,11 @@
   (setq indent-tabs-mode nil))
 
 (add-hook! go-mode
-  (setq
-   ;; Enable support for additional Flycheck checkers, such as GolangCI-Lint.
-   flycheck-eglot-exclusive nil))
+  (setq flycheck-eglot-exclusive nil)) ;; Enable support for additional Flycheck checkers, such as GolangCI-Lint.
+
+(add-hook! go-ts-mode
+  (setq go-ts-mode-indent-offset standard-indent
+        flycheck-eglot-exclusive nil))
 
 (add-hook! Info-mode
   (writeroom-mode t))
@@ -367,6 +392,8 @@
                       (buffer-string)))))
     (add-to-list 'eglot-server-programs `(((web-mode :language-id "php") (php-mode :language-id "php")) .
                                           ("intelephense" "--stdio" :initializationOptions (:licenseKey ,key))))))
+(add-hook! pr-review-input-mode
+  (auto-fill-mode -1))
 
 (add-hook! prog-mode
   (setq fill-column 100

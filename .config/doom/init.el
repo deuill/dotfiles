@@ -52,6 +52,7 @@
        (lsp +eglot)
        (magit +forge)
        pdf
+       (terraform +lsp)
        tree-sitter
 
        :lang
