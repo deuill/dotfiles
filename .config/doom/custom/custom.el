@@ -111,7 +111,7 @@ to the `killed-buffer-list' when killing the buffer."
        #'pr-review
      #'+custom--pr-review-at-point)))
 
-(defvar +custom--project-notes-dir "~/Notes"
+(defvar +custom--project-notes-dir "~/Documents/Projects"
   "The default directory for project notes.")
 
 (defvar +custom--project-notes-extension "md"
@@ -121,6 +121,8 @@ to the `killed-buffer-list' when killing the buffer."
 (defun +custom/open-project-notes ()
   "Creates or opens project-local notes file."
   (interactive)
+  (unless (projectile-project-p)
+    (user-error "Not in project, cannot open notes."))
   (let* ((dirname +custom--project-notes-dir)
          (filename (format "%s.%s" (projectile-project-name) +custom--project-notes-extension))
          (filepath (expand-file-name (format "%s/%s" dirname filename))))
@@ -133,7 +135,7 @@ to the `killed-buffer-list' when killing the buffer."
       (pop-to-buffer (get-buffer buffer))))
   (add-hook! 'kill-buffer-hook :local 'save-buffer))
 
-(set-popup-rule! "^\\*Project Notes" :side 'right :select t :quit 'other :width 0.5)
+(set-popup-rule! "^\\*Project Notes" :side 'right :select t :quit 'other :width (+ fill-column 4))
 
 ;;;###autoload
 (defun +custom/sqlite-view-file ()
@@ -177,3 +179,13 @@ to the `killed-buffer-list' when killing the buffer."
   (evil-insert-state))
 
 (add-to-list 'auto-mode-alist '("aerc-compose-[0-9]+\\.eml\\'" . aerc-compose-mode))
+
+;;;###autoload
+(defun +custom--command-line-ediff (switch)
+  "Ediff two files based on given SWITCH command-line argument"
+  (add-hook! 'ediff-quit-hook 'kill-emacs)
+  (let ((a (pop command-line-args-left))
+        (b (pop command-line-args-left)))
+    (ediff a b)))
+
+(add-to-list 'command-switch-alist '("--diff" . +custom--command-line-ediff))

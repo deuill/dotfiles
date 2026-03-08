@@ -161,7 +161,7 @@
   (set-popup-rule! "^\\*info\\*" :side 'right :select t :quit 'current :slot 0 :width (+ fill-column 4)))
 
 (after! (json-mode evil)
-  (evil-define-key 'normal json-mode-map (kbd "<tab>") 'evil-toggle-fold))
+  (evil-define-key 'normal js-json-mode-map (kbd "<tab>") 'evil-toggle-fold))
 
 (after! kubernetes-overview
   (setq kubernetes-kubectl-executable "kubectl-socks"
@@ -205,8 +205,11 @@
         markdown-enable-wiki-links t
         markdown-fontify-code-blocks-natively t))
 
+(after! org
+  (setq org-directory "~/Documents/Notes/"))
+
 (after! org-roam
-  (setq org-roam-directory "~/Documents/Notes"))
+  (setq org-roam-directory "~/Documents/Notes/Roam"))
 
 (after! persp-mode
   (setq persp-autokill-buffer-on-remove t
@@ -360,7 +363,7 @@
   (setq indent-tabs-mode nil))
 
 (add-hook! go-mode
-  (setq flycheck-eglot-exclusive nil)) ;; Enable support for additional Flycheck checkers, such as GolangCI-Lint.
+  (setq flycheck-eglot-exclusive nil))
 
 (add-hook! go-ts-mode
   (setq go-ts-mode-indent-offset standard-indent
