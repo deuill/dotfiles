@@ -85,8 +85,6 @@ to the `killed-buffer-list' when killing the buffer."
   (if (not (eq major-mode 'deft-mode))
       (deft-mode)))
 
-(defconst +custom--project-notes-filename "notes.org")
-
 ;;;###autoload
 (defun +custom--pr-review-at-point ()
   (interactive)
@@ -113,13 +111,29 @@ to the `killed-buffer-list' when killing the buffer."
        #'pr-review
      #'+custom--pr-review-at-point)))
 
+(defvar +custom--project-notes-dir "~/Notes"
+  "The default directory for project notes.")
+
+(defvar +custom--project-notes-extension "md"
+  "The default extension for project notes.")
+
 ;;;###autoload
 (defun +custom/open-project-notes ()
   "Creates or opens project-local notes file."
   (interactive)
-  (find-file (expand-file-name +custom--project-notes-filename (projectile-project-root)))
-  (auto-save-mode t)
+  (let* ((dirname +custom--project-notes-dir)
+         (filename (format "%s.%s" (projectile-project-name) +custom--project-notes-extension))
+         (filepath (expand-file-name (format "%s/%s" dirname filename))))
+    (unless (file-accessible-directory-p dirname)
+      (mkdir dirname t))
+    (let ((buffer (find-file-noselect filepath)))
+      (with-current-buffer buffer
+        (rename-buffer (format "*Project Notes %s*" filename))
+        (auto-save-mode t))
+      (pop-to-buffer (get-buffer buffer))))
   (add-hook! 'kill-buffer-hook :local 'save-buffer))
+
+(set-popup-rule! "^\\*Project Notes" :side 'right :select t :quit 'other :width 0.5)
 
 ;;;###autoload
 (defun +custom/sqlite-view-file ()

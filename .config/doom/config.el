@@ -285,6 +285,9 @@
   (define-key transient-edit-map   (kbd "<escape>") 'transient-quit-one)
   (define-key transient-sticky-map (kbd "<escape>") 'transient-quit-seq))
 
+(after! treesit
+  (setq treesit-font-lock-level 3))
+
 (after! vterm
   (setq vterm-shell "/usr/bin/fish")
   (set-popup-rule! "^\\*\\(?:doom:\\)vterm" :vslot -5 :select t :modeline nil :quit nil :ttl nil :height 0.25))
@@ -553,7 +556,8 @@
                  "i"   nil
                  "k"   nil
                  :desc "List project workspaces"      "l"   #'+workspace/display
-                 :desc "New project workspace"        "n"   #'+workspace/new
+                 :desc "Open project notes"           "n"   #'+custom/open-project-notes
+                 :desc "New project workspace"        "N"   #'+workspace/new
                  "o"   nil
                  :desc "Rename project workspace"     "R"   #'+workspace/rename
                  "s"   nil
