@@ -131,11 +131,12 @@ to the `killed-buffer-list' when killing the buffer."
     (let ((buffer (find-file-noselect filepath)))
       (with-current-buffer buffer
         (rename-buffer (format "*Project Notes %s*" filename))
+        (solaire-mode t)
         (auto-save-mode t))
-      (pop-to-buffer (get-buffer buffer))))
+      (pop-to-buffer buffer)))
   (add-hook! 'kill-buffer-hook :local 'save-buffer))
 
-(set-popup-rule! "^\\*Project Notes" :side 'right :select t :quit 'other :width (+ fill-column 4))
+(set-popup-rule! "^\\*Project Notes" :side 'right :select t :quit 'other :width 0.3)
 
 ;;;###autoload
 (defun +custom/sqlite-view-file ()
@@ -189,3 +190,12 @@ to the `killed-buffer-list' when killing the buffer."
     (ediff a b)))
 
 (add-to-list 'command-switch-alist '("--diff" . +custom--command-line-ediff))
+
+;;;###autoload
+(defun +custom/markdown-compile-cmark (beg end output-buffer)
+  "Compiles markdown with the CMark program, if available. Returns its exit code."
+  (when (executable-find "cmark")
+    (call-process-region beg end "cmark" nil output-buffer nil
+                         "--to" "html"
+                         "--unsafe"
+                         "--smart")))

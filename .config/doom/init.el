@@ -9,6 +9,7 @@
        spell
 
        :ui
+       dashboard
        doom
        (emoji +github)
        hl-todo
@@ -53,25 +54,24 @@
        (magit +forge)
        pdf
        (terraform +lsp)
-       tree-sitter
 
        :lang
-       (cc +tree-sitter)
+       cc
        data
        emacs-lisp
-       (go +lsp +tree-sitter)
-       (javascript +tree-sitter)
-       (lua +lsp +tree-sitter)
+       (go +lsp)
+       javascript
+       (lua +lsp)
        markdown
        (org +pretty)
-       (php +lsp +tree-sitter)
-       (python +lsp +tree-sitter)
+       (php +lsp)
+       (python +lsp)
        rest
-       (rust +lsp +tree-sitter)
+       (rust +lsp)
        (scheme +guile)
-       (sh +fish +lsp +tree-sitter)
-       (web +tree-sitter)
-       (yaml +tree-sitter)
+       (sh +fish +lsp)
+       web
+       yaml
 
        :os
        (tty +osc)

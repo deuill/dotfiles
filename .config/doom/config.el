@@ -28,8 +28,8 @@
  ;; Font definitions.
  doom-font                (font-spec :family "Iosevka"        :size 12 :weight 'light)
  doom-big-font            (font-spec :family "Iosevka"        :size 18 :weight 'light)
- doom-variable-pitch-font (font-spec :family "IBM Plex Sans"  :size 12)
- doom-serif-font          (font-spec :family "IBM Plex Serif" :size 18)
+ doom-variable-pitch-font (font-spec :family "IBM Plex Sans"  :size 12 :weight 'light)
+ doom-serif-font          (font-spec :family "IBM Plex Serif" :size 18 :weight 'light)
  doom-unicode-font        (font-spec :family "Iosevka"        :size 12 :weight 'light)
 
  ;; Column used as limit for various modes.
@@ -200,8 +200,9 @@
 (after! (magit evil)
   (evil-define-key* 'normal magit-status-mode-map (kbd "<escape>") #'magit-mode-bury-buffer))
 
-(after! markdown
-  (setq markdown-asymmetric-header t
+(after! markdown-mode
+  (setq +markdown-compile-functions '(+custom/markdown-compile-cmark)
+        markdown-asymmetric-header t
         markdown-enable-wiki-links t
         markdown-fontify-code-blocks-natively t))
 
