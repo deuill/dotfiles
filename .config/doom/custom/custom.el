@@ -96,11 +96,12 @@ to the `killed-buffer-list' when killing the buffer."
     (if (not (forge-pullreq-p pullreq))
         (user-error "We can only review PRs at the moment. You tried on something else."))
     (let* ((repo (forge-get-repository pullreq))
+           (host (oref repo githost))
            (owner (oref repo owner))
            (name (oref repo name))
            (number (oref pullreq number)))
       (message "Opening pull request %s..." (forge-get-url pullreq))
-      (pr-review-open owner name number))))
+      (pr-review-open host owner name number))))
 
 ;;;###autoload
 (defun +custom/start-pr-review (arg)
@@ -111,7 +112,7 @@ to the `killed-buffer-list' when killing the buffer."
        #'pr-review
      #'+custom--pr-review-at-point)))
 
-(defvar +custom--project-notes-dir "~/Documents/Projects"
+(defvar +custom--project-notes-dir "~/Projects"
   "The default directory for project notes.")
 
 (defvar +custom--project-notes-extension "md"

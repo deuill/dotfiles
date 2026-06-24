@@ -19,10 +19,11 @@ c.content.blocking.enabled = True
 c.content.geolocation = False
 c.colors.webpage.preferred_color_scheme = "dark"
 c.colors.webpage.darkmode.enabled = False
-c.editor.command = ["emacsclient", "--create-frame", "{}"]
-c.qt.highdpi = True
-c.scrolling.smooth = False
-c.statusbar.widgets = ["url", "progress", "scroll"]
+c.content.user_stylesheets = []
+c.editor.command = ["emacs", "{}"]
+c.qt.highdpi = False
+c.scrolling.smooth = True
+c.statusbar.widgets = ["url", "progress", "search_match", "scroll"]
 c.tabs.show = "multiple"
 c.tabs.tabs_are_windows = False
 c.tabs.background = True
@@ -31,10 +32,10 @@ c.url.default_page = "https://kagi.com"
 c.url.start_pages = c.url.default_page
 c.input.insert_mode.auto_leave = False
 c.input.insert_mode.auto_load = True
-c.zoom.default = "140%"
+c.zoom.default = "80%"
 
 # Searches.
-c.url.searchengines["DEFAULT"] = "https://kagi.com/search/?q={}"
+c.url.searchengines["DEFAULT"] = "https://kagi.com/html/search/?q={}"
 c.url.searchengines["!d"] = "https://duckduckgo.com/?q={}"
 c.url.searchengines["!aw"] = "https://wiki.archlinux.org/?search={}"
 c.url.searchengines["!ap"] = "https://www.archlinux.org/packages/?sort=&q={}"
@@ -79,8 +80,8 @@ c.window.title_format = "{current_title}"
 
 # Fonts.
 c.fonts.default_family = ["Iosevka"]
-c.fonts.default_size = "20pt"
-c.fonts.prompts = "20pt Iosevka"
+c.fonts.default_size = "9pt"
+c.fonts.prompts = "9pt Iosevka"
 c.fonts.web.family.sans_serif = "IBM Plex Sans"
 c.fonts.web.family.serif = "IBM Plex Serif"
 c.fonts.web.family.fixed = "IBM Plex Mono"
@@ -245,7 +246,7 @@ c.colors.prompts.bg = base00
 c.colors.prompts.selected.bg = base02
 
 # Foreground color of the statusbar.
-c.colors.statusbar.normal.fg = base0B
+c.colors.statusbar.normal.fg = base05
 
 # Background color of the statusbar.
 c.colors.statusbar.normal.bg = base00
@@ -263,10 +264,10 @@ c.colors.statusbar.passthrough.fg = base00
 c.colors.statusbar.passthrough.bg = base0C
 
 # Foreground color of the statusbar in private browsing mode.
-c.colors.statusbar.private.fg = base00
+c.colors.statusbar.private.fg = base01
 
 # Background color of the statusbar in private browsing mode.
-c.colors.statusbar.private.bg = base01
+c.colors.statusbar.private.bg = base0E
 
 # Foreground color of the statusbar in command mode.
 c.colors.statusbar.command.fg = base05
@@ -364,13 +365,13 @@ c.colors.tabs.pinned.selected.odd.bg = base02
 c.colors.tabs.pinned.selected.odd.fg = base05
 
 # Foreground color of selected odd tabs.
-c.colors.tabs.selected.odd.fg = base04
+c.colors.tabs.selected.odd.fg = base05
 
 # Background color of selected odd tabs.
 c.colors.tabs.selected.odd.bg = base01
 
 # Foreground color of selected even tabs.
-c.colors.tabs.selected.even.fg = base04
+c.colors.tabs.selected.even.fg = base05
 
 # Background color of selected even tabs.
 c.colors.tabs.selected.even.bg = base01

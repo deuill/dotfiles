@@ -29,7 +29,7 @@
  doom-font                (font-spec :family "Iosevka"        :size 12 :weight 'light)
  doom-big-font            (font-spec :family "Iosevka"        :size 18 :weight 'light)
  doom-variable-pitch-font (font-spec :family "IBM Plex Sans"  :size 12 :weight 'light)
- doom-serif-font          (font-spec :family "IBM Plex Serif" :size 18 :weight 'light)
+ doom-serif-font          (font-spec :family "IBM Plex Serif" :size 12 :weight 'light)
  doom-unicode-font        (font-spec :family "Iosevka"        :size 12 :weight 'light)
 
  ;; Column used as limit for various modes.
@@ -64,12 +64,16 @@
   '(treemacs-window-background-face :background "#323232")
 
   ;; Improve visibility for Ediff.
-  `(ediff-current-diff-A :background ,(doom-blend "#cc6666" "#2d2d2d" 0.1))
+  `(ediff-current-diff-A :background ,(doom-blend "#f2777a" "#2d2d2d" 0.1))
   `(ediff-current-diff-B :background ,(doom-blend "#a9dc76" "#2d2d2d" 0.1))
-  `(ediff-current-diff-C :background ,(doom-blend "#ffd866" "#2d2d2d" 0.1))
-  `(ediff-fine-diff-A    :background ,(doom-blend "#cc6666" "#2d2d2d" 0.3) :weight bold)
+  `(ediff-current-diff-C :background ,(doom-blend "#cc99cc" "#2d2d2d" 0.1))
+  `(ediff-fine-diff-A    :background ,(doom-blend "#f2777a" "#2d2d2d" 0.3) :weight bold)
   `(ediff-fine-diff-B    :background ,(doom-blend "#a9dc76" "#2d2d2d" 0.3) :weight bold)
-  `(ediff-fine-diff-C    :background ,(doom-blend "#ffd866" "#2d2d2d" 0.3) :weight bold)
+  `(ediff-fine-diff-C    :background ,(doom-blend "#cc99cc" "#2d2d2d" 0.3) :weight bold)
+
+  ;; Improve visibility for highlight-line-changes.
+  `(highlight-changes        :background ,(doom-blend "#a9dc76" "#2d2d2d" 0.3))
+  `(highlight-changes-delete :background ,(doom-blend "#f2777a" "#2d2d2d" 0.3))
 
   ;; Make LSP symbol highlights more prominent.
   '(eglot-highlight-symbol-face :inherit region)

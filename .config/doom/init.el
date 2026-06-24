@@ -1,7 +1,7 @@
 ;;; .doom.d/init.el -*- lexical-binding: t; -*-
 
 (doom! :completion
-       (corfu +icons)
+       (corfu +orderless +icons)
        (vertico +icons)
 
        :checkers
