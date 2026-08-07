@@ -165,6 +165,8 @@ to the `killed-buffer-list' when killing the buffer."
 (add-to-list 'auto-mode-alist '("\\.rtf\\'" . rich-view-mode))
 (add-to-list 'auto-mode-alist '("\\.docx\\'" . rich-view-mode))
 (add-to-list 'auto-mode-alist '("\\.odt\\'" . rich-view-mode))
+(add-to-list 'auto-mode-alist '("\\.xls\\'" . rich-view-mode))
+(add-to-list 'auto-mode-alist '("\\.xlsx\\'" . rich-view-mode))
 
 ;;;###autoload
 (defvar-keymap aerc-compose-mode-map

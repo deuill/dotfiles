@@ -79,6 +79,5 @@
        :config
        (default +bindings +gnupg +smartparens))
 
-(after! doom-cli-env
-  ;; Allow SSH-related environment variables to be set in persistent configuration.
-  (add-to-list 'doom-env-allow "^SSH_"))
+;; Allow SSH-related environment variables to be set in persistent configuration.
+(setq doom-env-allow '("^SSH_"))

@@ -5,6 +5,7 @@
 ;;;
 
 (load! "custom/custom" "~/.config/doom")
+(load! "custom/config" "~/.config/doom")
 
 ;;;
 ;;; UI configuration.
