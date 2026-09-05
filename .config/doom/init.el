@@ -54,24 +54,22 @@
        (magit +forge)
        pdf
        (terraform +lsp)
+       tree-sitter
 
        :lang
-       cc
+       (cc +tree-sitter)
        data
        emacs-lisp
-       (go +lsp)
-       javascript
-       (lua +lsp)
+       (go +lsp +tree-sitter)
+       (javascript +tree-sitter)
        markdown
        (org +pretty)
-       (php +lsp)
-       (python +lsp)
+       (python +lsp +tree-sitter)
        rest
-       (rust +lsp)
-       (scheme +guile)
-       (sh +fish +lsp)
-       web
-       yaml
+       (rust +lsp +tree-sitter)
+       (sh +fish +lsp +tree-sitter)
+       (web +lsp +tree-sitter)
+       (yaml +tree-sitter)
 
        :os
        (tty +osc)

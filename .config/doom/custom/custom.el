@@ -137,7 +137,7 @@ to the `killed-buffer-list' when killing the buffer."
       (pop-to-buffer buffer)))
   (add-hook! 'kill-buffer-hook :local 'save-buffer))
 
-(set-popup-rule! "^\\*Project Notes" :side 'right :select t :quit 'other :width 0.3)
+(set-popup-rule! "^\\*Project Notes" :side 'right :select t :quit 'other :width 0.5)
 
 ;;;###autoload
 (defun +custom/sqlite-view-file ()
