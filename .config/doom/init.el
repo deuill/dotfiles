@@ -18,6 +18,7 @@
        nav-flash
        ophints
        (popup +all +defaults)
+       smooth-scroll
        treemacs
        (vc-gutter +diff-hl +pretty)
        (window-select +numbers +switch-window)

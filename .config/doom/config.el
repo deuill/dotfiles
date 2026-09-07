@@ -119,9 +119,6 @@
 (after! consult-gh
   (setq consult-gh-preview-key "RET"))
 
-(after! dape
-  (setq dape-cwd-fn 'projectile-project-root))
-
 (after! deft
   (setq deft-directory "~/Documents/Notes"
         deft-default-extension "md")
@@ -132,6 +129,8 @@
   (set-popup-rule! "^\\*devdocs-" :side 'right :select t :quit 'other :slot 0 :width (+ fill-column 4)))
 
 (after! eglot
+  (dolist (mode '(text-mode markdown-mode))
+    (add-to-list 'eglot-server-programs `(,mode . ("harper-ls" "--stdio"))))
   (set-popup-rule! "^\\*eglot-help" :side 'bottom :select t :quit 'current :slot 0 :height 0.5))
 
 (after! (eglot evil)
@@ -158,6 +157,9 @@
   (evil-define-key* 'normal eww-mode-map (kbd "r") 'eww-reload)
   (defun shr-add-font (start end type) (+custom/shr-add-font start end type))
   (set-popup-rule! "^\\*eww\\*" :side 'right :select t :quit 'nil :slot 0 :width (+ fill-column 4)))
+
+(after! forge
+  (setq forge-status-buffer-default-topic-filters (forge--topics-spec :type 'topic :active nil :state 'open :order 'newest)))
 
 (after! go-playground
   (setq go-playground-basedir "~/.go/src/play"))
@@ -579,6 +581,8 @@
                  :desc "Remove project"               "X"   #'projectile-remove-known-project)
 
         (:prefix "s"
+         :desc "Jump to next error"      "e" #'next-error
+         :desc "Jump to previous error"  "E" #'previous-error
          "f"   nil
          :desc "Look up in docset"       "k" #'devdocs-browser-open
          :desc "Look up in other docset" "K" #'devdocs-browser-open-in
