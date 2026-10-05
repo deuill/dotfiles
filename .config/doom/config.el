@@ -109,7 +109,9 @@
  ;; Use Fish as shell in interative sessions.
  explicit-shell-file-name "/usr/bin/fish"
  ;; Use Bash for non-interactive shell calls.
- shell-file-name "/bin/bash")
+ shell-file-name "/bin/bash"
+ ;; Always prefer mode-specific formatters before LSP formatter.
+ +format-lsp--last t)
 
 (after! code-review
   (setq code-review-new-buffer-window-strategy #'switch-to-buffer
@@ -137,14 +139,14 @@
   (evil-collection-define-key 'normal 'eglot-mode-map
     "gD" 'xref-find-references))
 
+(after! eshell
+  (setq eshell-banner-message "")
+  (set-popup-rule! "^\\*\\(?:doom:\\)eshell" :vslot -5 :select t :modeline nil :quit nil :ttl nil :height 0.25))
+
 (after! evil
   ;; Transpose lines with J/K when in visual mode.
   (define-key evil-visual-state-map "J" #'drag-stuff-down)
   (define-key evil-visual-state-map "K" #'drag-stuff-up))
-
-(after! eshell
-  (setq eshell-banner-message "")
-  (set-popup-rule! "^\\*\\(?:doom:\\)eshell" :vslot -5 :select t :modeline nil :quit nil :ttl nil :height 0.25))
 
 (after! eww
   (setq shr-use-fonts t
@@ -234,6 +236,9 @@
     (transient-append-suffix 'forge-dispatch "c u"
       '("c r" "Review pull request" +custom/start-pr-review))))
 
+(after! python
+  (set-formatter! 'ruff :modes '(python-mode python-ts-mode)))
+
 (after! ranger
   (setq ranger-cleanup-on-disable t
         ranger-return-to-ranger t
@@ -274,7 +279,6 @@
 
 (after! sqlite-mode
   (require 'sqlite-mode-extras)
-  (set-popup-rule! "^\\*SQLite " :ignore t)
   (map! :map sqlite-mode-map
         :nvi "h" #'sqlite-mode-extras-backtab-dwim
         :nvi "j" #'next-line
@@ -304,7 +308,7 @@
   (set-popup-rule! "^\\*\\(?:doom:\\)vterm" :vslot -5 :select t :modeline nil :quit nil :ttl nil :height 0.25))
 
 (after! vundo
-  (setq vundo-glyph-alist vundo-ascii-symbols))
+  (setq vundo-glyph-alist vundo-unicode-symbols))
 
 (after! (:or man woman)
   (set-popup-rule! "^\\*\\(?:Wo\\)?Man " :side 'right :select t :quit 'current :slot 0 :width (+ fill-column 4)))

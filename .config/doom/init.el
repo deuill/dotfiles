@@ -27,7 +27,7 @@
 
        :editor
        (evil +everywhere)
-       (format +onsave +lsp)
+       (format +onsave)
        file-templates
        fold
        multiple-cursors
@@ -65,7 +65,7 @@
        (javascript +tree-sitter)
        markdown
        (org +pretty)
-       (python +lsp +tree-sitter)
+       (python +lsp +tree-sitter +uv)
        rest
        (rust +lsp +tree-sitter)
        (sh +fish +lsp +tree-sitter)
