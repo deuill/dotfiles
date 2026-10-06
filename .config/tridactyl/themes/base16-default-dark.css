@@ -1,0 +1,56 @@
+/* Base16 Default Dark by Chris Kempson (http://chriskempson.com) */
+
+:root {
+    --base00: #181818;
+    --base01: #282828;
+    --base02: #383838;
+    --base03: #585858;
+    --base04: #b8b8b8;
+    --base05: #d8d8d8;
+    --base06: #e8e8e8;
+    --base07: #f8f8f8;
+    --base08: #ab4642;
+    --base09: #dc9656;
+    --base0A: #f7ca88;
+    --base0B: #a1b56c;
+    --base0C: #86c1b9;
+    --base0D: #7cafc2;
+    --base0E: #ba8baf;
+    --base0F: #a16946;
+}
+
+:root {
+    --tridactyl-font-family: Iosevka, monospace;
+    --tridactyl-font-family-sans: "IBM Plex Sans", sans;
+    --tridactyl-cmdl-font-family: var(--tridactyl-font-family);
+    --tridactyl-cmplt-font-family: var(--tridactyl-font-family);
+    --tridactyl-font-size: 18pt;
+
+    --tridactyl-bg: var(--base00);
+    --tridactyl-fg: var(--base06);
+    --tridactyl-url-bg: var(--base00);
+    --tridactyl-url-fg: var(--base0D);
+    --tridactyl-highlight-box-bg: var(--base0B);
+    --tridactyl-highlight-box-fg: var(--base00);
+    --tridactyl-cmdl-bg: var(--base01);
+    --tridactyl-hintspan-bg: var(--base0A) !important;
+    --tridactyl-hintspan-fg: var(--base00) !important;
+    --tridactyl-hint-active-bg: none;
+    --tridactyl-hint-active-fg: var(--base08);
+    --tridactyl-hint-active-outline: none;
+    --tridactyl-hint-bg: none;
+    --tridactyl-hint-outline: none;
+    --tridactyl-of-bg: var(--base02);
+    --tridactyl-of-fg: var(--base07);
+}
+
+:root .sectionHeader {
+    background: var(--base01) !important;
+    color: var(--base0A) !important;
+    font-size: 1.2rem !important;
+}
+
+:root .option.focused .url {
+    background-color: none;
+    color: var(--tridactyl-of-fg);
+}

@@ -1,0 +1,13 @@
+" Tridactyl configuration
+
+" Use Base16 color scheme."
+colorscheme base16-default-dark
+
+" Hide native UI.
+guiset_quiet tabs none
+
+" Use Kagi as new tab page.
+set newtab https://kagi.com
+
+" For syntax highlighting see https://github.com/tridactyl/vim-tridactyl
+" vim: set filetype=tridactyl
