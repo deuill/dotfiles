@@ -24,7 +24,7 @@
 ;; Set default values for UI parameters.
 (setq-default
  ;; Default theme.
- doom-theme 'doom-monokai-pro
+ doom-theme 'doom-base16-eighties
 
  ;; Font definitions.
  doom-font                (font-spec :family "Iosevka"        :size 12 :weight 'light)
@@ -55,30 +55,6 @@
  doom-modeline-vcs-max-length 30)
 
 (custom-set-faces!
-  ;; Set colors consistent with Base16-Eighties theme.
-  '(default                         :background "#2d2d2d")
-  '(hl-line                         :background "#323232")
-  '(mode-line                       :background "#282828")
-  '(vertical-border                 :background "#282828" :foreground "#282828")
-  '(solaire-default-face            :background "#282828")
-  '(solaire-hl-line-face            :background "#323232")
-  '(treemacs-window-background-face :background "#323232")
-
-  ;; Improve visibility for Ediff.
-  `(ediff-current-diff-A :background ,(doom-blend "#f2777a" "#2d2d2d" 0.1))
-  `(ediff-current-diff-B :background ,(doom-blend "#a9dc76" "#2d2d2d" 0.1))
-  `(ediff-current-diff-C :background ,(doom-blend "#cc99cc" "#2d2d2d" 0.1))
-  `(ediff-fine-diff-A    :background ,(doom-blend "#f2777a" "#2d2d2d" 0.3) :weight bold)
-  `(ediff-fine-diff-B    :background ,(doom-blend "#a9dc76" "#2d2d2d" 0.3) :weight bold)
-  `(ediff-fine-diff-C    :background ,(doom-blend "#cc99cc" "#2d2d2d" 0.3) :weight bold)
-
-  ;; Improve visibility for highlight-line-changes.
-  `(highlight-changes        :background ,(doom-blend "#a9dc76" "#2d2d2d" 0.3))
-  `(highlight-changes-delete :background ,(doom-blend "#f2777a" "#2d2d2d" 0.3))
-
-  ;; Make LSP symbol highlights more prominent.
-  '(eglot-highlight-symbol-face :inherit region)
-
   ;; Have whitespace blend into background until highlighted.
   '(whitespace-space :background "#2d2d2d" :foreground "#2d2d2d")
   '(whitespace-tab   :background "#2d2d2d" :foreground "#2d2d2d")
