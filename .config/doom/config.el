@@ -24,7 +24,7 @@
 ;; Set default values for UI parameters.
 (setq-default
  ;; Default theme.
- doom-theme 'doom-base16-eighties
+ doom-theme 'doom-base16-default-dark
 
  ;; Font definitions.
  doom-font                (font-spec :family "Iosevka"        :size 12 :weight 'light)
@@ -180,7 +180,9 @@
   (setq magit-diff-refine-hunk t
         magit-display-buffer-function #'magit-display-buffer-traditional
         magit-revision-show-gravatars '("^Author:     " . "^Commit:     "))
-  (require 'pr-review))
+  (require 'agitjo)
+  (require 'pr-review)
+  (agitjo-setup "#"))
 
 (after! (magit evil)
   (evil-define-key* 'normal magit-status-mode-map (kbd "<escape>") #'magit-mode-bury-buffer))
@@ -284,7 +286,7 @@
   (set-popup-rule! "^\\*\\(?:doom:\\)vterm" :vslot -5 :select t :modeline nil :quit nil :ttl nil :height 0.25))
 
 (after! vundo
-  (setq vundo-glyph-alist vundo-unicode-symbols))
+  (setq vundo-glyph-alist vundo-ascii-symbols))
 
 (after! (:or man woman)
   (set-popup-rule! "^\\*\\(?:Wo\\)?Man " :side 'right :select t :quit 'current :slot 0 :width (+ fill-column 4)))
@@ -513,7 +515,6 @@
                    :desc "Git pull"                   "F"   #'magit-pull))
 
         "i" nil
-        "n" nil
         "o" nil
 
         (:prefix "p"
