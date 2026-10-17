@@ -6,8 +6,6 @@
 	default = current
 [pull]
 	rebase = false
-[color]
-	ui = 1
 [help]
 	autocorrect = 1
 [alias]

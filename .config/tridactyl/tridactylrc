@@ -1,10 +1,10 @@
 " Tridactyl configuration
 
 " Use Base16 color scheme."
-colorscheme base16-default-dark
+colorscheme deuill-mono
 
 " Hide native UI.
-guiset_quiet tabs none
+guiset_quiet gui none
 
 " Use Kagi as new tab page.
 set newtab https://kagi.com

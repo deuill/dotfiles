@@ -24,14 +24,14 @@
 ;; Set default values for UI parameters.
 (setq-default
  ;; Default theme.
- doom-theme 'doom-base16-default-dark
+ doom-theme 'doom-deuill-mono
 
  ;; Font definitions.
- doom-font                (font-spec :family "Iosevka"        :size 12 :weight 'light)
- doom-big-font            (font-spec :family "Iosevka"        :size 18 :weight 'light)
- doom-variable-pitch-font (font-spec :family "IBM Plex Sans"  :size 12 :weight 'light)
- doom-serif-font          (font-spec :family "IBM Plex Serif" :size 12 :weight 'light)
- doom-unicode-font        (font-spec :family "Iosevka"        :size 12 :weight 'light)
+ doom-font                (font-spec :family "Terminess Nerd Font" :size 13 :weight 'medium)
+ doom-big-font            (font-spec :family "Terminess Nerd Font" :size 13 :weight 'medium)
+ doom-symbol-font         (font-spec :family "Terminess Nerd Font" :size 13 :weight 'medium)
+ doom-variable-pitch-font (font-spec :family "Noto Sans"  :size 11)
+ doom-serif-font          (font-spec :family "Noto Serif" :size 11)
 
  ;; Column used as limit for various modes.
  fill-column 100
@@ -51,13 +51,14 @@
  display-line-numbers-type nil
 
  ;; Set up mode-line.
+ doom-modeline-bar-width 2
  doom-modeline-persp-name t
  doom-modeline-vcs-max-length 30)
 
 (custom-set-faces!
   ;; Have whitespace blend into background until highlighted.
-  '(whitespace-space :background "#2d2d2d" :foreground "#2d2d2d")
-  '(whitespace-tab   :background "#2d2d2d" :foreground "#2d2d2d")
+  '(whitespace-space :background "#e0dcd7" :foreground "#e0dcd7")
+  '(whitespace-tab   :background "#e0dcd7" :foreground "#e0dcd7")
 
   ;; Set heading sizes for HTML documents.
   '(shr-h1 :height 1.6 :weight bold)
@@ -180,9 +181,7 @@
   (setq magit-diff-refine-hunk t
         magit-display-buffer-function #'magit-display-buffer-traditional
         magit-revision-show-gravatars '("^Author:     " . "^Commit:     "))
-  (require 'agitjo)
-  (require 'pr-review)
-  (agitjo-setup "#"))
+  (require 'pr-review))
 
 (after! (magit evil)
   (evil-define-key* 'normal magit-status-mode-map (kbd "<escape>") #'magit-mode-bury-buffer))
