@@ -99,12 +99,13 @@ Can be an integer to determine the exact padding."
    ((font-lock-type-face &override)          :weight 'bold :underline t)
    ((font-lock-comment-face &override)       :slant 'italic)
    ((font-lock-builtin-face &override)       :weight 'bold)
+   ((font-lock-constant-face &override)      :slant 'italic)
    ((font-lock-string-face &override)        :slant 'italic)
    ((font-lock-number-face &override)        :slant 'italic)
    ((font-lock-keyword-face &override)       :weight 'bold)
-   ((help-key-binding &override)             :background nil    :foreground red   :box nil)
-   ((region &override)                       :background bg-alt :foreground base6 :inverse-video t)
-   (match                                    :background base7  :foreground base0)
+   ((help-key-binding &override)             :background nil   :foreground red   :box nil)
+   ((region &override)                       :background base0 :foreground base6 :inverse-video t)
+   (match                                    :background base7 :foreground base0)
 
    ;; I-search and I-edit
    (isearch-fail     :foreground red)
@@ -118,8 +119,12 @@ Can be an integer to determine the exact padding."
    (fill-column-indicator :foreground base3)
 
    ;; transient
-   (transient-key-stay :foreground red)
-   (transient-key-exit :background red :foreground base0)
+   (transient-key :foreground red)
+   (transient-key-noop :foreground base5)
+   (transient-key-stay :inherit 'transient-key)
+   (transient-key-exit :inherit 'transient-key :weight 'bold)
+   (transient-key-stack :inherit 'transient-key-exit)
+   (transient-argument :foreground red :weight 'bold)
 
    ;; diff
    (diff-changed        :background base1 :foreground base8)
@@ -150,24 +155,35 @@ Can be an integer to determine the exact padding."
    (magit-diff-file-heading-selection :background base6 :foreground bg :weight 'bold :extend t)
    (magit-diff-hunk-heading           :background base6 :foreground bg-alt :extend t)
    (magit-diff-hunk-heading-highlight :background base7 :foreground bg :weight 'bold :extend t)
+   (magit-header-line                 :background base6 :foreground base1 :weight 'bold)
    (magit-dimmed                      :foreground base5)
+
+   ;; forge
+   (forge-topic-unread  :weight 'bold :underline t)
+   (forge-pullreq-draft :foreground base5 :weight 'normal)
 
    ;; completions
    (completions-common-part :foreground base8 :weight 'bold :underline t)
 
+   ;; corfu
+   (corfu-current :background red :foreground base0)
+
    ;; orderless
-   (orderless-match-face-0 :foreground bg :background region :weight 'bold)
+   (orderless-match-face-0 :weight 'bold :underline t)
    (orderless-match-face-1 :inherit 'orderless-match-face-0)
    (orderless-match-face-2 :inherit 'orderless-match-face-0)
    (orderless-match-face-3 :inherit 'orderless-match-face-0)
 
    ;; doom-modeline
    (doom-modeline-bar               :background base0)
-   (doom-modeline-info              :foreground base2)
-   (doom-modeline-buffer-path       :foreground base2 :weight 'bold)
-   (doom-modeline-project-dir       :foreground base0 :weight 'bold)
-   (doom-modeline-persp-name        :foreground base2)
+   (doom-modeline-info              :foreground base1)
+   (doom-modeline-warning           :foreground base2 :weight 'bold)
+   (doom-modeline-project-dir       :foreground base0)
+   (doom-modeline-buffer-path       :foreground base2)
    (doom-modeline-buffer-major-mode :foreground base2)
+   (doom-modeline-buffer-modified   :foreground base2 :weight 'bold)
+   (doom-modeline-persp-name        :foreground base2)
+   (doom-modeline-evil-insert-state :foreground base0)
 
    ;; line numbers
    ((line-number &override) :foreground base4)
@@ -177,7 +193,7 @@ Can be an integer to determine the exact padding."
    (eglot-highlight-symbol-face :background base2)
 
    ;; vertico
-   (vertico-current :background highlight :foreground bg)
+   (vertico-current :background red :foreground base0)
 
    ;; modeline
    (mode-line
