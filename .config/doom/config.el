@@ -27,9 +27,9 @@
  doom-theme 'doom-deuill-mono
 
  ;; Font definitions.
- doom-font                (font-spec :family "Iosevka" :size 12 :weight 'light)
- doom-big-font            (font-spec :family "Iosevka" :size 18 :weight 'light)
- doom-symbol-font         (font-spec :family "Iosevka" :size 12 :weight 'light)
+ doom-font                (font-spec :family "Iosevka" :size 12)
+ doom-big-font            (font-spec :family "Iosevka" :size 18)
+ doom-symbol-font         (font-spec :family "Iosevka" :size 12)
  doom-variable-pitch-font (font-spec :family "Noto Sans"  :size 12)
  doom-serif-font          (font-spec :family "Noto Serif" :size 12)
 
@@ -79,6 +79,8 @@
  auth-sources '("secrets:Login")
  ;; Always save bookmark list on modification.
  bookmark-save-flag 1
+ ;; Set default User-Agent header for all requests.
+ url-user-agent "Mozilla/5.0 (Android 17; Mobile; rv:158.0) Gecko/158.0 Firefox/158.0"
  ;; Use EWW for browing URLs by default.
  browse-url-browser-function 'eww-browse-url
  ;; Use a more reasonable default for scratch buffers.
@@ -131,14 +133,16 @@
         shr-max-width fill-column
         shr-hr-line ?━
         shr-bullet "• "
-        url-user-agent "Mozilla/5.0 (Android 14; Mobile; rv:109.0) Gecko/121.0 Firefox/121.0"
-        eww-search-prefix "https://lite.duckduckgo.com/lite?q=")
+        eww-search-prefix "https://kagi.com/html/search?q=")
   (evil-define-key* 'normal eww-mode-map (kbd "r") 'eww-reload)
   (defun shr-add-font (start end type) (+custom/shr-add-font start end type))
   (set-popup-rule! "^\\*eww\\*" :side 'right :select t :quit 'nil :slot 0 :width (+ fill-column 4)))
 
 (after! forge
   (setq forge-status-buffer-default-topic-filters (forge--topics-spec :type 'topic :active nil :state 'open :order 'newest)))
+
+(after! go-gen-test
+  (setq go-gen-test-executable "gotests -parallel"))
 
 (after! go-playground
   (setq go-playground-basedir "~/.go/src/play"))
@@ -302,7 +306,8 @@
   (add-to-list 'auto-mode-alist '("\\.bu\\'" . yaml-mode)))
 
 (after! (yaml-mode evil)
-  (evil-define-key* 'normal yaml-mode-map (kbd "<tab>") #'evil-toggle-fold))
+  (evil-define-key* 'normal yaml-mode-map (kbd "<tab>") #'evil-toggle-fold)
+  (evil-define-key* 'normal yaml-ts-mode-map (kbd "<tab>") #'evil-toggle-fold))
 
 ;;;
 ;;; Hooks and mode-specific configuration.
